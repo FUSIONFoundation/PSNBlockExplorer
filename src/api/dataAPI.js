@@ -7,6 +7,7 @@ var datablock = {
   latestBlock : {},
   transactions : {},
   blocks : {},
+  totalTransactions : "-"
 };
 
 
@@ -37,10 +38,19 @@ function getServerRefresh() {
 
   rp(requestOptions)
     .then(response => {
-      if ( Array.isArray( response ) && response.length > 0 ) {
-        console.log(response)
-        datablock.priceInfo = response[0]
-        console.log( datablock.priceInfo )
+      if ( response ) {
+        //if ( datablock.)
+        if ( datablock.maxBlock !== response.maxBlock ||
+        datablock.totalTransactions !== response.totalTransactions ||
+        datablock.priceInfo._id !== response.data.priceInfo._id )
+       {
+          console.log(response);
+          datablock.maxBlock = response.maxBlock
+          datablock.totalTransactions = response.totalTransactions
+          datablock.priceInfo = response.priceInfo
+          datablock.lastTwoBlocks = response.lastTwoBlocks
+          currentDataState.emit( "data", datablock )
+        }
         /*
         circulating_supply: 29704811.2
         last_updated: "2018-12-09T10:32:21.000Z"
@@ -81,6 +91,7 @@ export default class currentDataState {
    */
   static on(eventName, listener) {
     eventEmitter.on(eventName, listener);
+    listener( 'data', datablock )
   }
 
   /**
