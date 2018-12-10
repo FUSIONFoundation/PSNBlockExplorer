@@ -53,7 +53,7 @@ export default class Dashboard extends Component {
     console.log(data);
     //debugger
     return (
-      <View style={{width:1240}}>
+      <View style={{width:1280}}>
         <TitleBar title="DashBoard" />
         <View style={styles.dashBoardHeader}>
           <View style={styles.currentPriceBox}>

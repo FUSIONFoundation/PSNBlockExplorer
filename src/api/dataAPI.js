@@ -11,7 +11,8 @@ var datablock = {
   lastUpdateTime : new  Date(),
   last5Blocks : [],
   last5Transactions : [],
-  menuPath : 'Dashboard'
+  menuPath : 'Dashboard',
+  blockCache : {}
 };
 
 
@@ -109,6 +110,10 @@ function fetchNext5() {
         console.log( response )
         datablock.last5Blocks = response
         currentDataState.emit( "data", datablock )
+        for ( let b of response ) {
+          datablock.blockCache[b.hash] = b
+          datablock.blockCache[b.height] = b
+        }
         return getNext5Transactions()
       }
       return true
@@ -205,4 +210,64 @@ export default class currentDataState {
     datablock.menuPath = path
     eventEmitter.emit( 'menuPathChanged', path, false )
   }
+
+  static getBlock( blockNumber ) {
+   
+    let b = datablock.blockCache[blockNumber]
+    if ( b ) {
+      return b
+    }
+
+    // lets request 10 blocks
+    let blockStart 
+    if ( blockNumber < 5 ) {
+      blockStart = 0
+    } else {
+      blockStart = blockNumber - 5
+    }
+    requestBlockRange(blockStart)
+    return "loading"
+  }
+}
+
+function requestBlockRange(blockStart ) {
+  
+  let page = Math.floor( blockStart ) / 20
+  let size = 20 
+  const requestOptions = {
+    method: "GET",
+    uri: server + "/blocks/all",
+    qs: {
+      sort : 'asc',
+      page ,
+      size 
+    },
+    headers: {
+      "X-Content-Type-Options":"nosniff"
+    },
+    json: true,
+    gzip: true
+  };
+
+  return rp(requestOptions)
+    .then(response => {
+      if ( response ) {
+        console.log( "yyyyyy")
+        console.log( response )
+        currentDataState.emit( "data", datablock )
+         
+        for ( let b of response ) {
+          datablock.blockCache[b.hash] = b
+          datablock.blockCache[b.height] = b
+        }
+        eventEmitter.emit("blocksLoaded", datablock , false )
+      }
+      return true
+    })
+    .catch(err => {
+      console.log("Fetch next blocks API call error:", err.message);
+      setTimeout( () => {
+        requestBlockRange(blockStart )
+      }, 1000 ) 
+    });
 }

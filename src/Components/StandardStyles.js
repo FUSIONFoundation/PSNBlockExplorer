@@ -659,6 +659,27 @@ var styles = StyleSheet.create({
         color : colors.labelGrey,
         fontWeight : constants.regularFont,
         textAlign : 'right'
+    },
+    largerTitleBar :   {
+        fontFamily: constants.font,
+        fontSize: 24,
+        fontWeight: constants.boldFont,
+        color: colors.textBlue,
+    },
+    blockGrayBox: { 
+        borderRadius : 3,
+        overflow : 'visible',
+        backgroundColor : colors.tagGrey,
+        marginleft : 16,
+        textAlign : 'center',
+        padding : 8,
+        marginLeft : 16,
+    },
+    blockNumberText : {
+        fontFamily: constants.font,
+        fontSize: 14,
+        fontWeight: constants.regularFont,
+        color: colors.textBlue, 
     }
 });
 
