@@ -547,7 +547,29 @@ var styles = StyleSheet.create({
     marginTop : 18,
     marginBottom : 18,
     marginRight : 16
-  }
+  },
+  dashBoardHeader : {
+    marginLeft : 80,
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: "auto",
+    flexDirection : 'row',
+    justifyContent : 'flex-start',
+  },
+  currentPriceBox: {
+    borderColor: colors.orderGrey,
+    borderRadius: 3,
+    backgroundColor: "white",
+    borderWidth: 1,
+    width: 624,
+    padding: 32,
+    flex: 1,
+    flexBasis: "100%",
+    marginTop: 24,
+    overflow: "visible",
+    boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
+  },
 });
 
 export default styles;

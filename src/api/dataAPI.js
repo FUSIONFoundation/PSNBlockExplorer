@@ -7,7 +7,10 @@ var datablock = {
   latestBlock : {},
   transactions : {},
   blocks : {},
-  totalTransactions : "-"
+  totalTransactions : "-",
+  lastUpdateTime : new  Date(),
+  last5Blocks : {},
+  last5TTransactions : {}
 };
 
 
@@ -18,7 +21,7 @@ let server = "https://explorefusion.io"
 function scheduleRefresh() {
       setTimeout( ()=> {
         getServerRefresh()
-      }, 75000 )
+      }, 7500 )
 }
 
 getServerRefresh()
@@ -40,17 +43,26 @@ function getServerRefresh() {
     .then(response => {
       if ( response ) {
         //if ( datablock.)
-        if ( datablock.maxBlock !== response.maxBlock ||
-        datablock.totalTransactions !== response.totalTransactions ||
-        datablock.priceInfo._id !== response.data.priceInfo._id )
-       {
+      //   if ( datablock.maxBlock !== response.maxBlock ||
+      //   datablock.totalTransactions !== response.totalTransactions ||
+      //   datablock.priceInfo._id !== response.data.priceInfo._id )
+      //  {
+        //we want to always update the update time
+          let getNext5 = false
           console.log(response);
-          datablock.maxBlock = response.maxBlock
+          if ( datablock.maxBlock !== response.maxBlock ) {
+            getNext5 = true
+            datablock.maxBlock = response.maxBlock
+          }
           datablock.totalTransactions = response.totalTransactions
           datablock.priceInfo = response.priceInfo
           datablock.lastTwoBlocks = response.lastTwoBlocks
+          datablock.lastUpdateTime = new Date()
+          if ( getNext5 ) {
+            fetchNext5()
+          }
           currentDataState.emit( "data", datablock )
-        }
+        // }
         /*
         circulating_supply: 29704811.2
         last_updated: "2018-12-09T10:32:21.000Z"
@@ -69,6 +81,71 @@ function getServerRefresh() {
     .catch(err => {
       console.log("API call error:", err.message);
       scheduleRefresh()
+    });
+}
+
+function fetchNext5() {
+  const requestOptions = {
+    method: "GET",
+    uri: server + "/blocks/all",
+    qs: {
+      sort : 'desc',
+      page : 0,
+      size : 5
+    },
+    headers: {
+      "X-Content-Type-Options":"nosniff"
+    },
+    json: true,
+    gzip: true
+  };
+
+  return rp(requestOptions)
+    .then(response => {
+      if ( response ) {
+        console.log( "555555")
+        console.log( response )
+        datablock.last5Blocks = response
+        currentDataState.emit( "data", datablock )
+        return getNext5Transactions()
+      }
+      return true
+    })
+    .catch(err => {
+      console.log("Fetch next blocks API call error:", err.message);
+      setTimeout( fetchNext5, 1000 ) 
+    });
+}
+
+function getNext5Transactions() {
+  const requestOptions = {
+    method: "GET",
+    uri: server + "/transactions/all",
+    qs: {
+      sort : 'desc',
+      page : 0,
+      size : 5
+    },
+    headers: {
+      "X-Content-Type-Options":"nosniff"
+    },
+    json: true,
+    gzip: true
+  };
+
+  return rp(requestOptions)
+    .then(response => {
+      if ( response ) {
+        console.log( "TTTT")
+        console.log( response )
+        datablock.last5Transactions = response
+        currentDataState.emit( "data", datablock )
+      }
+      return true
+    })
+    .catch(err => {
+      console.log("Fetch next blocks API call error:", err.message);
+      setTimeout( getNext5Transactions, 1000 ) 
     });
 }
 
