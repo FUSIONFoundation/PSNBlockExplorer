@@ -6,6 +6,7 @@ import TitleBar from "./TitleBar.js";
 import dataStore from "../api/dataAPI.js";
 import TextBox from './TextBox.js'
 import Utils from '../utils'
+import BlockSummary from './BlockSummary.js'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -17,8 +18,10 @@ export default class Dashboard extends Component {
   renderLast5Blocks() {
     let blocks = [];
     let data = dataStore.datablock;
+    let index = 0
     for (let b of data.last5Blocks) {
-      blocks.push(<Text key={b.hash}>{b.hash}</Text>);
+        index++
+      blocks.push(<BlockSummary key={b.hash} block={b} divider={index<5?"true":"false"}/>)
     }
     return blocks;
   }
@@ -26,8 +29,10 @@ export default class Dashboard extends Component {
   renderLast5Transactions() {
     let transactions = [];
     let data = dataStore.datablock;
+    let index = 0
     for (let t of data.last5Transactions) {
-      transactions.push(<Text key={t.hash}>{t.hash}</Text>);
+      transactions.push(<Text key={t.hash} divider={index<4?"true":"false"}>{t.hash}</Text>);
+      index++
     }
     return transactions;
   }
@@ -46,12 +51,12 @@ export default class Dashboard extends Component {
     }
     console.log(data);
     return (
-      <View>
+      <View style={{width:1240}}>
         <TitleBar title="DashBoard" />
         <View style={styles.dashBoardHeader}>
           <View style={styles.currentPriceBox}>
             <View style={styles.simpleRow}>
-              <TextBox line1="Current Price" line2={price} />
+              <TextBox line1="Current Price" line2={"$"+price} />
               <TextBox line1="Market Cap" line2={"$"+market_cap} />
               <TextBox line1="Circulating Supply" line2={"$"+supply} />
             </View>
@@ -70,12 +75,12 @@ export default class Dashboard extends Component {
         </View>
         <View style={styles.dashBoardHeader}>
           <View style={styles.currentPriceBox}>
-            <Text>Recent Blocks</Text>
+            <Text style={styles.sectionHeader}>Recent Blocks</Text>
             {this.renderLast5Blocks()}
           </View>
           <View style={{ width: 33, height: 1 }} />
           <View style={styles.currentPriceBox}>
-            <Text>Recent Transactions</Text>
+            <Text  style={styles.sectionHeader}>Recent Transactions</Text>
             {this.renderLast5Transactions()}
           </View>
         </View>

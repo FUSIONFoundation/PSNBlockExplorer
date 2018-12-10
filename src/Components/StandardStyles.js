@@ -551,11 +551,9 @@ var styles = StyleSheet.create({
   dashBoardHeader : {
     marginLeft : 80,
     flex: 1,
-    flexGrow: 1,
-    flexShrink: 0,
-    flexBasis: "auto",
     flexDirection : 'row',
     justifyContent : 'flex-start',
+    width : 1240
   },
   currentPriceBox: {
     borderColor: colors.orderGrey,
@@ -565,7 +563,6 @@ var styles = StyleSheet.create({
     width: 624,
     padding: 32,
     flex: 1,
-    flexBasis: "100%",
     marginTop: 24,
     overflow: "visible",
     boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
@@ -587,7 +584,81 @@ var styles = StyleSheet.create({
     flexDirection : 'column',
     justifyContent : 'flex-start',
     alignItems : 'flex-start'
-  }
+  },
+  textBoxLine1Text : {
+      fontFamily : constants.fontFamily,
+      fontSize : 12 ,
+      letterSpacing : 0,
+      color : colors.labelGrey,
+      fontWeight : constants.regularFont
+  },
+  textBoxLine2Text : {
+    fontFamily : constants.fontFamily,
+    fontSize : 24 ,
+    letterSpacing : 0,
+    color : colors.textBlue,
+    fontWeight : constants.boldFont,
+    marginTop : 8,
+    },
+    sectionHeader : { 
+        fontFamily : constants.fontFamily,
+        fontSize : 18 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.boldFont,
+        marginBottom : 32
+    },
+    SummaryBoxColum : {
+        height : 106,
+        width :  560,
+        flex: 1,
+        flexDirection : 'column',
+        justifyContent : 'flex-start',
+        alignItems : 'flex-start',
+    },
+    summaryDetailRow : {
+        width : 560,
+        flex : 1 ,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'flex-start'
+    },
+    summaryLabel : {
+        width : 80,
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        letterSpacing : 0,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    },
+    summaryLine1Text : {
+        fontFamily : constants.fontFamily,
+        fontSize : 18 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.boldFont,
+    },
+    summaryLine2Text : {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    summaryLine3Text : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        letterSpacing : 0,
+        color : colors.textGreen,
+        fontWeight : constants.mediumFont,
+    },
+    summaryLine1RightText : {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    }
 });
 
 export default styles;

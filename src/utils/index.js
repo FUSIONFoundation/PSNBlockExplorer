@@ -122,4 +122,16 @@ export default class Utils {
     a = a * 100;
     return a.toFixed(2);
   }
+
+  static calcReward( height ) {
+    let i
+    // initial reward 2.5
+    let reward = 2.5
+    // every 4915200 blocks divide reward by 2
+    let segment = Math.floor( height  / 4915200 )
+    for ( i = 0; i < segment ; i++ ) {
+      reward = reward/2
+    }
+    return reward
+  }
 }
