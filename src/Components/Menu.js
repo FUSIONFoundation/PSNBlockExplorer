@@ -2,16 +2,17 @@ import React, { Component } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import history from "../history.js";
 import styles from "./StandardStyles.js";
+import dataStore from "../api/dataAPI.js";
 
 var path = "Dashboard";
 
 class MenuButton extends Component {
   render() {
-    let active = path === this.props.text;
+    let active = dataStore.datablock.menuPath === this.props.text;
     return (
       <TouchableOpacity
         onPress={() => {
-          path = this.props.text;
+          dataStore.setMenuPath( this.props.text );
           this.props.onpress()
           history.push(this.props.link);
         }}
@@ -38,6 +39,7 @@ export default class Menu extends Component {
     constructor(props) {
         super(props)
         this.redraw = this.redraw.bind(this)
+        this.dataListener = this.dataListener.bind(this)
     }
   render() {
     return (
@@ -49,6 +51,18 @@ export default class Menu extends Component {
         <MenuButton text="Addresses" link="Addresses"  onpress={this.redraw} />
       </View>
     );
+  }
+
+  componentDidMount() {
+    dataStore.on("menuPathChanged", this.dataListener);
+  }
+
+  componentWillUnmount() {
+    dataStore.removeEventListener("menuPathChanged", this.dataListener);
+  }
+  
+  dataListener( menuPath ) {
+    this.redraw()
   }
 
   redraw() {

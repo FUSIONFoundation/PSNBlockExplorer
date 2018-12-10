@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 
 import styles from "./StandardStyles.js";
 import Utils from "../utils";
 import moment from "moment";
 import Colors from "./colors.js";
-
+import history from "../history.js";
+import dataStore from "../api/dataAPI.js";
 export default class BlockSummary extends Component {
   render() {
     let b = this.props.block;
@@ -19,7 +20,7 @@ export default class BlockSummary extends Component {
     let miner = b.parsed.miner;
     let transactionCount = b.numberOfTransactions;
     let reward = "" + Utils.calcReward(height) + " FSN";
-    let t = Utils.timeAgo( new Date(b.timeStamp * 1000) ) + " ago"
+    let t = Utils.timeAgo(new Date(b.timeStamp * 1000)) + " ago";
 
     let tText = transactionCount === 1 ? "Transaction" : "Transactions";
 
@@ -28,22 +29,33 @@ export default class BlockSummary extends Component {
         <View style={{ height: 8 }} />
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Block Height</Text>
-          <View
-            style={{
-              width: 350,
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-start"
-            }}
+          <TouchableOpacity onPress={() => {
+                dataStore.setMenuPath(  "Blocks" );
+                history.push(`/blocks/${height}`);
+          }}>
+            <View
+              style={{
+                width: 350,
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start"
+              }}
+            >
+              <Text style={styles.summaryLine1Text}>{height}</Text>
+              <Text
+                style={styles.summaryLine2Text}
+              >{`  (${transactionCount} ${tText})`}</Text>
+            </View>
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.summaryLine1RightText,
+              { width: 120, marginRight: 10 }
+            ]}
           >
-            <Text style={styles.summaryLine1Text}>{height}</Text>
-            <Text
-              style={styles.summaryLine2Text}
-            >{`  (${transactionCount} ${tText})`}</Text>
-          </View>
-          <Text style={[styles.summaryLine1RightText,
-            {width:120, marginRight:10}]}>{t}</Text>
+            {t}
+          </Text>
         </View>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Mined By</Text>
@@ -61,7 +73,8 @@ export default class BlockSummary extends Component {
             marginBottom: 8,
             height: 1,
             width: 560,
-            backgroundColor: this.props.divider === "true" ? Colors.orderGrey : "transparent"
+            backgroundColor:
+              this.props.divider === "true" ? Colors.orderGrey : "transparent"
           }}
         />
       </View>

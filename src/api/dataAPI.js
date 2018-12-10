@@ -10,7 +10,8 @@ var datablock = {
   totalTransactions : "-",
   lastUpdateTime : new  Date(),
   last5Blocks : [],
-  last5Transactions : []
+  last5Transactions : [],
+  menuPath : 'Dashboard'
 };
 
 
@@ -31,6 +32,7 @@ function getServerRefresh() {
     method: "GET",
     uri: server + "/fsnprice",
     qs: {
+      sort : 'desc'
     },
     headers: {
       "X-Content-Type-Options":"nosniff"
@@ -197,5 +199,10 @@ export default class currentDataState {
    */
   static getEventEmitter() {
     return eventEmitter;
+  }
+
+  static setMenuPath( path ) {
+    datablock.menuPath = path
+    eventEmitter.emit( 'menuPathChanged', path, false )
   }
 }

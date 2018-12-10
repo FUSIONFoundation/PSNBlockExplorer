@@ -51,6 +51,7 @@ export default class Dashboard extends Component {
         data.lastTwoBlocks[0].timeStamp - data.lastTwoBlocks[1].timeStamp;
     }
     console.log(data);
+    //debugger
     return (
       <View style={{width:1240}}>
         <TitleBar title="DashBoard" />

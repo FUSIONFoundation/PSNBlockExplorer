@@ -12,7 +12,7 @@ import Menu from "./Components/Menu.js";
 import BlockDisplayer from "./Components/BlockDisplayer";
 import 'font-awesome/css/font-awesome.min.css';
 
-import { Route, Router } from "react-router-dom";
+import { Route, Router, Switch } from "react-router-dom";
 
 
 class App extends Component {
@@ -24,12 +24,14 @@ class App extends Component {
         <Menu/>
         <Router history={history}>
             <div>
+              <Switch>
               <Route exact path="/" component={Dashboard} />
-              <Route path="/Blocks" component={Blocks} />         
+              <Route path="/Blocks/:blockNumber" component={Blocks} />
+              <Route path="/Blocks" component={Blocks} />
               <Route path="/Transactions" component={Transactions} />
               <Route path="/Assets" component={Assets} />
               <Route path="/Addresses" component={Addresses}/>
-              <Route path="/Block/:blockNumber" component={BlockDisplayer} />
+              </Switch>
             </div>
           </Router>
       </View>
