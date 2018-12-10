@@ -19,7 +19,7 @@ class App extends Component {
   render() {
 
     return (
-      <View>
+      <View style={{width:1280}}>
         <Header/>
         <Menu/>
         <Router history={history}>

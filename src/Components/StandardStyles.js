@@ -245,6 +245,7 @@ var styles = StyleSheet.create({
     width: 620,
     padding: 32,
     flex: 1,
+    justifyContent : 'space-around',
     flexBasis: "100%",
     marginTop: 24,
     overflow: "visible",
@@ -484,7 +485,6 @@ var styles = StyleSheet.create({
     top : 1 
   },
   menuButtonViewActive: {
-    height: 16,
     marginRight: 16,
     height : 36 ,
     alignItems : 'center',
@@ -553,7 +553,7 @@ var styles = StyleSheet.create({
     flex: 1,
     flexDirection : 'row',
     justifyContent : 'flex-start',
-    width : 1240
+    width : 1280
   },
   currentPriceBox: {
     borderColor: colors.orderGrey,
@@ -680,7 +680,36 @@ var styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: constants.regularFont,
         color: colors.textBlue, 
-    }
+    },
+    detailBox :    {
+        borderColor: colors.orderGrey,
+        borderRadius: 3,
+        backgroundColor: "white",
+        borderWidth: 1,
+        width: 1280,
+        paddingTop: 32,
+        paddingBottom : 32,
+        flex: 1,
+        marginTop: 24,
+        overflow: "visible",
+        boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
+      },
+      detailLineLabel : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        letterSpacing : 0,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    },
+    detailLineValue : {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+        marginTop : 9,
+        marginBottom : 11
+    },
 });
 
 export default styles;

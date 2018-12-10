@@ -215,6 +215,9 @@ export default class currentDataState {
    
     let b = datablock.blockCache[blockNumber]
     if ( b ) {
+      if (!b.parsed) {
+        b.parsed = JSON.parse(b.block);
+      }
       return b
     }
 
