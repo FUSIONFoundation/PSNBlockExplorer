@@ -19,8 +19,7 @@ export default class BlockSummary extends Component {
     let miner = b.parsed.miner;
     let transactionCount = b.numberOfTransactions;
     let reward = "" + Utils.calcReward(height) + " FSN";
-    let t =
-      (new Date().getTime() - new Date(b.timeStamp * 1000).getTime()) / 1000;
+    let t = Utils.timeAgo( new Date(b.timeStamp * 1000) ) + " ago"
 
     let tText = transactionCount === 1 ? "Transaction" : "Transactions";
 
@@ -43,7 +42,8 @@ export default class BlockSummary extends Component {
               style={styles.summaryLine2Text}
             >{`  (${transactionCount} ${tText})`}</Text>
           </View>
-          <Text style={[styles.summaryLine1RightText,{alignText:'right',width:134}]}>{t}</Text>
+          <Text style={[styles.summaryLine1RightText,
+            {width:120, marginRight:10}]}>{t}</Text>
         </View>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Mined By</Text>

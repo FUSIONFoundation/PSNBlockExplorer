@@ -658,6 +658,7 @@ var styles = StyleSheet.create({
         letterSpacing : 0,
         color : colors.labelGrey,
         fontWeight : constants.regularFont,
+        textAlign : 'right'
     }
 });
 

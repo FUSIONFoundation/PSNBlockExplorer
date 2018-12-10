@@ -31,28 +31,28 @@ export default class Utils {
     return str.substr(0, index) + value + str.substr(index);
   }
 
-  static formatWei( val ) {
-    if ( typeof val === 'object') {
-      val = val.toString()
+  static formatWei(val) {
+    if (typeof val === "object") {
+      val = val.toString();
     }
     let len = val.length;
-    if ( len < 18 ) {
-      val = "0".repeat(18-len) + val
-      len = 18
+    if (len < 18) {
+      val = "0".repeat(18 - len) + val;
+      len = 18;
     }
-    if ( len === 18 ) {
-      val = "." + val
+    if (len === 18) {
+      val = "." + val;
     } else {
-      val = Utils.insert( val, val.length - 18, "." )
+      val = Utils.insert(val, val.length - 18, ".");
     }
 
-    val = Utils.removeZeros( val, true, true , true )
+    val = Utils.removeZeros(val, true, true, true);
 
-    if ( val.charAt(0) === '.') {
+    if (val.charAt(0) === ".") {
       return "0" + val;
     }
-    if ( val.length === 0 ) {
-      return 0
+    if (val.length === 0) {
+      return 0;
     }
     return val;
   }
@@ -70,7 +70,7 @@ export default class Utils {
     if (leading) {
       after = before.replace(regEx1, ""); // Remove leading 0's
     } else {
-        after = before;
+      after = before;
     }
     if (trailing) {
       if (after.indexOf(".") > -1) {
@@ -86,8 +86,8 @@ export default class Utils {
   static displayNumber(value, precision = 2, trimTrailingZeros = false) {
     var units = " K M G T P E Z Y".split(" ");
 
-    if ( isNaN(value)) {
-      return "-"
+    if (isNaN(value)) {
+      return "-";
     }
 
     if (value < 0) {
@@ -104,16 +104,15 @@ export default class Utils {
       units.length - 1
     );
 
-    if ( power === -1 ) {
-      power = 0
+    if (power === -1) {
+      power = 0;
     }
-   
+
     var val = "" + (value / Math.pow(1000, power)).toFixed(precision);
 
     if (trimTrailingZeros) {
-        val = Utils.removeZeros( val );
+      val = Utils.removeZeros(val);
     }
-
 
     return val + units[power];
   }
@@ -123,15 +122,64 @@ export default class Utils {
     return a.toFixed(2);
   }
 
-  static calcReward( height ) {
-    let i
+  static calcReward(height) {
+    let i;
     // initial reward 2.5
-    let reward = 2.5
+    let reward = 2.5;
     // every 4915200 blocks divide reward by 2
-    let segment = Math.floor( height  / 4915200 )
-    for ( i = 0; i < segment ; i++ ) {
-      reward = reward/2
+    let segment = Math.floor(height / 4915200);
+    for (i = 0; i < segment; i++) {
+      reward = reward / 2;
     }
-    return reward
+    return reward;
+  }
+
+  static timeAgo(date) {
+    // Should show all seconds. If > 59s show in minutes only. (1m).
+    // If greater than 1m wait until next minute to change time. (2m)
+    // If greater than an hour we can show Hours and mins (1h2m)
+    // If greater than 24 hours we can show in days and hours. (2d 12h)... etc.
+    // ago
+
+    if (typeof date !== 'object') {
+      date = new Date(date);
+    }
+  
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var intervalType;
+  
+    var interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) {
+      intervalType = 'year';
+    } else {
+      interval = Math.floor(seconds / 2592000);
+      if (interval >= 1) {
+        intervalType = 'month';
+      } else {
+        interval = Math.floor(seconds / 86400);
+        if (interval >= 1) {
+          intervalType = 'day';
+        } else {
+          interval = Math.floor(seconds / 3600);
+          if (interval >= 1) {
+            intervalType = "hour";
+          } else {
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) {
+              intervalType = "minute";
+            } else {
+              interval = seconds;
+              intervalType = "second";
+            }
+          }
+        }
+      }
+    }
+  
+    if (interval > 1 || interval === 0) {
+      intervalType += 's';
+    }
+  
+    return interval + ' ' + intervalType;
   }
 }
