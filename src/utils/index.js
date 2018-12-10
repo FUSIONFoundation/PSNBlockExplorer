@@ -86,24 +86,34 @@ export default class Utils {
   static displayNumber(value, precision = 2, trimTrailingZeros = false) {
     var units = " K M G T P E Z Y".split(" ");
 
+    if ( isNaN(value)) {
+      return "-"
+    }
+
     if (value < 0) {
       return "-" + Utils.displayNumber(Math.abs(value));
     }
 
-    if (value < 1) {
-      return value + units[0];
-    }
+    // if (value < 1) {
+    //   debugger
+    //   // return value + units[0];
+    // }
 
     var power = Math.min(
       Math.floor(Math.log(value) / Math.log(1000)),
       units.length - 1
     );
 
+    if ( power === -1 ) {
+      power = 0
+    }
+   
     var val = "" + (value / Math.pow(1000, power)).toFixed(precision);
 
     if (trimTrailingZeros) {
         val = Utils.removeZeros( val );
     }
+
 
     return val + units[power];
   }

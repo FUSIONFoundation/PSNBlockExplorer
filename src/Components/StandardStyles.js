@@ -570,6 +570,24 @@ var styles = StyleSheet.create({
     overflow: "visible",
     boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
   },
+  simpleRow : {
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: "auto",
+    flexDirection : 'row',
+    justifyContent : 'flex-start',
+    alignItems : 'flex-start'
+  },
+  TextBoxColumn : {
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: "auto",
+    flexDirection : 'column',
+    justifyContent : 'flex-start',
+    alignItems : 'flex-start'
+  }
 });
 
 export default styles;

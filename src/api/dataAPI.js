@@ -9,8 +9,8 @@ var datablock = {
   blocks : {},
   totalTransactions : "-",
   lastUpdateTime : new  Date(),
-  last5Blocks : {},
-  last5TTransactions : {}
+  last5Blocks : [],
+  last5Transactions : []
 };
 
 
