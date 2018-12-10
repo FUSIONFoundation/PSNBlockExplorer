@@ -182,4 +182,10 @@ export default class Utils {
   
     return interval + ' ' + intervalType;
   }
+
+  static midHashDisplay( addr ) {
+      let first = addr.substr( 0, 9  )
+      let end = addr.substr(  addr.length - 10, 9 )
+      return first + "..." + end
+  }
 }

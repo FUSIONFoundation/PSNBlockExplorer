@@ -7,6 +7,7 @@ import dataStore from "../api/dataAPI.js";
 import TextBox from './TextBox.js'
 import Utils from '../utils'
 import BlockSummary from './BlockSummary.js'
+import TransactionSummary from './TransactionSummary.js'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Dashboard extends Component {
     let data = dataStore.datablock;
     let index = 0
     for (let t of data.last5Transactions) {
-      transactions.push(<Text key={t.hash} divider={index<4?"true":"false"}>{t.hash}</Text>);
+      transactions.push(<TransactionSummary key={t.hash} transaction={t} divider={index<4?"true":"false"}/>);
       index++
     }
     return transactions;
