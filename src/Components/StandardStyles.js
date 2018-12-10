@@ -243,7 +243,6 @@ var styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     width: 620,
-    padding: 32,
     flex: 1,
     justifyContent : 'space-around',
     flexBasis: "100%",

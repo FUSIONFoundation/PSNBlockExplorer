@@ -77,7 +77,7 @@ export default class Blocks extends Component {
               alignItems: "center"
             }}
           >
-            <View style={{paddingLeft:16}}>
+            <View style={{marginLeft:16}}>
               <DetailLine label="Block Height" val={this.state.block} />
               <DetailLine label="Transactions" val={transactionCount} />
               <DetailLine label="Age" val={t} />
@@ -86,11 +86,12 @@ export default class Blocks extends Component {
               <DetailLine
                 label="ParentHash"
                 hideBorder={true}
+                clickable={true}
                 val={b.parsed.parentHash}
               />
             </View>
             <View style={{marginRight:8}}>
-              <DetailLine label="Miner" val={miner} />
+              <DetailLine label="Miner"  val={miner} />
               <DetailLine label="Size" val={b.parsed.size} />
               <DetailLine label="Gas Used" val={b.parsed.gasUsed} />
               <DetailLine label="Gas Limit" val={b.parsed.gasLimit} />
