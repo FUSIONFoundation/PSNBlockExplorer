@@ -28,12 +28,33 @@ export default class Blocks extends Component {
     this.dataListener = this.dataListener.bind(this);
   }
 
+  componentWillReceiveProps(newProps)
+  {
+      if (  this.props.match.params.blockNumber !==
+           newProps.match.params.blockNumber ) 
+           {
+               let b = newProps.match.params.blockNumber
+               if (b) {
+                if ( typeof b === 'string' && b.startsWith('0x')) 
+                {
+          
+                } else if (isNaN(b) || b < 0) {
+                  b = -1;
+                } else {
+                  b = parseInt(b);
+                }
+              }
+          
+            this.setState( { block : b })
+           }
+  }
+
   returnSingleBlock() {
     let b = dataStore.getBlock(this.state.block);
 
     if (b === "loading") {
         let s = this.state.block 
-        if ( typeof s  === 'String' ) {
+        if ( typeof s  === 'string' ) {
             if ( s > 21 ) {
                 s = Utils.midHashDisplay(s)
             }
@@ -65,7 +86,7 @@ export default class Blocks extends Component {
     let parentHash = b.parsed.parentHash
 
     return (
-      <View style={{ width: 1280, marginLeft: 80, marginTop: 16 }}>
+      <View key={parentHash} style={{ width: 1280, marginLeft: 80, marginTop: 16 }}>
         <View
           style={{
             flex: 1,

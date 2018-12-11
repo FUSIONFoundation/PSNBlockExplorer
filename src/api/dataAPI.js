@@ -12,7 +12,8 @@ var datablock = {
   last5Blocks : [],
   last5Transactions : [],
   menuPath : 'Dashboard',
-  blockCache : {}
+  blockCache : {},
+  pendingLoad : {}
 };
 
 
@@ -211,8 +212,9 @@ export default class currentDataState {
     eventEmitter.emit( 'menuPathChanged', path, false )
   }
 
+  
   static getBlock( blockNumber ) {
-    debugger
+
     let b = datablock.blockCache[blockNumber]
     if ( b ) {
       if (!b.parsed) {
@@ -221,9 +223,15 @@ export default class currentDataState {
       return b
     }
 
+    if ( datablock.pendingLoad[blockNumber]) {
+      return "loading"
+    }
+
+    datablock.pendingLoad[blockNumber]  = true
+
     if ( typeof blockNumber === 'string' &&  
         blockNumber.startsWith("0x") ) {
-      requestBlockRange(blockNumber)
+      requestBlockRange(blockNumber, blockNumber)
       return "loading"
     }
     // lets request 10 blocks
@@ -233,12 +241,12 @@ export default class currentDataState {
     } else {
       blockStart = blockNumber - 5
     }
-    requestBlockRange(blockStart)
+    requestBlockRange(blockStart, blockNumber)
     return "loading"
   }
 }
 
-function requestBlockRange(blockStart ) {
+function requestBlockRange(blockStart, keyToLoad ) {
   let page = 0, size = 1
   let uri = server + "/blocks/" + blockStart
   if ( typeof blockStart !== 'string' ||
@@ -276,10 +284,12 @@ function requestBlockRange(blockStart ) {
         }
         eventEmitter.emit("blocksLoaded", datablock , false )
       }
+      delete  datablock.pendingLoad[keyToLoad]
       return true
     })
     .catch(err => {
       console.log("Fetch next blocks API call error:", err.message);
+      delete  datablock.pendingLoad[keyToLoad]
       setTimeout( () => {
         requestBlockRange(blockStart )
       }, 1000 ) 
