@@ -669,11 +669,39 @@ var styles = StyleSheet.create({
         borderRadius : 3,
         overflow : 'visible',
         backgroundColor : colors.tagGrey,
-        marginleft : 16,
         textAlign : 'center',
         padding : 8,
         marginLeft : 16,
     },
+    blockGrayInput: {
+        width: 110,
+        borderRadius: 3,
+        alignSelf : 'flex-start',
+        flex: 1,
+        flexShrink: 0,
+        flexBasis: "auto",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+      },
+      blockNodeInput: {
+        borderColor: colors.orderGrey,
+        borderRadius: 3,
+        backgroundColor: "white",
+        borderWidth: 1,
+        fontSize: 12,
+        fontFamily: constants.mediumFont,
+        color: colors.labelGrey,
+        width: 100 ,
+        height: 28,
+        outline: "none",
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingTop: 4,
+        paddingBottom: 4,
+        marginLeft: 16
+        //clearButtonMode : 'always'
+      },
     blockNumberText : {
         fontFamily: constants.font,
         fontSize: 14,
@@ -689,7 +717,7 @@ var styles = StyleSheet.create({
         paddingTop: 32,
         paddingBottom : 32,
         flex: 1,
-        marginTop: 24,
+        marginTop: 16,
         overflow: "visible",
         boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
       },
@@ -718,6 +746,37 @@ var styles = StyleSheet.create({
         alignSelf : 'flex-end',
         marginRight : 16
 
+    },
+    leftBlockText : {
+        marginRight : 12,
+        paddingTop : 4,
+        paddingLeft : 8,
+        paddingRight : 8,
+        paddingBottom : 4,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+        borderColor : colors.backgroundGrey,
+        borderRadius  : 3,
+        borderWidth : 1,
+        backgroundColor : colors.white
+    },
+    rightBlockText : {
+        paddingTop : 4,
+        paddingLeft : 8,
+        paddingRight : 8,
+        paddingBottom : 4,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+        borderColor : colors.backgroundGrey,
+        borderRadius  : 3,
+        borderWidth : 1,
+        backgroundColor : colors.white
     }
 });
 

@@ -1,10 +1,10 @@
 import moment from "moment";
 import EventEmitter from "events"
+import { debug } from "util";
 const rp = require("request-promise")
 
 var datablock = {
   priceInfo : {},
-  latestBlock : {},
   transactions : {},
   blocks : {},
   totalTransactions : "-",
@@ -13,7 +13,8 @@ var datablock = {
   last5Transactions : [],
   menuPath : 'Dashboard',
   blockCache : {},
-  pendingLoad : {}
+  pendingLoad : {},
+  maxBlock : 0
 };
 
 
@@ -235,24 +236,20 @@ export default class currentDataState {
       return "loading"
     }
     // lets request 10 blocks
-    let blockStart 
-    if ( blockNumber < 5 ) {
-      blockStart = 0
-    } else {
-      blockStart = blockNumber - 5
-    }
-    requestBlockRange(blockStart, blockNumber)
+    requestBlockRange(blockNumber, blockNumber, blockNumber)
     return "loading"
   }
 }
 
-function requestBlockRange(blockStart, keyToLoad ) {
+function requestBlockRange(blockStart, keyToLoad, orgVal ) {
   let page = 0, size = 1
   let uri = server + "/blocks/" + blockStart
+
   if ( typeof blockStart !== 'string' ||
         !blockStart.startsWith("0x") ) {
-     page = Math.floor( parseInt( blockStart ) ) / 20
-     size = 20 
+         // debugger
+     page = parseInt( parseInt( blockStart )  / 10 )
+     size = 10
      uri = server + "/blocks/all"
   }
 
@@ -277,7 +274,7 @@ function requestBlockRange(blockStart, keyToLoad ) {
         console.log( "yyyyyy")
         console.log( response )
         currentDataState.emit( "data", datablock )
-         
+
         for ( let b of response ) {
           datablock.blockCache[b.hash] = b
           datablock.blockCache[b.height] = b
@@ -291,7 +288,7 @@ function requestBlockRange(blockStart, keyToLoad ) {
       console.log("Fetch next blocks API call error:", err.message);
       delete  datablock.pendingLoad[keyToLoad]
       setTimeout( () => {
-        requestBlockRange(blockStart )
+        requestBlockRange(blockStart, keyToLoad, orgVal )
       }, 1000 ) 
     });
 }
