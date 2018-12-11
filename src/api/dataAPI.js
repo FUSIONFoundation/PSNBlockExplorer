@@ -212,7 +212,7 @@ export default class currentDataState {
   }
 
   static getBlock( blockNumber ) {
-   
+    debugger
     let b = datablock.blockCache[blockNumber]
     if ( b ) {
       if (!b.parsed) {
@@ -221,6 +221,11 @@ export default class currentDataState {
       return b
     }
 
+    if ( typeof blockNumber === 'string' &&  
+        blockNumber.startsWith("0x") ) {
+      requestBlockRange(blockNumber)
+      return "loading"
+    }
     // lets request 10 blocks
     let blockStart 
     if ( blockNumber < 5 ) {
@@ -234,12 +239,18 @@ export default class currentDataState {
 }
 
 function requestBlockRange(blockStart ) {
-  
-  let page = Math.floor( blockStart ) / 20
-  let size = 20 
+  let page = 0, size = 1
+  let uri = server + "/blocks/" + blockStart
+  if ( typeof blockStart !== 'string' ||
+        !blockStart.startsWith("0x") ) {
+     page = Math.floor( parseInt( blockStart ) ) / 20
+     size = 20 
+     uri = server + "/blocks/all"
+  }
+
   const requestOptions = {
     method: "GET",
-    uri: server + "/blocks/all",
+    uri,
     qs: {
       sort : 'asc',
       page ,

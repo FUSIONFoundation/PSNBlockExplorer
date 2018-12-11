@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
 
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
 import dataStore from "../api/dataAPI.js";
 import Utils from "../utils";
 import DetailLine from "./DetailLine";
+import history from "../history.js";
 
 export default class Blocks extends Component {
   constructor(props) {
@@ -13,7 +14,10 @@ export default class Blocks extends Component {
     let b = this.props.match.params.blockNumber;
 
     if (b) {
-      if (isNaN(b) || b < 0) {
+      if ( typeof b === 'string' && b.startsWith('0x')) 
+      {
+
+      } else if (isNaN(b) || b < 0) {
         b = -1;
       } else {
         b = parseInt(b);
@@ -28,6 +32,12 @@ export default class Blocks extends Component {
     let b = dataStore.getBlock(this.state.block);
 
     if (b === "loading") {
+        let s = this.state.block 
+        if ( typeof s  === 'String' ) {
+            if ( s > 21 ) {
+                s = Utils.midHashDisplay(s)
+            }
+        }
       return (
         <View
           style={{
@@ -41,7 +51,7 @@ export default class Blocks extends Component {
         >
           <ActivityIndicator size="large" animating="true" />
           <Text style={styles.largerTitleBar}>
-            {"Loading block " + this.state.block}
+            {"Loading block " + s}
           </Text>
         </View>
       );
@@ -52,6 +62,7 @@ export default class Blocks extends Component {
     let reward = "" + Utils.calcReward(b.height) + " FSN";
     let t = Utils.timeAgo(new Date(b.timeStamp * 1000)) + " ago";
     let tText = transactionCount === 1 ? "Transaction" : "Transactions";
+    let parentHash = b.parsed.parentHash
 
     return (
       <View style={{ width: 1280, marginLeft: 80, marginTop: 16 }}>
@@ -65,7 +76,7 @@ export default class Blocks extends Component {
         >
           <Text style={styles.largerTitleBar}>Block</Text>
           <View style={styles.blockGrayBox}>
-            <Text style={styles.blockNumberText}>{this.state.block}</Text>
+            <Text style={styles.blockNumberText}>{b.height}</Text>
           </View>
         </View>
         <View style={styles.detailBox}>
@@ -77,21 +88,26 @@ export default class Blocks extends Component {
               alignItems: "center"
             }}
           >
-            <View style={{marginLeft:16}}>
-              <DetailLine label="Block Height" val={this.state.block} />
+            <View style={{ marginLeft: 16 }}>
+              <DetailLine label="Block Height" val={b.height} />
               <DetailLine label="Transactions" val={transactionCount} />
               <DetailLine label="Age" val={t} />
               <DetailLine label="Reward" val={reward} />
               <DetailLine label="Hash" val={b.hash} />
-              <DetailLine
-                label="ParentHash"
-                hideBorder={true}
-                clickable={true}
-                val={b.parsed.parentHash}
-              />
+              <TouchableOpacity onPress={() => {
+                     dataStore.setMenuPath(  "Blocks" );
+                     history.push(`/blocks/${parentHash}`);
+              }}>
+                <DetailLine
+                  label="ParentHash"
+                  hideBorder={true}
+                  clickable={true}
+                  val={b.parsed.parentHash}
+                />
+              </TouchableOpacity>
             </View>
-            <View style={{marginRight:8}}>
-              <DetailLine label="Miner"  val={miner} />
+            <View style={{ marginRight: 8 }}>
+              <DetailLine label="Miner" val={miner} />
               <DetailLine label="Size" val={b.parsed.size} />
               <DetailLine label="Gas Used" val={b.parsed.gasUsed} />
               <DetailLine label="Gas Limit" val={b.parsed.gasLimit} />
