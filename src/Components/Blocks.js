@@ -128,6 +128,7 @@ export default class Blocks extends Component {
               </TouchableOpacity>
             </View>
             <View style={{ marginRight: 8 }}>
+              <View style={{height:16}}/>
               <DetailLine label="Miner" val={miner} />
               <DetailLine label="Size" val={b.parsed.size} />
               <DetailLine label="Gas Used" val={b.parsed.gasUsed} />
@@ -138,6 +139,7 @@ export default class Blocks extends Component {
                 hideBorder={true}
                 val={b.parsed.extraData}
               />
+               <Text style={styles.extraDataLineBlock}>{Utils.toAscii( b.parsed.extraData ) }</Text>
             </View>
             <View />
           </View>

@@ -141,24 +141,24 @@ export default class Utils {
     // If greater than 24 hours we can show in days and hours. (2d 12h)... etc.
     // ago
 
-    if (typeof date !== 'object') {
+    if (typeof date !== "object") {
       date = new Date(date);
     }
-  
+
     var seconds = Math.floor((new Date() - date) / 1000);
     var intervalType;
-  
+
     var interval = Math.floor(seconds / 31536000);
     if (interval >= 1) {
-      intervalType = 'year';
+      intervalType = "year";
     } else {
       interval = Math.floor(seconds / 2592000);
       if (interval >= 1) {
-        intervalType = 'month';
+        intervalType = "month";
       } else {
         interval = Math.floor(seconds / 86400);
         if (interval >= 1) {
-          intervalType = 'day';
+          intervalType = "day";
         } else {
           interval = Math.floor(seconds / 3600);
           if (interval >= 1) {
@@ -175,17 +175,42 @@ export default class Utils {
         }
       }
     }
-  
+
     if (interval > 1 || interval === 0) {
-      intervalType += 's';
+      intervalType += "s";
     }
-  
-    return interval + ' ' + intervalType;
+
+    return interval + " " + intervalType;
   }
 
-  static midHashDisplay( addr ) {
-      let first = addr.substr( 0, 9  )
-      let end = addr.substr(  addr.length - 10, 9 )
-      return first + "..." + end
+  static midHashDisplay(addr) {
+    let first = addr.substr(0, 9);
+    let end = addr.substr(addr.length - 10, 9);
+    return first + "..." + end;
   }
+
+  /**
+   * Should be called to get ascii from it's hex representation
+   *
+   * @method toAscii
+   * @param {String} string in hex
+   * @returns {String} ascii string representation of hex value
+   */
+  static toAscii(hex) {
+    // Find termination
+    var str = "";
+    var i = 0,
+      l = hex.length;
+    if (hex.substring(0, 2) === "0x") {
+      i = 2;
+    }
+    for (; i < l; i += 2) {
+      var code = parseInt(hex.substr(i, 2), 16);
+      str += String.fromCharCode(code);
+    }
+
+    return str;
+  }
+
+
 }

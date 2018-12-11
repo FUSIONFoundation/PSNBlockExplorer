@@ -709,6 +709,16 @@ var styles = StyleSheet.create({
         marginTop : 9,
         marginBottom : 11
     },
+    extraDataLineBlock: {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+        alignSelf : 'flex-end',
+        marginRight : 16
+
+    }
 });
 
 export default styles;
