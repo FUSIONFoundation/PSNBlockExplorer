@@ -297,6 +297,9 @@ export default class currentDataState {
   static getTransaction(t) {
     let tr = datablock.transactions[t];
     if (tr) {
+      if ( !tr.parsed ) {
+        tr.parsed = JSON.parse(tr.transaction)
+      }
       return tr;
     }
 
@@ -319,11 +322,15 @@ export default class currentDataState {
 
   static executeLoadOfTransactions(c) {
     let uri = server + "/transactions/ts";
-    datablock.disableTLoader = true;
+    
     let cacheToProces = c ? c : Object.keys( datablock.cacheTLoad );
     if (!c) {
       datablock.cacheTLoad = {};
     }
+    if ( cacheToProces.length === 0 ) {
+      return
+    }
+    datablock.disableTLoader = true;
 
     const requestOptions = {
       method: "GET",
@@ -349,7 +356,7 @@ export default class currentDataState {
             delete datablock.pendingTLoad[t.hash];
           }
           datablock.disableTLoader = false;
-          eventEmitter.emit("transactionLoaded", datablock, false);
+          eventEmitter.emit("transactionsLoaded", datablock, false);
         }
         return true;
       })

@@ -779,6 +779,46 @@ var styles = StyleSheet.create({
         borderRadius  : 3,
         borderWidth : 1,
         backgroundColor : colors.white
+    },
+    transactionShortHash : {
+        width : 464,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionBlock : {
+        width : 168,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionAge : {
+        width : 163,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionCmd : {
+        width : 93,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionExtra: {
+        width : 150,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
     }
 });
 
