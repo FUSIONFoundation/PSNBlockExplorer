@@ -699,7 +699,9 @@ var styles = StyleSheet.create({
         paddingRight: 2,
         paddingTop: 4,
         paddingBottom: 4,
-        marginLeft: 16
+        marginLeft: 16,
+        marginTop : 3,
+        marginBottom : 2
         //clearButtonMode : 'always'
       },
     blockNumberText : {
