@@ -16,6 +16,7 @@ var datablock = {
   pendingLoad: {},
   pendingTLoad: {},
   cacheTLoad: {},
+  letPageTransactionCache : {},
   maxBlock: 0
 };
 
@@ -366,5 +367,51 @@ export default class currentDataState {
           currentDataState.executeLoadOfTransactions(cacheToProces);
         }, 1000);
       });
+  }
+
+  static generateTransactionListFromTime( pageNumber, sortField, direction, size , callback ) {
+    let uri = server + "/transactions/all";
+    let qs = { pageNumber, sortField , direction }
+    let qsStringify = JSON.stringify(qs)
+
+    if (  datablock.letPageTransactionCache[qsStringify] ) {
+      return datablock.letPageTransactionCache[qsStringify]
+    }
+
+    // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        page : pageNumber,
+        sort : direction,
+        field : sortField
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    rp(requestOptions)
+      .then(response => {
+        if (response) {
+          let tss = []
+          for ( let t of response ) {
+            datablock.transactions[t.hash] = t
+            tss.push( t.hash )
+          }
+          datablock.letPageTransactionCache[qsStringify] = tss
+          callback( null, datablock.letPageTransactionCache[qsStringify]  )
+        }
+        return true;
+      })
+      .catch(err => {
+        callback( err, null )
+      });
+
+    return "loading"
   }
 }

@@ -202,13 +202,34 @@ export default class Blocks extends Component {
     }
 
     return (
-      <View style={{ width: 1280 }}>
-        <TitleBar title="Blocks" />
-        <View>
-          <Text>blockExploer</Text>
+        <View key={"hash"} style={{ width: 1280, marginTop: 32}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <TitleBar title="Blocks" />
+          </View>
+          <View style={[styles.detailBox,{marginLeft: 80 }]}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center"
+              }}
+            >
+              <View style={{ marginLeft: 16 }}>
+                <Text>Blocks</Text>
+                <View />
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
-    );
+      );
   }
 
   dataListener(datablock) {
