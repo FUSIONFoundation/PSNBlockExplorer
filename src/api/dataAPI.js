@@ -236,7 +236,11 @@ export default class currentDataState {
       return "loading"
     }
     // lets request 10 blocks
-    requestBlockRange(blockNumber, blockNumber, blockNumber)
+    let blockStart = blockNumber
+    if ( blockNumber < 5 ) {
+        blockStart -= 5;
+    }
+    requestBlockRange(blockStart, blockNumber, blockNumber)
     return "loading"
   }
 }
