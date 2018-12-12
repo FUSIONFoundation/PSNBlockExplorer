@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
 import dataStore from "../api/dataAPI";
-import TransactionListLine from "./TransactionListLine"
+import TransactionListLine from "./TransactionListLine";
 
 export default class Transactions extends Component {
   constructor(props) {
@@ -35,37 +35,37 @@ export default class Transactions extends Component {
   }
 
   generateTransactionList() {
-      if ( !this.props.block ) {
-        return
+    let ret = [];
+    if (!this.props.block) {
+      return;
+    }
+    let b = dataStore.getBlock(this.state.block);
+    if (b === "loading") {
+      return <Text>Loading Block</Text>;
+    }
+    for (let t of b.parsed.transactions) {
+      console.log(t);
+      let transaction = dataStore.getTransaction(t);
+      if (transaction === "loading") {
+        ret.push(
+          <View key={t}>
+            <Text>loading {t}</Text>
+          </View>
+        );
+      } else {
+        ret.push(
+          <View key={t}>
+            <Text>loaded {t}</Text>
+          </View>
+        );
       }
-      let b = dataStore.getBlock(this.state.block);
-      if (b === "loading") {
-          return <Text>Loading Block</Text>
-      }
-      for ( let t of b.parsed.transactions ) {
-          console.log(t)
-          let transaction = dataStore.getTransaction(t);
-          if ( transaction === 'loading' ) {
-            return (
-                <View key={t}>
-                    <Text>loading {t}</Text>
-                </View>
-            )
-          }
-          return (
-              <View key={t}>
-                    <Text>loaded {t}</Text>
-              </View>
-          )
-      }
+    }
+    return ret;
   }
 
   render() {
     return (
-      <View
-        key={"hash"}
-        style={{ width: 1280, marginTop: 32 }}
-      >
+      <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>
         <View
           style={{
             flex: 1,

@@ -1,44 +1,45 @@
 import moment from "moment";
-import EventEmitter from "events"
+import EventEmitter from "events";
 import { debug } from "util";
-const rp = require("request-promise")
+const rp = require("request-promise");
 
 var datablock = {
-  priceInfo : {},
-  transactions : {},
-  blocks : {},
-  totalTransactions : "-",
-  lastUpdateTime : new  Date(),
-  last5Blocks : [],
-  last5Transactions : [],
-  menuPath : 'Dashboard',
-  blockCache : {},
-  pendingLoad : {},
-  maxBlock : 0
+  priceInfo: {},
+  transactions: {},
+  blocks: {},
+  totalTransactions: "-",
+  lastUpdateTime: new Date(),
+  last5Blocks: [],
+  last5Transactions: [],
+  menuPath: "Dashboard",
+  blockCache: {},
+  pendingLoad: {},
+  pendingTLoad: {},
+  cacheTLoad: {},
+  maxBlock: 0
 };
-
 
 let eventEmitter = new EventEmitter();
 
-let server = "https://explorefusion.io"
+let server = "https://explorefusion.io";
 
 function scheduleRefresh() {
-      setTimeout( ()=> {
-        getServerRefresh()
-      }, 7500 )
+  setTimeout(() => {
+    getServerRefresh();
+  }, 7500);
 }
 
-getServerRefresh()
+getServerRefresh();
 
 function getServerRefresh() {
   const requestOptions = {
     method: "GET",
     uri: server + "/fsnprice",
     qs: {
-      sort : 'desc'
+      sort: "desc"
     },
     headers: {
-      "X-Content-Type-Options":"nosniff"
+      "X-Content-Type-Options": "nosniff"
     },
     json: true,
     gzip: true
@@ -46,27 +47,27 @@ function getServerRefresh() {
 
   rp(requestOptions)
     .then(response => {
-      if ( response ) {
+      if (response) {
         //if ( datablock.)
-      //   if ( datablock.maxBlock !== response.maxBlock ||
-      //   datablock.totalTransactions !== response.totalTransactions ||
-      //   datablock.priceInfo._id !== response.data.priceInfo._id )
-      //  {
+        //   if ( datablock.maxBlock !== response.maxBlock ||
+        //   datablock.totalTransactions !== response.totalTransactions ||
+        //   datablock.priceInfo._id !== response.data.priceInfo._id )
+        //  {
         //we want to always update the update time
-          let getNext5 = false
-          console.log(response);
-          if ( datablock.maxBlock !== response.maxBlock ) {
-            getNext5 = true
-            datablock.maxBlock = response.maxBlock
-          }
-          datablock.totalTransactions = response.totalTransactions
-          datablock.priceInfo = response.priceInfo
-          datablock.lastTwoBlocks = response.lastTwoBlocks
-          datablock.lastUpdateTime = new Date()
-          if ( getNext5 ) {
-            fetchNext5()
-          }
-          currentDataState.emit( "data", datablock )
+        let getNext5 = false;
+        console.log(response);
+        if (datablock.maxBlock !== response.maxBlock) {
+          getNext5 = true;
+          datablock.maxBlock = response.maxBlock;
+        }
+        datablock.totalTransactions = response.totalTransactions;
+        datablock.priceInfo = response.priceInfo;
+        datablock.lastTwoBlocks = response.lastTwoBlocks;
+        datablock.lastUpdateTime = new Date();
+        if (getNext5) {
+          fetchNext5();
+        }
+        currentDataState.emit("data", datablock);
         // }
         /*
         circulating_supply: 29704811.2
@@ -81,11 +82,11 @@ function getServerRefresh() {
         _id: "2018-12-09T15:34:32.062Z"
         */
       }
-      scheduleRefresh()
+      scheduleRefresh();
     })
     .catch(err => {
       console.log("API call error:", err.message);
-      scheduleRefresh()
+      scheduleRefresh();
     });
 }
 
@@ -94,12 +95,12 @@ function fetchNext5() {
     method: "GET",
     uri: server + "/blocks/all",
     qs: {
-      sort : 'desc',
-      page : 0,
-      size : 5
+      sort: "desc",
+      page: 0,
+      size: 5
     },
     headers: {
-      "X-Content-Type-Options":"nosniff"
+      "X-Content-Type-Options": "nosniff"
     },
     json: true,
     gzip: true
@@ -107,22 +108,22 @@ function fetchNext5() {
 
   return rp(requestOptions)
     .then(response => {
-      if ( response ) {
-        console.log( "555555")
-        console.log( response )
-        datablock.last5Blocks = response
-        currentDataState.emit( "data", datablock )
-        for ( let b of response ) {
-          datablock.blockCache[b.hash] = b
-          datablock.blockCache[b.height] = b
+      if (response) {
+        console.log("555555");
+        console.log(response);
+        datablock.last5Blocks = response;
+        currentDataState.emit("data", datablock);
+        for (let b of response) {
+          datablock.blockCache[b.hash] = b;
+          datablock.blockCache[b.height] = b;
         }
-        return getNext5Transactions()
+        return getNext5Transactions();
       }
-      return true
+      return true;
     })
     .catch(err => {
       console.log("Fetch next blocks API call error:", err.message);
-      setTimeout( fetchNext5, 1000 ) 
+      setTimeout(fetchNext5, 1000);
     });
 }
 
@@ -131,12 +132,12 @@ function getNext5Transactions() {
     method: "GET",
     uri: server + "/transactions/all",
     qs: {
-      sort : 'desc',
-      page : 0,
-      size : 5
+      sort: "desc",
+      page: 0,
+      size: 5
     },
     headers: {
-      "X-Content-Type-Options":"nosniff"
+      "X-Content-Type-Options": "nosniff"
     },
     json: true,
     gzip: true
@@ -144,28 +145,26 @@ function getNext5Transactions() {
 
   return rp(requestOptions)
     .then(response => {
-      if ( response ) {
-        console.log( "TTTT")
-        console.log( response )
-        datablock.last5Transactions = response
-        currentDataState.emit( "data", datablock )
+      if (response) {
+        console.log("TTTT");
+        console.log(response);
+        datablock.last5Transactions = response;
+        currentDataState.emit("data", datablock);
       }
-      return true
+      return true;
     })
     .catch(err => {
       console.log("Fetch next blocks API call error:", err.message);
-      setTimeout( getNext5Transactions, 1000 ) 
+      setTimeout(getNext5Transactions, 1000);
     });
 }
 
 export default class currentDataState {
-
   static get datablock() {
-    return datablock
+    return datablock;
   }
- 
-  static blockInfo( balanceInfo ) {
-  }
+
+  static blockInfo(balanceInfo) {}
 
   /**
    * Adds the @listener function to the end of the listeners array
@@ -177,7 +176,7 @@ export default class currentDataState {
    */
   static on(eventName, listener) {
     eventEmitter.on(eventName, listener);
-    listener( 'data', datablock )
+    listener("data", datablock);
   }
 
   /**
@@ -208,91 +207,157 @@ export default class currentDataState {
     return eventEmitter;
   }
 
-  static setMenuPath( path ) {
-    datablock.menuPath = path
-    eventEmitter.emit( 'menuPathChanged', path, false )
+  static setMenuPath(path) {
+    datablock.menuPath = path;
+    eventEmitter.emit("menuPathChanged", path, false);
   }
 
-  
-  static getBlock( blockNumber ) {
-
-    let b = datablock.blockCache[blockNumber]
-    if ( b ) {
+  static getBlock(blockNumber) {
+    let b = datablock.blockCache[blockNumber];
+    if (b) {
       if (!b.parsed) {
         b.parsed = JSON.parse(b.block);
       }
-      return b
+      return b;
     }
 
-    if ( datablock.pendingLoad[blockNumber]) {
-      return "loading"
+    if (datablock.pendingLoad[blockNumber]) {
+      return "loading";
     }
 
-    datablock.pendingLoad[blockNumber]  = true
+    datablock.pendingLoad[blockNumber] = true;
 
-    if ( typeof blockNumber === 'string' &&  
-        blockNumber.startsWith("0x") ) {
-      requestBlockRange(blockNumber, blockNumber)
-      return "loading"
+    if (typeof blockNumber === "string" && blockNumber.startsWith("0x")) {
+      currentDataState.requestBlockRange(blockNumber, blockNumber);
+      return "loading";
     }
     // lets request 10 blocks
-    let blockStart = blockNumber
-    if ( blockNumber < 5 ) {
-        blockStart -= 5;
+    let blockStart = blockNumber;
+    if (blockNumber < 5) {
+      blockStart -= 5;
     }
-    requestBlockRange(blockStart, blockNumber, blockNumber)
-    return "loading"
-  }
-}
-
-function requestBlockRange(blockStart, keyToLoad, orgVal ) {
-  let page = 0, size = 1
-  let uri = server + "/blocks/" + blockStart
-
-  if ( typeof blockStart !== 'string' ||
-        !blockStart.startsWith("0x") ) {
-         // debugger
-     page = parseInt( parseInt( blockStart )  / 10 )
-     size = 10
-     uri = server + "/blocks/all"
+    currentDataState.requestBlockRange(blockStart, blockNumber, blockNumber);
+    return "loading";
   }
 
-  const requestOptions = {
-    method: "GET",
-    uri,
-    qs: {
-      sort : 'asc',
-      page ,
-      size 
-    },
-    headers: {
-      "X-Content-Type-Options":"nosniff"
-    },
-    json: true,
-    gzip: true
-  };
+  static requestBlockRange(blockStart, keyToLoad, orgVal) {
+    let page = 0,
+      size = 1;
+    let uri = server + "/blocks/" + blockStart;
 
-  return rp(requestOptions)
-    .then(response => {
-      if ( response ) {
-        console.log( "yyyyyy")
-        console.log( response )
-        currentDataState.emit( "data", datablock )
+    if (typeof blockStart !== "string" || !blockStart.startsWith("0x")) {
+      // debugger
+      page = parseInt(parseInt(blockStart) / 10);
+      size = 10;
+      uri = server + "/blocks/all";
+    }
 
-        for ( let b of response ) {
-          datablock.blockCache[b.hash] = b
-          datablock.blockCache[b.height] = b
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        sort: "asc",
+        page,
+        size
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    return rp(requestOptions)
+      .then(response => {
+        if (response) {
+          //console.log( "yyyyyy")
+          //console.log( response )
+
+          for (let b of response) {
+            datablock.blockCache[b.hash] = b;
+            datablock.blockCache[b.height] = b;
+          }
+          eventEmitter.emit("blocksLoaded", datablock, false);
         }
-        eventEmitter.emit("blocksLoaded", datablock , false )
-      }
-      delete  datablock.pendingLoad[keyToLoad]
-      return true
-    })
-    .catch(err => {
-      console.log("Fetch next blocks API call error:", err.message);
-      delete  datablock.pendingLoad[keyToLoad]
-      setTimeout( () => {
-        requestBlockRange(blockStart, keyToLoad, orgVal )
-      }, 1000 ) 
-    });
+        delete datablock.pendingLoad[keyToLoad];
+        return true;
+      })
+      .catch(err => {
+        console.log("Fetch next blocks API call error:", err.message);
+        delete datablock.pendingLoad[keyToLoad];
+        setTimeout(() => {
+          currentDataState.requestBlockRange(blockStart, keyToLoad, orgVal);
+        }, 1000);
+      });
+  }
+
+  // pendingTLoad : {},
+  // cacheTLoad : {},
+
+  static getTransaction(t) {
+    let tr = datablock.transactions[t];
+    if (tr) {
+      return tr;
+    }
+
+    if (datablock.pendingLoad[t]) {
+      return "loading";
+    }
+
+    let startTimer = Object.keys(datablock.cacheTLoad).length === 0;
+
+    datablock.pendingTLoad[t] = true;
+
+    datablock.cacheTLoad[t] = true;
+
+    if (startTimer && !datablock.disableTLoader) {
+      setTimeout(currentDataState.executeLoadOfTransactions, 1);
+    }
+
+    return "loading";
+  }
+
+  static executeLoadOfTransactions(c) {
+    let uri = server + "/transactions/ts";
+    datablock.disableTLoader = true;
+    let cacheToProces = c ? c : Object.keys( datablock.cacheTLoad );
+    if (!c) {
+      datablock.cacheTLoad = {};
+    }
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        ts: cacheToProces.join("-")
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    return rp(requestOptions)
+      .then(response => {
+        if (response) {
+          console.log("yyyTTTTTTyy");
+          console.log(response);
+
+          for (let t of response) {
+            datablock.transactions[t.hash] = t;
+            delete datablock.pendingTLoad[t.hash];
+          }
+          datablock.disableTLoader = false;
+          eventEmitter.emit("transactionLoaded", datablock, false);
+        }
+        return true;
+      })
+      .catch(err => {
+        console.log("Fetch next transaction API call error:", err);
+        setTimeout(() => {
+          currentDataState.executeLoadOfTransactions(cacheToProces);
+        }, 1000);
+      });
+  }
 }
