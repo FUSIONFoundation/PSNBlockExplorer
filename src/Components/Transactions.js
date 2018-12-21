@@ -50,8 +50,8 @@ export default class Transactions extends Component {
     let ret = []
     let transactions
     let b
-
-    if ( this.props.history ) {
+    
+    if ( !this.state.block) {
         let { pageNumber, sortField, direction, size  } = this.state
         transactions = dataStore.generateTransactionListFromTime( pageNumber, sortField, direction, size, ()=>{
             if ( this.mounted ) {
@@ -61,18 +61,16 @@ export default class Transactions extends Component {
         if ( transactions === "loading") {
             return <Text>Loading Transaction List...</Text>;
         }
-        if  ( !transactions ) {
-            return <Text>what</Text>
-        }
-
-            
-
+       
     } else {
         b = dataStore.getBlock(this.state.block);
         if (b === "loading") {
             return <Text>Loading Block</Text>;
         }
-        transactions = b.parsed.Transactions
+        transactions = b.parsed.transactions
+    }
+    if  ( !transactions || transactions.length === 0 ) {
+        return  <Text>No Transactions</Text>
     }
     for (let t of transactions ) {
       let tr = dataStore.getTransaction(t);

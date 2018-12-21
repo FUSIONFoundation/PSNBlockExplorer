@@ -385,6 +385,7 @@ export default class currentDataState {
       uri,
       qs: {
         page : pageNumber,
+        size : size,
         sort : direction,
         field : sortField
       },

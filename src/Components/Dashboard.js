@@ -59,8 +59,8 @@ export default class Dashboard extends Component {
           <View style={styles.currentPriceBox}>
             <View style={styles.simpleRow}>
               <TextBox line1="Current Price" line2={"$"+price} />
-              <TextBox line1="Market Cap" line2={"$"+market_cap} />
-              <TextBox line1="Circulating Supply" line2={"$"+supply} />
+              <TextBox line1="Circulating Supply Value" line2={"$"+market_cap} />
+              <TextBox line1="Circulating Supply" line2={supply} />
             </View>
           </View>
           <View style={{ width: 33, height: 1 }} />
