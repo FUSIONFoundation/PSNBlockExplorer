@@ -8,6 +8,7 @@ import Transactions from "./Components/Transactions.js";
 import Assets from "./Components/Assets.js";
 import Addresses from "./Components/Addresses.js";
 import Header from "./Components/Header/Header.js";
+import AppSelect from "./Components/Header/AppSelect.js";
 import Menu from "./Components/Menu.js";
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -33,6 +34,7 @@ class App extends Component {
               </Switch>
             </div>
           </Router>
+          <AppSelect/>
       </View>
     );
   }

@@ -2,15 +2,31 @@ import React, { Component } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../colors";
 import constants from "../constants";
-import NodeSelect from "../NodeSelect";
 
 var fusionLogo = require("../../images/explorer-logo.svg");
 var boxes = require("./9Boxes.svg");
 
+let glb_appSelect
+let glb_header
+
 export default class Header extends Component {
-  state = {
-    appSelectOpen : false
+ 
+  constructor(props) {
+    super(props)
+    glb_header = this
+    this.state = {
+      appSelectOpen : false
+    }
   }
+
+  static setAppDisplay( appdisplay ) {
+    glb_appSelect = appdisplay
+  }
+  static hideAppDisplay() {
+      glb_appSelect.setState( { appSelectOpen : false })
+      glb_header.setState( { appSelectOpen : false })
+  }
+
   render() {
     let width = this.props.titleWidth || 150;
     let appBKColoor = this.state.appSelectOpen ? colors.backgroundGrey : colors.white
@@ -30,6 +46,7 @@ export default class Header extends Component {
             style={{ marginLeft: 80, width: 129, height: 29 }}
           />
           <TouchableOpacity onPress={()=>{
+            glb_appSelect.setState( { appSelectOpen : !this.state.appSelectOpen })
             this.setState( { appSelectOpen : !this.state.appSelectOpen })
           }}>
             <View style={[styles.appSelect, { backgroundColor: appBKColoor, width: width }]}>
@@ -46,6 +63,11 @@ export default class Header extends Component {
         {/* <View style={styles.nodeSelectBox}>
             <NodeSelect/>
         </View> */}
+        {this.state.appSelectOpen && (
+          <View style={styles.popupMenuBox}>
+            <Text>Apps</Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -75,6 +97,18 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
     borderColor: colors.orderGrey
+  },
+  popupMenuBox : {
+    backgroundColor : colors.primaryBlue,
+    width : 224,
+    boxShadow: "0 8px 16px 0 rgba(0, 15, 33, 0.16), 0 0 8px 0 rgba(0, 15, 33, 0.08);",
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: colors.orderGrey,
+    position : 'absolute',
+    top : 64,
+    left: 224,
+    padding : 16
   },
   borderTitle: {
     width: 0.9,
