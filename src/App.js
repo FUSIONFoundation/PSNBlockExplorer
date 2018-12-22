@@ -7,7 +7,7 @@ import Blocks from "./Components/Blocks.js";
 import Transactions from "./Components/Transactions.js";
 import Assets from "./Components/Assets.js";
 import Addresses from "./Components/Addresses.js";
-import Header from "./Components/Header.js";
+import Header from "./Components/Header/Header.js";
 import Menu from "./Components/Menu.js";
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -19,7 +19,7 @@ class App extends Component {
 
     return (
       <View>
-        <Header/>
+        <Header title="Block Explorer" titleWidth={150} version="1.00.00"/>
         <Menu/>
         <Router history={history}>
             <div>
