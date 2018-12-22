@@ -22,7 +22,7 @@ var datablock = {
 
 let eventEmitter = new EventEmitter();
 
-let server = "https://explorefusion.io";
+let server = "https://api.fusionnetwork.io";
 
 function scheduleRefresh() {
   setTimeout(() => {
@@ -107,7 +107,7 @@ function fetchNext5() {
     gzip: true
   };
 
-  return rp(requestOptions)
+   rp(requestOptions)
     .then(response => {
       if (response) {
         console.log("555555");

@@ -9,7 +9,6 @@ import Assets from "./Components/Assets.js";
 import Addresses from "./Components/Addresses.js";
 import Header from "./Components/Header.js";
 import Menu from "./Components/Menu.js";
-import BlockDisplayer from "./Components/BlockDisplayer";
 import 'font-awesome/css/font-awesome.min.css';
 
 import { Route, Router, Switch } from "react-router-dom";
