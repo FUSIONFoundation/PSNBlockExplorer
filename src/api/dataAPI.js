@@ -304,7 +304,7 @@ export default class currentDataState {
       return tr;
     }
 
-    if (datablock.pendingLoad[t]) {
+    if (datablock.pendingTLoad[t]) {
       return "loading";
     }
 

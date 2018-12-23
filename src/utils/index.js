@@ -1,3 +1,15 @@
+
+let glb_commandMap = {
+  "BuyTicketFunc" : "Buy Ticket",
+  "MakeSwapFunc" : "Make Swap",
+  "GenAssetFunc" : "Create Asset",
+  "SendAssetFunc" : "Send Asset",
+  "TakeSwapFunc" : "Take Swap",
+  "RecallSwapFunc" : "Recall Swap",
+  "AssetToTimeLock" : "Time Lock to Asset",
+  "TimeLockToTimeLock" : "Time Lock to Time Lock",
+  "TimeLockToAsset" : "Asset to Time Lock"
+}
 export default class Utils {
   // https://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn
   static displayNumber2(value) {
@@ -212,5 +224,21 @@ export default class Utils {
     return str;
   }
 
-
+  static getFusionCmdDisplayName(cmd, data) {
+    if ( !cmd ) {
+      return "Send"
+    }
+    let ret = glb_commandMap[cmd]
+    if ( !ret ) {
+      if ( cmd === 'AssetValueChangeFunc' ) {
+        if ( data.IsInc ) {
+          return "Increase Asset Supply"
+        } else {
+          return "Decrease Asset Supply"
+        }
+      }
+      return cmd
+    }
+    return ret
+  }
 }

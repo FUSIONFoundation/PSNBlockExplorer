@@ -16,63 +16,70 @@ export default class Transactions extends Component {
     this.state = {
       block: props.block,
       transaction: props.transaction,
-      sortField  : 'timestamp',
-      direction  : 'desc',
-      pageNumber : 0 ,
-      size : 20,
+      sortField: "timestamp",
+      direction: "desc",
+      pageNumber: 0,
+      size: 20,
       update: 0
     };
 
     this.dataListener = this.dataListener.bind(this);
-    this.mounted = false
+    this.mounted = false;
   }
 
   dataListener(datablock) {
-    this.setState({ update: this.state.update + 1 });
+    if (this.mounted) {
+      this.setState({ update: this.state.update + 1 });
+    }
   }
 
   componentDidMount() {
-    this.mounted = true
-    if ( this.props.history ) {
-        dataStore.setMenuPath("Transactions");
+    this.mounted = true;
+    if (this.props.history) {
+      dataStore.setMenuPath("Transactions");
     }
     dataStore.on("data", this.dataListener);
     dataStore.on("transactionsLoaded", this.dataListener);
   }
 
   componentWillUnmount() {
-    this.mounted = false
+    this.mounted = false;
     dataStore.removeEventListener("data", this.dataListener);
     dataStore.removeEventListener("transactionsLoaded", this.dataListener);
   }
 
   generateTransactionList() {
-    let ret = []
-    let transactions
-    let b
-    
-    if ( !this.state.block) {
-        let { pageNumber, sortField, direction, size  } = this.state
-        transactions = dataStore.generateTransactionListFromTime( pageNumber, sortField, direction, size, ()=>{
-            if ( this.mounted ) {
-                this.setState({ update: this.state.update + 1 });
-            }
-        })
-        if ( transactions === "loading") {
-            return <Text>Loading Transaction List...</Text>;
+    let ret = [];
+    let transactions;
+    let b;
+
+    if (!this.state.block) {
+      let { pageNumber, sortField, direction, size } = this.state;
+      transactions = dataStore.generateTransactionListFromTime(
+        pageNumber,
+        sortField,
+        direction,
+        size,
+        () => {
+          if (this.mounted) {
+            this.setState({ update: this.state.update + 1 });
+          }
         }
-       
+      );
+      if (transactions === "loading") {
+        return <Text>Loading Transaction List...</Text>;
+      }
     } else {
-        b = dataStore.getBlock(this.state.block);
-        if (b === "loading") {
-            return <Text>Loading Block</Text>;
-        }
-        transactions = b.parsed.transactions
+      b = dataStore.getBlock(this.state.block);
+      if (b === "loading") {
+        return <Text>Loading Block</Text>;
+      }
+      transactions = b.parsed.transactions;
     }
-    if  ( !transactions || transactions.length === 0 ) {
-        return  <Text>No Transactions</Text>
+    if (!transactions || transactions.length === 0) {
+      return <Text>No Transactions</Text>;
     }
-    for (let t of transactions ) {
+    for (let t of transactions) {
       let tr = dataStore.getTransaction(t);
       if (tr === "loading") {
         ret.push(
@@ -84,7 +91,8 @@ export default class Transactions extends Component {
         let hash = tr.parsed.hash;
         let from = tr.fromAddress;
         let to = tr.toAddress;
-        let fusionCommand = t.fusionCommand;
+        let data = tr.data
+        let fusionCommand = Utils.getFusionCmdDisplayName( tr.fusionCommand, data);
         let extraCommand = tr.extraCommand;
 
         let shortHash = hash.substr(0, 48) + "...";
@@ -96,9 +104,9 @@ export default class Transactions extends Component {
 
         let commandExtra = tr.commandExtra;
         let index = 0;
-
+       
         ret.push(
-          <View>
+          <View key={hash}>
             <View
               key={tr.hash}
               style={{
@@ -135,25 +143,34 @@ export default class Transactions extends Component {
   }
 
   render() {
-    let title
-    if ( this.props.history ) {
-        title = ( <TitleBar key="title" title="Transactions" /> )
+    let title;
+    if (this.props.history) {
+      title = <TitleBar key="title" title="Transactions" />;
     } else {
-        title = ( <Text key="title" style={styles.largerTitleBar}>Transactions</Text> )
+      title = (
+        <Text key="title" style={styles.largerTitleBar}>
+          Transactions
+        </Text>
+      );
     }
     return (
-      <View key={"hash"} style={{ width: 1280, marginTop: 32}}>
+      <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>
         <View
           style={{
             flex: 1,
             flexDirection: "row",
             justifyContent: "flex-start",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           {title}
         </View>
-        <View style={[styles.detailBox,{marginLeft: this.props.history ? 80 : 0 }]}>
+        <View
+          style={[
+            styles.detailBox,
+            { marginLeft: this.props.history ? 80 : 0 }
+          ]}
+        >
           <View
             style={{
               flex: 1,
