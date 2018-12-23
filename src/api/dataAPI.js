@@ -349,7 +349,7 @@ export default class currentDataState {
     return rp(requestOptions)
       .then(response => {
         if (response) {
-          console.log("yyyTTTTTTyy");
+          console.log("yyyTTTTTTyy" + cacheToProces.join("-"), requestOptions);
           console.log(response);
 
           for (let t of response) {
