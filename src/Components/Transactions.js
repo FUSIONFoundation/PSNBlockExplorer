@@ -157,11 +157,7 @@ export default class Transactions extends Component {
     if (this.props.history) {
       title = <TitleBar key="title" title="Transactions" />;
     } else {
-      title = (
-        <Text key="title" style={styles.largerTitleBar}>
-          Transactions
-        </Text>
-      );
+      title = <TitleBar title="Transactions" />
     }
     return (
       <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>

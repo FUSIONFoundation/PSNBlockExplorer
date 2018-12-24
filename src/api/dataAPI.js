@@ -17,6 +17,9 @@ var datablock = {
   pendingTLoad: {},
   cacheTLoad: {},
   letPageTransactionCache : {},
+  letPageTransactionCachePending : {},
+  letPageBlockCache : {},
+  letPageBlockCachePending : {},
   maxBlock: 0
 };
 
@@ -380,6 +383,12 @@ export default class currentDataState {
       return datablock.letPageTransactionCache[qsStringify]
     }
 
+    if ( datablock.letPageTransactionCachePending[qsStringify] ) {
+      return "loading"
+    }
+
+    datablock.letPageTransactionCachePending[qsStringify] = true
+
     // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
 
     const requestOptions = {
@@ -409,12 +418,73 @@ export default class currentDataState {
           datablock.letPageTransactionCache[qsStringify] = tss
           callback( null, datablock.letPageTransactionCache[qsStringify]  )
         }
+        delete datablock.letPageTransactionCachePending[qsStringify] 
         return true;
       })
       .catch(err => {
+        delete datablock.letPageTransactionCachePending[qsStringify] 
         callback( err, null )
       });
 
     return "loading"
   }
+
+  static generateBlockList( index, sortField, direction, size , callback ) {
+    let uri = server + "/blocks/all";
+    let qs = { index, sortField , direction }
+    let qsStringify = JSON.stringify(qs)
+
+    if (  datablock.letPageBlockCache[qsStringify] ) {
+      return datablock.letPageBlockCache[qsStringify]
+    }
+
+    if ( datablock.letPageBlockCachePending[qsStringify] ) {
+      return "loading"
+    }
+
+    datablock.letPageBlockCachePending[qsStringify] = true
+
+    // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        index : index,
+        size : size,
+        sort : direction,
+        field : sortField
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+     rp(requestOptions)
+      .then(response => {
+        if (response) {
+          let bbb = []
+          for ( let b of response ) {
+            datablock.blockCache[b.hash] = b;
+            datablock.blockCache[b.height] = b;
+            bbb.push( b )
+          }
+          datablock.letPageBlockCache[qsStringify] = bbb
+          //debugger
+          callback( null, bbb  )
+        }
+        delete datablock.letPageBlockCachePending[qsStringify]
+        return true;
+      })
+      .catch(err => {
+        delete datablock.letPageBlockCachePending[qsStringify]
+        callback( err, null )
+
+      });
+
+    return "loading"
+  }
+
 }

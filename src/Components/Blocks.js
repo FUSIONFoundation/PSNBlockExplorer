@@ -28,7 +28,12 @@ export default class Blocks extends Component {
       }
     }
 
-    this.state = { block: b, update: 0 };
+    this.state = { block: b, update: 0,
+        sortField: "height",
+        direction: "asc",
+        index: 0,
+        size: 20,
+        update: 0 };
     this.dataListener = this.dataListener.bind(this);
   }
 
@@ -202,7 +207,7 @@ export default class Blocks extends Component {
     }
 
     return (
-        <View key={"hash"} style={{ width: 1280, marginTop: 32}}>
+        <View key={"block"} style={{ width: 1280, marginTop: 32}}>
           <View
             style={{
               flex: 1,
@@ -224,6 +229,7 @@ export default class Blocks extends Component {
             >
               <View style={{ marginLeft: 16 }}>
                 <Text>Blocks</Text>
+                {this.generateBlockList()}
                 <View />
               </View>
             </View>
@@ -232,17 +238,44 @@ export default class Blocks extends Component {
       );
   }
 
+  generateBlockList() {
+    let { index, sortField, direction, size } = this.state;
+    let blocks  = dataStore.generateBlockList(
+      index,
+      sortField,
+      direction,
+      size,
+      () => {
+        if (this.mounted) {
+          this.setState({ update: this.state.update + 1 });
+        }
+      }
+    );
+    if (blocks === "loading") {
+      return <Text>Loading Block List...</Text>;
+    }
+    let bls = []
+    for ( let b of blocks ) {
+        bls.push( (
+            <Text> {b.hash} </Text>
+        ))
+    }
+    return bls;
+  }
+
   dataListener(datablock) {
     this.setState({ update: this.state.update + 1 });
   }
 
   componentDidMount() {
     dataStore.setMenuPath("Blocks");
+    this.mounted = true
     dataStore.on("data", this.dataListener);
     dataStore.on("blocksLoaded", this.dataListener);
   }
 
   componentWillUnmount() {
+    this.mounted = false
     dataStore.removeEventListener("blocksLoaded", this.dataListener);
     dataStore.on("data", this.dataListener);
   }
