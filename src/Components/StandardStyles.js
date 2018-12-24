@@ -889,6 +889,40 @@ var styles = StyleSheet.create({
         backgroundColor : colors.tagGreen,
         fontWeight : constants.boldFont,
     },
+    transactionDetailRow : {
+        width : 711,
+        height : 40,
+        flex : 1,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'space-between',
+    },
+    transactionDetailLabel : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        textAlign : 'left',
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    },
+    transactionDetailBlock : {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        textAlign : 'right',
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionDetailValue : {
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        textAlign : 'right',
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
+    transactionDetailBorder : {
+        height : 1,
+        width : 711,
+        backgroundColor : colors.orderGrey
+    }
 });
 
 export default styles;

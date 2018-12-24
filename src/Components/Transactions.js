@@ -242,7 +242,8 @@ export default class Transactions extends Component {
 
       let shortHash = hash.substr(0, 33) + "...";
 
-      let tm = Utils.timeAgo(new Date(tr.timeStamp * 1000));
+      let d = new Date(tr.timeStamp * 1000);
+      let tm = Utils.timeAgo(d) + " (" + moment(d).format("LLL") + ")";
 
       let midTo = Utils.midHashDisplay(to);
       let midFrom = Utils.midHashDisplay(from);
@@ -255,39 +256,86 @@ export default class Transactions extends Component {
       );
 
       gasPrice = Utils.formatWei(gasPrice.toString());
+      //debugger
 
       ret = (
         <View key={hash}>
           {title}
 
-          <View style={[styles.detailBox, { marginLeft: 80 , paddingBottom : 0 , paddingTop : 0 }]}>
-            <View style={{flex:1,flexDirection:'row'}}>
-            <View style={{ width: 503 }}>
-              <Text>send</Text>
-            </View>
-            <View
-              style={{
-                width: 1,
-                height: 480,
-                backgroundColor: Colors.orderGrey
-              }}
-            />
-            <View style={{ width: 617 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  dataStore.setMenuPath("Transactions");
-                  history.push(`/Transactions/${hash}`);
+          <View
+            style={[
+              styles.detailBox,
+              { marginLeft: 80, paddingBottom: 0, paddingTop: 0 }
+            ]}
+          >
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ width: 503 }}>
+                <Text>{fusionCommand}</Text>
+              </View>
+              <View
+                style={{
+                  width: 1,
+                  height: 480,
+                  backgroundColor: Colors.orderGrey
+                }}
+              />
+              <View
+                style={{
+                  width: 617,
+                  padding: 32,
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start"
                 }}
               >
-                <Text style={styles.transactionShortHash}>{shortHash}</Text>
-              </TouchableOpacity>
-              <Text style={styles.transactionBlock}>{tr.height}</Text>
-              <Text style={styles.transactionAge}>{tm}</Text>
-
-              <Text style={styles.transactionCmd}>{fusionCommand}</Text>
-              {this.renderAssetField()}
-              <Text style={styles.transactionFee}>{gasPrice}</Text>
-            </View>
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Status</Text>
+                  <Text style={styles.transactionDetailValue}>true</Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>
+                    Transaction Type
+                  </Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {fusionCommand}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Block</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      window.scrollTo(0,0)
+                      dataStore.setMenuPath("Blocks");
+                      history.push(`/blocks/${tr.height}`);
+                    }}
+                  >
+                    <Text style={styles.transactionDetailBlock}>
+                      {tr.height}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Age</Text>
+                  <Text style={styles.transactionDetailValue}>{tm}</Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Gas Used</Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {tr.receipt.gasUsed}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Nonce</Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {tr.transaction.nonce}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+              </View>
             </View>
           </View>
         </View>
