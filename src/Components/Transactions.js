@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
@@ -9,10 +9,12 @@ import Utils from "../utils";
 import moment from "moment";
 import Colors from "./colors.js";
 import BigNumber from 'big-number';
+import history from "../history.js";
 
 export default class Transactions extends Component {
   constructor(props) {
     super(props);
+    let hash = this.props.isExact ?  null : this.props.match.params.transactionHash 
 
     this.state = {
       block: props.block,
@@ -21,7 +23,8 @@ export default class Transactions extends Component {
       direction: "desc",
       pageNumber: 0,
       size: 20,
-      update: 0
+      update: 0,
+      hash : hash
     };
 
     this.dataListener = this.dataListener.bind(this);
@@ -48,6 +51,15 @@ export default class Transactions extends Component {
     dataStore.removeEventListener("data", this.dataListener);
     dataStore.removeEventListener("transactionsLoaded", this.dataListener);
   }
+
+  componentWillReceiveProps(newProps) {
+    if ( this.props.match ) {
+        this.setState({ hash: newProps.match.params.transactionHash });
+    } else {
+        this.setState( { hash : undefined })
+    }
+  }
+
 
   renderAssetField( tr ) {
       return (<Text style={styles.transactionExtra}>loading...</Text>)
@@ -127,7 +139,12 @@ export default class Transactions extends Component {
                 justifyContent: "flex-start"
               }}
             >
+            <TouchableOpacity onPress={()=>{
+                      dataStore.setMenuPath(  "Transactions" );
+                      history.push(`/Transactions/${hash}`);
+            }}>
               <Text style={styles.transactionShortHash}>{shortHash}</Text>
+              </TouchableOpacity>
               <Text style={styles.transactionBlock}>{tr.height}</Text>
               <Text style={styles.transactionAge}>{tm}</Text>
 
@@ -152,13 +169,21 @@ export default class Transactions extends Component {
     return ret;
   }
 
+  renderOneTransaction() {
+      return <Text>{this.state.hash}</Text>
+  }
+
   render() {
     let title;
     if (this.props.history) {
       title = <TitleBar key="title" title="Transactions" />;
     } else {
-      title = <TitleBar title="Transactions" />
+      title = <TitleBar key="title" title="Transactions" />
     }
+    if ( this.state.hash ) {
+        return this.renderOneTransaction()
+    }
+
     return (
       <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>
         <View

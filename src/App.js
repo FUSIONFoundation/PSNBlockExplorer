@@ -28,6 +28,7 @@ class App extends Component {
               <Route exact path="/" component={Dashboard} />
               <Route path="/Blocks/:blockNumber" component={Blocks} />
               <Route path="/Blocks" component={Blocks} />
+              <Route path="/Transactions/:transactionHash" component={Transactions} />
               <Route path="/Transactions" component={Transactions} />
               <Route path="/Assets" component={Assets} />
               <Route path="/Addresses" component={Addresses}/>

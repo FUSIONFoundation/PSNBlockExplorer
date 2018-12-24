@@ -46,7 +46,7 @@ export default class Blocks extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (
+    if ( this.props.match && 
       this.props.match.params.blockNumber !== newProps.match.params.blockNumber
     ) {
       let b = newProps.match.params.blockNumber;
@@ -345,7 +345,9 @@ export default class Blocks extends Component {
   }
 
   dataListener(datablock) {
-    this.setState({ update: this.state.update + 1 });
+      if ( this.mounted ) {
+         this.setState({ update: this.state.update + 1 });
+      }
   }
 
   componentDidMount() {

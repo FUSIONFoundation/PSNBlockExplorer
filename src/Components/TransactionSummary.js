@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text , TouchableOpacity} from "react-native";
 
 import styles from "./StandardStyles.js";
 import Utils from "../utils";
 import moment from "moment";
 import Colors from "./colors.js";
+import dataStore from "../api/dataAPI.js";
+import history from "../history.js";
 
 export default class TransactionSummary extends Component {
   render() {
@@ -42,7 +44,12 @@ export default class TransactionSummary extends Component {
               justifyContent: "flex-start"
             }}
           >
+            <TouchableOpacity onPress={()=>{
+                      dataStore.setMenuPath(  "Transactions" );
+                      history.push(`/Transactions/${hash}`);
+            }}>
             <Text style={styles.summaryLine1Text}>{shortHash}</Text>
+            </TouchableOpacity>
           </View>
           <Text style={[styles.summaryLine1RightText,
             {width:120, marginRight:10}]}>{tm}</Text>
