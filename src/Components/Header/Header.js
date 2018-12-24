@@ -80,7 +80,7 @@ var styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     height: 72,
-    width: "100%",
+    width:  1440,
     backgroundColor: colors.white,
     overflow: "visible",
     boxShadow: "inset 0 -1px 0 0 #bdc4ce"

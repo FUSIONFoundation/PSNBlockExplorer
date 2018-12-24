@@ -21,7 +21,10 @@ export default class TitleBar extends Component {
 
         return (<View style={styles.explorerTitleBar}>
             <Text style={styles.explorerTitleBarText}>{this.props.title}</Text>
-            <Text style={styles.explorerTitleText}>Last Updated: {dtDisplay}</Text>
+            { !this.props.noUpdateTime && (
+                 <Text style={styles.explorerTitleText}>Last Updated: {dtDisplay}</Text>
+            )}
+            {this.props.children}
             </View>)
     }
 

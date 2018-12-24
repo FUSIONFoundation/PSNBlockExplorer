@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Clipboard,
+  TouchableOpacity,
+  Image,
+  StyleSheet
+} from "react-native";
 
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
@@ -8,13 +15,16 @@ import TransactionListLine from "./TransactionListLine";
 import Utils from "../utils";
 import moment from "moment";
 import Colors from "./colors.js";
-import BigNumber from 'big-number';
+import BigNumber from "big-number";
 import history from "../history.js";
 
 export default class Transactions extends Component {
   constructor(props) {
     super(props);
-    let hash = this.props.isExact ?  null : this.props.match.params.transactionHash 
+    let hash =
+      this.props.isExact || !props.match
+        ? null
+        : props.match.params.transactionHash;
 
     this.state = {
       block: props.block,
@@ -24,7 +34,7 @@ export default class Transactions extends Component {
       pageNumber: 0,
       size: 20,
       update: 0,
-      hash : hash
+      hash: hash
     };
 
     this.dataListener = this.dataListener.bind(this);
@@ -53,16 +63,15 @@ export default class Transactions extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if ( this.props.match ) {
-        this.setState({ hash: newProps.match.params.transactionHash });
+    if (this.props.match) {
+      this.setState({ hash: newProps.match.params.transactionHash });
     } else {
-        this.setState( { hash : undefined })
+      this.setState({ hash: undefined });
     }
   }
 
-
-  renderAssetField( tr ) {
-      return (<Text style={styles.transactionExtra}>loading...</Text>)
+  renderAssetField(tr) {
+    return <Text style={styles.transactionExtra}>loading...</Text>;
   }
 
   generateTransactionList() {
@@ -108,8 +117,11 @@ export default class Transactions extends Component {
         let hash = tr.hash;
         let from = tr.fromAddress;
         let to = tr.toAddress;
-        let data = tr.data
-        let fusionCommand = Utils.getFusionCmdDisplayName( tr.fusionCommand, data);
+        let data = tr.data;
+        let fusionCommand = Utils.getFusionCmdDisplayName(
+          tr.fusionCommand,
+          data
+        );
         let extraCommand = tr.extraCommand;
 
         let shortHash = hash.substr(0, 33) + "...";
@@ -122,10 +134,12 @@ export default class Transactions extends Component {
         let commandExtra = tr.commandExtra;
         let index = 0;
 
-        let gasPrice = BigNumber(tr.transaction.gasPrice).multiply( tr.receipt.gasUsed )
+        let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
+          tr.receipt.gasUsed
+        );
 
-        gasPrice = Utils.formatWei( gasPrice.toString() )
-       
+        gasPrice = Utils.formatWei(gasPrice.toString());
+
         ret.push(
           <View key={hash}>
             <View
@@ -139,11 +153,13 @@ export default class Transactions extends Component {
                 justifyContent: "flex-start"
               }}
             >
-            <TouchableOpacity onPress={()=>{
-                      dataStore.setMenuPath(  "Transactions" );
-                      history.push(`/Transactions/${hash}`);
-            }}>
-              <Text style={styles.transactionShortHash}>{shortHash}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  dataStore.setMenuPath("Transactions");
+                  history.push(`/Transactions/${hash}`);
+                }}
+              >
+                <Text style={styles.transactionShortHash}>{shortHash}</Text>
               </TouchableOpacity>
               <Text style={styles.transactionBlock}>{tr.height}</Text>
               <Text style={styles.transactionAge}>{tm}</Text>
@@ -170,7 +186,100 @@ export default class Transactions extends Component {
   }
 
   renderOneTransaction() {
-      return <Text>{this.state.hash}</Text>
+    let t = this.state.hash;
+    let ret;
+    let tr = dataStore.getTransaction(t);
+
+    let title = (
+      <View
+        key="title"
+        style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start" }}
+      >
+        <TitleBar key="title" title="Transaction" noUpdateTime={true}>
+          <View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                overflow: "hidden",
+                padding: 4,
+                backgroundColor: Colors.tagGrey
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  Clipboard.setString(t);
+                }}
+              >
+                <Text>
+                  {t}
+                  <i style={{ marginLeft: 4 }} className="fa fa-copy" />
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TitleBar>
+      </View>
+    );
+
+    if (tr === "loading") {
+      return (
+        <View key={t}>
+          {title}
+
+          <View style={[styles.detailBox, { marginLeft: 80 }]}>
+            <Text>loading {t}</Text>
+          </View>
+        </View>
+      );
+    } else {
+      let hash = tr.hash;
+      let from = tr.fromAddress;
+      let to = tr.toAddress;
+      let data = tr.data;
+      let fusionCommand = Utils.getFusionCmdDisplayName(tr.fusionCommand, data);
+      let extraCommand = tr.extraCommand;
+
+      let shortHash = hash.substr(0, 33) + "...";
+
+      let tm = Utils.timeAgo(new Date(tr.timeStamp * 1000));
+
+      let midTo = Utils.midHashDisplay(to);
+      let midFrom = Utils.midHashDisplay(from);
+
+      let commandExtra = tr.commandExtra;
+      let index = 0;
+
+      let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
+        tr.receipt.gasUsed
+      );
+
+      gasPrice = Utils.formatWei(gasPrice.toString());
+
+      ret = (
+        <View key={hash}>
+          {title}
+
+          <View style={[styles.detailBox, { marginLeft: 80 }]}>
+            <TouchableOpacity
+              onPress={() => {
+                dataStore.setMenuPath("Transactions");
+                history.push(`/Transactions/${hash}`);
+              }}
+            >
+              <Text style={styles.transactionShortHash}>{shortHash}</Text>
+            </TouchableOpacity>
+            <Text style={styles.transactionBlock}>{tr.height}</Text>
+            <Text style={styles.transactionAge}>{tm}</Text>
+
+            <Text style={styles.transactionCmd}>{fusionCommand}</Text>
+            {this.renderAssetField()}
+            <Text style={styles.transactionFee}>{gasPrice}</Text>
+          </View>
+        </View>
+      );
+      return ret;
+    }
   }
 
   render() {
@@ -178,10 +287,10 @@ export default class Transactions extends Component {
     if (this.props.history) {
       title = <TitleBar key="title" title="Transactions" />;
     } else {
-      title = <TitleBar key="title" title="Transactions" />
+      title = <TitleBar key="title" title="Transactions" />;
     }
-    if ( this.state.hash ) {
-        return this.renderOneTransaction()
+    if (this.state.hash) {
+      return this.renderOneTransaction();
     }
 
     return (

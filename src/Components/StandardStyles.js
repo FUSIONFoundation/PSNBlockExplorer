@@ -885,7 +885,6 @@ var styles = StyleSheet.create({
         fontFamily : constants.fontFamily,
         fontSize : 12 ,
         letterSpacing : 0,
-        textAlign : 'right',
         color : colors.textGreen,
         backgroundColor : colors.tagGreen,
         fontWeight : constants.boldFont,
