@@ -8,6 +8,7 @@ import TransactionListLine from "./TransactionListLine";
 import Utils from "../utils";
 import moment from "moment";
 import Colors from "./colors.js";
+import BigNumber from 'big-number';
 
 export default class Transactions extends Component {
   constructor(props) {
@@ -46,6 +47,10 @@ export default class Transactions extends Component {
     this.mounted = false;
     dataStore.removeEventListener("data", this.dataListener);
     dataStore.removeEventListener("transactionsLoaded", this.dataListener);
+  }
+
+  renderAssetField( tr ) {
+      return (<Text style={styles.transactionExtra}>loading...</Text>)
   }
 
   generateTransactionList() {
@@ -88,14 +93,14 @@ export default class Transactions extends Component {
           </View>
         );
       } else {
-        let hash = tr.parsed.hash;
+        let hash = tr.hash;
         let from = tr.fromAddress;
         let to = tr.toAddress;
         let data = tr.data
         let fusionCommand = Utils.getFusionCmdDisplayName( tr.fusionCommand, data);
         let extraCommand = tr.extraCommand;
 
-        let shortHash = hash.substr(0, 48) + "...";
+        let shortHash = hash.substr(0, 33) + "...";
 
         let tm = Utils.timeAgo(new Date(tr.timeStamp * 1000));
 
@@ -104,6 +109,10 @@ export default class Transactions extends Component {
 
         let commandExtra = tr.commandExtra;
         let index = 0;
+
+        let gasPrice = BigNumber(tr.transaction.gasPrice).multiply( tr.receipt.gasUsed )
+
+        gasPrice = Utils.formatWei( gasPrice.toString() )
        
         ret.push(
           <View key={hash}>
@@ -123,7 +132,8 @@ export default class Transactions extends Component {
               <Text style={styles.transactionAge}>{tm}</Text>
 
               <Text style={styles.transactionCmd}>{fusionCommand}</Text>
-              <Text style={styles.transactionExtra}>{commandExtra}</Text>
+              {this.renderAssetField()}
+              <Text style={styles.transactionFee}>{gasPrice}</Text>
             </View>
             <View
               style={{

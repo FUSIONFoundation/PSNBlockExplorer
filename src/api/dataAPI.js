@@ -299,7 +299,9 @@ export default class currentDataState {
     let tr = datablock.transactions[t];
     if (tr) {
       if ( !tr.parsed ) {
-        tr.parsed = JSON.parse(tr.transaction)
+        tr.transaction = JSON.parse(tr.transaction)
+        tr.receipt = JSON.parse(tr.receipt)
+        tr.parsed = true
       }
       return tr;
     }

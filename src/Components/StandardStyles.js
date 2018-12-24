@@ -781,7 +781,7 @@ var styles = StyleSheet.create({
         backgroundColor : colors.white
     },
     transactionShortHash : {
-        width : 464,
+        width : 372,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
@@ -789,7 +789,7 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     transactionBlock : {
-        width : 168,
+        width : 172,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
@@ -797,7 +797,7 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     transactionAge : {
-        width : 163,
+        width : 144,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
@@ -805,7 +805,7 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     transactionCmd : {
-        width : 93,
+        width : 193,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
@@ -813,12 +813,21 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     transactionExtra: {
-        width : 150,
+        width : 270,
         fontFamily : constants.fontFamily,
-        fontSize : 14 ,
+        fontSize : 12 ,
         letterSpacing : 0,
         color : colors.textBlue,
         fontWeight : constants.regularFont,
+    },
+    transactionFee: {
+        width : 270,
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        letterSpacing : 0,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+        textAlign : 'right'
     }
 });
 
