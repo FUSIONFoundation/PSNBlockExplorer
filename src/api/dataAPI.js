@@ -467,6 +467,7 @@ export default class currentDataState {
         if (response) {
           let bbb = []
           for ( let b of response ) {
+            b.parsed = JSON.parse(b.block);
             datablock.blockCache[b.hash] = b;
             datablock.blockCache[b.height] = b;
             bbb.push( b )

@@ -64,6 +64,10 @@ export default class Colors
         return '#e4e9f0'
     }
 
+    static get tagGreen() {
+        return '#e5f6d3'
+    }
+
     static get textGrey() {
         return '#4a4a4a'
     }
