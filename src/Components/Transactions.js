@@ -260,21 +260,35 @@ export default class Transactions extends Component {
         <View key={hash}>
           {title}
 
-          <View style={[styles.detailBox, { marginLeft: 80 }]}>
-            <TouchableOpacity
-              onPress={() => {
-                dataStore.setMenuPath("Transactions");
-                history.push(`/Transactions/${hash}`);
+          <View style={[styles.detailBox, { marginLeft: 80 , paddingBottom : 0 , paddingTop : 0 }]}>
+            <View style={{flex:1,flexDirection:'row'}}>
+            <View style={{ width: 503 }}>
+              <Text>send</Text>
+            </View>
+            <View
+              style={{
+                width: 1,
+                height: 480,
+                backgroundColor: Colors.orderGrey
               }}
-            >
-              <Text style={styles.transactionShortHash}>{shortHash}</Text>
-            </TouchableOpacity>
-            <Text style={styles.transactionBlock}>{tr.height}</Text>
-            <Text style={styles.transactionAge}>{tm}</Text>
+            />
+            <View style={{ width: 617 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  dataStore.setMenuPath("Transactions");
+                  history.push(`/Transactions/${hash}`);
+                }}
+              >
+                <Text style={styles.transactionShortHash}>{shortHash}</Text>
+              </TouchableOpacity>
+              <Text style={styles.transactionBlock}>{tr.height}</Text>
+              <Text style={styles.transactionAge}>{tm}</Text>
 
-            <Text style={styles.transactionCmd}>{fusionCommand}</Text>
-            {this.renderAssetField()}
-            <Text style={styles.transactionFee}>{gasPrice}</Text>
+              <Text style={styles.transactionCmd}>{fusionCommand}</Text>
+              {this.renderAssetField()}
+              <Text style={styles.transactionFee}>{gasPrice}</Text>
+            </View>
+            </View>
           </View>
         </View>
       );
