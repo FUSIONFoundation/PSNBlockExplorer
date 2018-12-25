@@ -56,7 +56,7 @@ export default class TransactionSummary extends Component {
         </View>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Type/Asset</Text>
-          <Text style={styles.summaryLine2Text}>{fusionCommand}</Text>
+          <Text style={styles.summaryLine2Text}>{Utils.getFusionCmdDisplayName(fusionCommand, t.data)}</Text>
         </View>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>From/To</Text>

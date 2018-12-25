@@ -270,7 +270,7 @@ export default class Transactions extends Component {
           >
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ width: 503 }}>
-                <Text>{fusionCommand}</Text>
+                <Text>{Utils.getFusionCmdDisplayName(fusionCommand,data)}</Text>
               </View>
               <View
                 style={{
@@ -297,7 +297,16 @@ export default class Transactions extends Component {
                     Transaction Type
                   </Text>
                   <Text style={styles.transactionDetailValue}>
-                    {fusionCommand}
+                    {Utils.getFusionCmdDisplayName(fusionCommand,data)}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>
+                    Transaction Hash
+                  </Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {hash}
                   </Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
@@ -332,6 +341,13 @@ export default class Transactions extends Component {
                   <Text style={styles.transactionDetailLabel}>Nonce</Text>
                   <Text style={styles.transactionDetailValue}>
                     {tr.transaction.nonce}
+                  </Text>
+                </View>
+                <View style={styles.transactionDetailBorder} />
+                <View style={styles.transactionDetailRow}>
+                  <Text style={styles.transactionDetailLabel}>Input</Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {tr.transaction.input}
                   </Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
