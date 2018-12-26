@@ -18,6 +18,7 @@ import colors from "./colors.js";
 import BigNumber from "big-number";
 import history from "../history.js";
 import Pager from "./Pager";
+import Sorter from "./Sorter"
 import currentDataState from "../api/dataAPI.js";
 
 export default class Transactions extends Component {
@@ -390,9 +391,11 @@ export default class Transactions extends Component {
   }
 
   renderHeader() {
+    let sortField = this.state.sortField
+    let direction = this.state.direction
     return (
       <View>
-        <View style={{ alignSelf: "flex-end", marginRight: 148 }}>
+        <View style={{ alignSelf: "flex-end", marginRight: 0 }}>
           <Pager
             start={this.state.index}
             end={this.state.index + this.state.size - 1}
@@ -416,22 +419,35 @@ export default class Transactions extends Component {
             alignItems: "flex-start"
           }}
         >
-          <View style={{ marginLeft: 0, marginRight: 280 }}>
+          <View style={{ marginLeft: 0, marginRight: 255 , flexDirection : 'row' }}>
             <Text style={styles.headerFieldText}>Transaction Hash</Text>
+            <Sorter active={sortField=="hash"} direction={direction} onPress={(dir)=>{
+                this.setState( { sortField : 'hash', index : 0, direction : dir})
+            }}/>
           </View>
-          <View style={{ marginLeft: 0, marginRight: 130 }}>
+          <View style={{ marginLeft: 0, marginRight: 106, flexDirection : 'row' }}>
             <Text style={styles.headerFieldText}>Block</Text>
+            <Sorter active={sortField=="block"} direction={direction} onPress={(dir)=>{
+                this.setState( { sortField : 'block', index : 0, direction : dir})
+            }}
+            />
           </View>
-          <View style={{ marginLeft: 0, marginRight: 90 }}>
+          <View style={{ marginLeft: 0, marginRight: 66 , flexDirection : 'row' }} >
             <Text style={styles.headerFieldText}>Age</Text>
+            <Sorter active={sortField=="timestamp"} direction={direction} onPress={(dir)=>{
+                this.setState( { sortField : 'timestamp', index : 0, direction : dir})
+            }}/>
           </View>
-          <View style={{ marginLeft: 0, marginRight: 110 }}>
+          <View style={{ marginLeft: 0, marginRight: 86, flexDirection : 'row'  }}>
             <Text style={styles.headerFieldText}>Type</Text>
+            <Sorter active={sortField=="type"} direction={direction} onPress={(dir)=>{
+                this.setState( { sortField : 'type', index : 0, direction : dir})
+            }}/>
           </View>
-          <View style={{ marginLeft: 0, marginRight: 360 }}>
+          <View style={{ marginLeft: 0, marginRight: 300, flexDirection : 'row'  }}>
             <Text style={styles.headerFieldText}>Asset(s)</Text>
           </View>
-          <View style={{ marginLeft: 0, marginRight: 155 }}>
+          <View style={{ marginLeft: 60, marginRight: 0, flexDirection : 'row' }}>
             <Text style={styles.headerFieldText}>Fees</Text>
           </View>
         </View>
