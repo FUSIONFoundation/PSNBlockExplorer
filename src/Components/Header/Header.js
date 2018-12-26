@@ -75,7 +75,7 @@ export default class Header extends Component {
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: '1 0 0',
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -83,11 +83,13 @@ var styles = StyleSheet.create({
     width:  1440,
     backgroundColor: colors.white,
     overflow: "visible",
-    boxShadow: "inset 0 -1px 0 0 #bdc4ce"
+    boxShadow: "inset 0 -1px 0 0 #bdc4ce",
+    flexShrink: 0,
+    minWidth : 0
   },
   appSelect: {
     height: 40,
-    flex: 1,
+    flex: '1 0 0',
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",

@@ -5,7 +5,7 @@ import constants from "./constants";
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: '1 0 0',
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "auto",
@@ -33,7 +33,7 @@ var styles = StyleSheet.create({
     color: "rgba(22,22,22, .5)"
   },
   imageUploadSection: {
-    flex: 1,
+    flex: '1 0 0',
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "auto",
@@ -78,7 +78,7 @@ var styles = StyleSheet.create({
   balanceBox: {
     width: 160,
     marginBottom: 5,
-    flex: 1,
+    flex: '1 0 0',
     flexDirection: "row",
     justifyContent: "flex-start",
     flexBasis: "100%"
@@ -155,7 +155,7 @@ var styles = StyleSheet.create({
     marginLeft: 1
   },
   largeMetricBox: {
-    flex: 1,
+    flex: '1 0 0',
     flexBasis: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -243,7 +243,7 @@ var styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     width: 620,
-    flex: 1,
+    flex: '1 0 0',
     justifyContent : 'space-around',
     flexBasis: "100%",
     marginTop: 24,
@@ -268,7 +268,7 @@ var styles = StyleSheet.create({
   rewardHolderViewText: {
     width: 227,
     marginLeft: 32,
-    flex: 1,
+    flex: '1 0 0',
     flexBasis: "100%",
     justifyContent: "center"
   },
@@ -334,7 +334,7 @@ var styles = StyleSheet.create({
     width: 620,
     height: 48,
     marginTop: 20,
-    flex: 1,
+    flex: '1 0 0',
     flexBasis: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -384,7 +384,7 @@ var styles = StyleSheet.create({
     fontWeight: constants.mediumFont
   },
   stakeDetailRow: {
-    flex: 1,
+    flex: '1 0 0',
     flexBasis: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -392,7 +392,7 @@ var styles = StyleSheet.create({
     height: 56
   },
   fundsDetailRow: {
-    flex: 1,
+    flex: '1 0 0',
     flexBasis: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -414,7 +414,7 @@ var styles = StyleSheet.create({
     alignSelf: "center"
   },
   errorForFundsBox: {
-    flex: 1,
+    flex: '1 0 0',
     flexDirection: "row",
     marginRight: 6,
     alignItems: "center"
@@ -506,7 +506,7 @@ var styles = StyleSheet.create({
   },
   menuBar : {
     width : 1280,
-    flex: 1,
+    flex: '1 0 0',
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "auto",
@@ -520,7 +520,7 @@ var styles = StyleSheet.create({
   explorerTitleBar : {
       width : 1280,
       marginLeft : 80,
-      flex: 1,
+      flex: '1 0 0',
       flexGrow: 1,
       flexShrink: 0,
       flexBasis: "auto",
@@ -549,7 +549,7 @@ var styles = StyleSheet.create({
   },
   dashBoardHeader : {
     marginLeft : 80,
-    flex: 1,
+    flex: '1 0 0',
     flexDirection : 'row',
     justifyContent : 'flex-start',
     width : 1280
@@ -561,13 +561,13 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     width: 624,
     padding: 32,
-    flex: 1,
+    flex: '1 0 0',
     marginTop: 24,
     overflow: "visible",
     boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"
   },
   simpleRow : {
-    flex: 1,
+    flex: '1 0 0',
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "auto",
@@ -576,7 +576,7 @@ var styles = StyleSheet.create({
     alignItems : 'flex-start'
   },
   TextBoxColumn : {
-    flex: 1,
+    flex: '1 0 0',
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: "auto",
@@ -610,7 +610,7 @@ var styles = StyleSheet.create({
     SummaryBoxColum : {
         height : 106,
         width :  560,
-        flex: 1,
+        flex: '1 0 0',
         flexDirection : 'column',
         justifyContent : 'flex-start',
         alignItems : 'flex-start',
@@ -677,7 +677,7 @@ var styles = StyleSheet.create({
         width: 110,
         borderRadius: 3,
         alignSelf : 'flex-start',
-        flex: 1,
+        flex: '1 0 0',
         flexShrink: 0,
         flexBasis: "auto",
         justifyContent: "center",
@@ -718,7 +718,7 @@ var styles = StyleSheet.create({
         width: 1280,
         paddingTop: 32,
         paddingBottom : 32,
-        flex: 1,
+        flex: '1 0 0',
         marginTop: 16,
         overflow: "visible",
         boxShadow: "0 2px 0 0 rgba(189, 196, 206, 0.2)"

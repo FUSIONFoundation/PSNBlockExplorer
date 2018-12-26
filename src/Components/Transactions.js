@@ -150,7 +150,7 @@ export default class Transactions extends Component {
               style={{
                 width: 1216,
                 height: 40,
-                flex: 1,
+                flex: '1 0 0',
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "flex-start"
@@ -196,13 +196,13 @@ export default class Transactions extends Component {
     let title = (
       <View
         key="title"
-        style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start" }}
+        style={{ flex: '1 0 0', flexDirection: "row", justifyContent: "flex-start" }}
       >
         <TitleBar key="title" title="Transaction" noUpdateTime={true}>
           <View>
             <View
               style={{
-                flex: 1,
+                flex: '1 0 0',
                 flexDirection: "row",
                 overflow: "hidden",
                 padding: 4,
@@ -279,7 +279,7 @@ export default class Transactions extends Component {
               { marginLeft: 80, paddingBottom: 0, paddingTop: 0 }
             ]}
           >
-            <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ flex: '1 0 0', flexDirection: "row" }}>
               <View style={{ width: 503 }}>
                 <Text>
                   {Utils.getFusionCmdDisplayName(fusionCommand, data)}
@@ -413,42 +413,44 @@ export default class Transactions extends Component {
         </View>
         <View
           style={{
-            flex: 1,
+            flex: '1 0 0',
             marginBottom: 8,
             flexDirection: "row",
-            alignItems: "flex-start"
+            justifyContent: "flex-start",
+            alignItems : 'center'
           }}
         >
-          <View style={{ marginLeft: 0, marginRight: 255 , flexDirection : 'row' }}>
-            <Text style={styles.headerFieldText}>Transaction Hash</Text>
-            <Sorter active={sortField=="hash"} direction={direction} onPress={(dir)=>{
+          <View style={{ marginLeft: 0, marginRight: 255 , flexDirection : 'row', 
+          alignItems : 'flex-start', justifyContent : 'center' }}>
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Transaction Hash</Text>
+            <Sorter active={sortField==="hash"} direction={direction} onPress={(dir)=>{
                 this.setState( { sortField : 'hash', index : 0, direction : dir})
             }}/>
           </View>
           <View style={{ marginLeft: 0, marginRight: 106, flexDirection : 'row' }}>
-            <Text style={styles.headerFieldText}>Block</Text>
-            <Sorter active={sortField=="block"} direction={direction} onPress={(dir)=>{
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Block</Text>
+            <Sorter active={sortField==="block"} direction={direction} onPress={(dir)=>{
                 this.setState( { sortField : 'block', index : 0, direction : dir})
             }}
             />
           </View>
           <View style={{ marginLeft: 0, marginRight: 66 , flexDirection : 'row' }} >
-            <Text style={styles.headerFieldText}>Age</Text>
-            <Sorter active={sortField=="timestamp"} direction={direction} onPress={(dir)=>{
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Age</Text>
+            <Sorter active={sortField==="timestamp"} direction={direction} onPress={(dir)=>{
                 this.setState( { sortField : 'timestamp', index : 0, direction : dir})
             }}/>
           </View>
           <View style={{ marginLeft: 0, marginRight: 86, flexDirection : 'row'  }}>
-            <Text style={styles.headerFieldText}>Type</Text>
-            <Sorter active={sortField=="type"} direction={direction} onPress={(dir)=>{
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Type</Text>
+            <Sorter active={sortField==="type"} direction={direction} onPress={(dir)=>{
                 this.setState( { sortField : 'type', index : 0, direction : dir})
             }}/>
           </View>
           <View style={{ marginLeft: 0, marginRight: 300, flexDirection : 'row'  }}>
-            <Text style={styles.headerFieldText}>Asset(s)</Text>
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Asset(s)</Text>
           </View>
           <View style={{ marginLeft: 60, marginRight: 0, flexDirection : 'row' }}>
-            <Text style={styles.headerFieldText}>Fees</Text>
+            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Fees</Text>
           </View>
         </View>
       </View>
@@ -470,7 +472,7 @@ export default class Transactions extends Component {
       <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>
         <View
           style={{
-            flex: 1,
+            flex: '1 0 0',
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center"
@@ -486,7 +488,7 @@ export default class Transactions extends Component {
         >
           <View
             style={{
-              flex: 1,
+              flex: '1 0 0',
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center"
