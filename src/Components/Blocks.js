@@ -277,6 +277,10 @@ export default class Blocks extends Component {
             onRight={()=>{
                 this.indexMove( 20 )
             }}
+            onNewPage={(page,index)=>{
+                //debugger
+                this.setState( {index :index } )
+            }}
         />
         </View>
           <View

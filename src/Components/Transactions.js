@@ -253,7 +253,11 @@ export default class Transactions extends Component {
       let commandExtra = tr.commandExtra;
       let index = 0;
 
-      let toAddress = data.ToAddress
+      if ( !data ) {
+          data = {}
+      }
+
+      let toAddress = data.ToAddress || tr.toAddress
       let value = data.Value
       let AssetID = data.AssetID
 
@@ -398,6 +402,9 @@ export default class Transactions extends Component {
             }}
             onRight={() => {
               this.indexMove(20);
+            }}
+            onNewPage={(page,index)=>{
+                this.setState( {index :index } )
             }}
           />
         </View>

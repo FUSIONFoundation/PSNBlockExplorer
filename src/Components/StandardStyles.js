@@ -949,7 +949,36 @@ var styles = StyleSheet.create({
         fontSize : 12 ,
         color : colors.labelGrey,
         fontWeight : constants.regularFont,
-    }
+    },
+    pagerInput: {
+        borderColor: colors.orderGrey,
+        borderRadius: 3,
+        backgroundColor: "white",
+        borderWidth: 1,
+        fontSize: 12,
+        fontFamily: constants.mediumFont,
+        color: colors.labelGrey,
+        width: 40 ,
+        outline: "none",
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingTop: 4,
+        paddingBottom: 4,
+      },
+      pagePageBox: {
+        borderColor: colors.orderGrey,
+        borderRadius: 3,
+        backgroundColor: "white",
+        borderWidth: 1,
+        fontSize: 12,
+        fontFamily: constants.mediumFont,
+        color: colors.labelGrey,
+        outline: "none",
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingTop: 4,
+        paddingBottom: 4,
+      },
 });
 
 export default styles;
