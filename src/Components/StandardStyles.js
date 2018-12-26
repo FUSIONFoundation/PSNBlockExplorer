@@ -838,15 +838,16 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     blocksTimeAgo : {
-        width : 200,
+        width : 100,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
         color : colors.textBlue,
+        textAlign : 'center',
         fontWeight : constants.regularFont,
     },
     blocksTransactions : {
-        width : 160,
+        width : 180,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         textAlign : 'right',
@@ -855,25 +856,27 @@ var styles = StyleSheet.create({
         fontWeight : constants.regularFont,
     },
     blocksMiner: {
-        width : 388,
+        marginLeft : 50,
+        width : 450,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
-        textAlign : 'left',
-        letterSpacing : 0,
+        textAlign : 'right',
         color : colors.primaryBlue,
         fontWeight : constants.regularFont,
     },
     blocksGasUsed : {
-        width : 140,
+        marginLeft : 50,
+        width : 150,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
-        textAlign : 'right',
+        textAlign : 'center',
         color : colors.textBlue,
         fontWeight : constants.regularFont,
     },
     blocksGasLimit : {
-        width : 140,
+        marginLeft : 50,
+        width : 160,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
@@ -922,6 +925,12 @@ var styles = StyleSheet.create({
         height : 1,
         width : 711,
         backgroundColor : colors.orderGrey
+    },
+    headerFieldText : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
     }
 });
 

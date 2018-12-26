@@ -46,7 +46,8 @@ export default class Blocks extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if ( this.props.match && 
+    if (
+      this.props.match &&
       this.props.match.params.blockNumber !== newProps.match.params.blockNumber
     ) {
       let b = newProps.match.params.blockNumber;
@@ -237,7 +238,7 @@ export default class Blocks extends Component {
   }
 
   render() {
-    if ( !isNaN( this.state.block ) && this.state.block >= 0) {
+    if (!isNaN(this.state.block) && this.state.block >= 0) {
       return this.returnSingleBlock();
     }
 
@@ -263,9 +264,44 @@ export default class Blocks extends Component {
             }}
           >
             <View style={{ marginLeft: 16 }}>
-              <Text>Blocks</Text>
+              <View
+                style={{
+                  flex: 1,
+                  marginBottom: 8,
+                  flexDirection: "row",
+                  alignItems: "flex-start"
+                }}
+              >
+                <View style={{marginLeft:0,marginRight:150}}>
+                  <Text style={styles.headerFieldText}>Block</Text>
+                </View>
+                <View  style={{marginLeft:0,marginRight:90}}>
+                  <Text  style={styles.headerFieldText}>Age</Text>
+                </View>
+                <View  style={{marginLeft:0,marginRight:54}}>
+                  <Text style={styles.headerFieldText}>Transactions</Text>
+                </View>
+                <View style={{marginLeft:0,marginRight:380}}>
+                  <Text  style={styles.headerFieldText}>Miner</Text>
+                </View>
+                <View style={{marginLeft:0,marginRight:90}}>
+                  <Text  style={styles.headerFieldText}>Gas Used</Text>
+                </View>
+                <View style={{marginLeft:0,marginRight:155}}>
+                  <Text  style={styles.headerFieldText}>Gas Limit</Text>
+                </View>
+                <View style={{marginLeft:0,marginRight:0}}>
+                  <Text  style={styles.headerFieldText}>Reward</Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  height: 1,
+                  width: 1216,
+                  backgroundColor: colors.orderGrey
+                }}
+              />
               {this.generateBlockList()}
-              <View />
             </View>
           </View>
         </View>
@@ -300,8 +336,7 @@ export default class Blocks extends Component {
         <View key={b.hash}>
           <View
             key={b.hash}
-            style=
-            {{
+            style={{
               width: 1216,
               height: 40,
               flex: 1,
@@ -309,7 +344,7 @@ export default class Blocks extends Component {
               alignItems: "center",
               justifyContent: "flex-start"
             }}
-            >
+          >
             <TouchableOpacity
               onPress={() => {
                 window.scrollTo(0, 0);
@@ -320,14 +355,16 @@ export default class Blocks extends Component {
               <Text style={styles.blocksBlock}> {height} </Text>
             </TouchableOpacity>
             <Text style={styles.blocksTimeAgo}> {tm} </Text>
-            <Text style={styles.blocksTransactions}> {transactions.length} </Text>
+            <Text style={styles.blocksTransactions}>
+              {" "}
+              {transactions.length}{" "}
+            </Text>
             <Text style={styles.blocksMiner}> {miner} </Text>
             <Text style={styles.blocksGasUsed}> {gasUsed} </Text>
             <Text style={styles.blocksGasLimit}> {gasLimit} </Text>
-            <View style={{width:140, alignItems: 'flex-end'}}>
-                <Text style={styles.blocksReward}> {reward + " FSN"} </Text>
+            <View style={{ width: 140, alignItems: "flex-end" }}>
+              <Text style={styles.blocksReward}> {reward + " FSN"} </Text>
             </View>
-
           </View>
           <View
             style={{
@@ -344,9 +381,9 @@ export default class Blocks extends Component {
   }
 
   dataListener(datablock) {
-      if ( this.mounted ) {
-         this.setState({ update: this.state.update + 1 });
-      }
+    if (this.mounted) {
+      this.setState({ update: this.state.update + 1 });
+    }
   }
 
   componentDidMount() {
