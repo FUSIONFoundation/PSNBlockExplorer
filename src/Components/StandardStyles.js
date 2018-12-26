@@ -931,6 +931,24 @@ var styles = StyleSheet.create({
         fontSize : 12 ,
         color : colors.labelGrey,
         fontWeight : constants.regularFont,
+    },
+    pageRowText : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.textBlue,
+        fontWeight : constants.boldFont,
+    },
+    pageRowCountText : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
+    pagePageCountText : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
     }
 });
 

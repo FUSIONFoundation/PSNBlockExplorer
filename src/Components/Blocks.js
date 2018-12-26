@@ -18,6 +18,8 @@ import colors from "./colors";
 import Transactions from "./Transactions";
 import "font-awesome/css/font-awesome.min.css";
 import BlockSelect from "./BlockSelect";
+import Pager from "./Pager";
+import currentDataState from "../api/dataAPI.js";
 
 export default class Blocks extends Component {
   constructor(props) {
@@ -62,6 +64,18 @@ export default class Blocks extends Component {
 
       this.setState({ block: b });
     }
+  }
+
+  indexMove( amount ) {
+      let index = this.state.index
+      index += amount
+      if ( index < 0 ) {
+          index = 0
+      }
+      if ( index + this.state.size > currentDataState.datablock.maxBlock ) {
+          index = currentDataState.datablock.maxBlock  - this.state.size
+      }
+      this.setState( {index : index })
   }
 
   blockMove(direction) {
@@ -255,6 +269,16 @@ export default class Blocks extends Component {
           <TitleBar title="Blocks" />
         </View>
         <View style={[styles.detailBox, { marginLeft: 80 }]}>
+        <View style={{alignSelf:'flex-end',marginRight:48 }}>
+        <Pager start={this.state.index} end={this.state.index+this.state.size-1} count={currentDataState.datablock.maxBlock} 
+            onLeft={()=> {
+                this.indexMove( -20 ) 
+            }}
+            onRight={()=>{
+                this.indexMove( 20 )
+            }}
+        />
+        </View>
           <View
             style={{
               flex: 1,
