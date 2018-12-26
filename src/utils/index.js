@@ -6,9 +6,9 @@ let glb_commandMap = {
   "SendAssetFunc" : "Send Asset",
   "TakeSwapFunc" : "Take Swap",
   "RecallSwapFunc" : "Recall Swap",
-  "AssetToTimeLock" : "Time Lock to Asset",
+  "AssetToTimeLock" : "Asset To Time Lock",
   "TimeLockToTimeLock" : "Time Lock to Time Lock",
-  "TimeLockToAsset" : "Asset to Time Lock"
+  "TimeLockToAsset" : "Time Lock To Asset"
 }
 export default class Utils {
   // https://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn

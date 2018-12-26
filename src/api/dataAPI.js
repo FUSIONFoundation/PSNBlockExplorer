@@ -303,6 +303,11 @@ export default class currentDataState {
     if (tr) {
       if ( !tr.parsed ) {
         tr.transaction = JSON.parse(tr.transaction)
+        try {
+        tr.data = JSON.parse(tr.data)
+        } catch(e) {
+
+        }
         tr.receipt = JSON.parse(tr.receipt)
         tr.parsed = true
       }

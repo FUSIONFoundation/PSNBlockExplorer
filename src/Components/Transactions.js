@@ -253,12 +253,16 @@ export default class Transactions extends Component {
       let commandExtra = tr.commandExtra;
       let index = 0;
 
+      let toAddress = data.ToAddress
+      let value = data.Value
+      let AssetID = data.AssetID
+
       let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
         tr.receipt.gasUsed
       );
 
       gasPrice = Utils.formatWei(gasPrice.toString());
-      //debugger
+      // debugger
 
       ret = (
         <View key={hash}>
@@ -275,6 +279,13 @@ export default class Transactions extends Component {
                 <Text>
                   {Utils.getFusionCmdDisplayName(fusionCommand, data)}
                 </Text>
+                { value && (
+                <Text>{`Value: ${value}`}</Text>)}
+                {toAddress && (
+                <Text>{`To: ${toAddress}`}</Text> )}
+                <Text>{`From: ${tr.fromAddress}`}</Text>
+                {AssetID && (
+                <Text>{`AssetID: ${AssetID}`}</Text> )}
               </View>
               <View
                 style={{
