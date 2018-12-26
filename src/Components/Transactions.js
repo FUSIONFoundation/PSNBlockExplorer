@@ -17,6 +17,8 @@ import moment from "moment";
 import colors from "./colors.js";
 import BigNumber from "big-number";
 import history from "../history.js";
+import Pager from "./Pager";
+import currentDataState from "../api/dataAPI.js";
 
 export default class Transactions extends Component {
   constructor(props) {
@@ -31,7 +33,7 @@ export default class Transactions extends Component {
       transaction: props.transaction,
       sortField: "timestamp",
       direction: "desc",
-      pageNumber: 0,
+      index: 0,
       size: 20,
       update: 0,
       hash: hash
@@ -80,9 +82,9 @@ export default class Transactions extends Component {
     let b;
 
     if (!this.state.block) {
-      let { pageNumber, sortField, direction, size } = this.state;
+      let { index, sortField, direction, size } = this.state;
       transactions = dataStore.generateTransactionListFromTime(
-        pageNumber,
+        index,
         sortField,
         direction,
         size,
@@ -360,33 +362,60 @@ export default class Transactions extends Component {
     }
   }
 
+  indexMove( amount ) {
+    let index = this.state.index
+    index += amount
+    if ( index < 0 ) {
+        index = 0
+    }
+    if ( index + this.state.size > currentDataState.datablock.totalTransactions ) {
+        index = currentDataState.datablock.totalTransactions  - this.state.size
+    }
+    this.setState( {index : index })
+  }
+
   renderHeader() {
     return (
-      <View
-        style={{
-          flex: 1,
-          marginBottom: 8,
-          flexDirection: "row",
-          alignItems: "flex-start"
-        }}
-      >
-        <View style={{ marginLeft: 0, marginRight: 280 }}>
-          <Text style={styles.headerFieldText}>Transaction Hash</Text>
+      <View>
+        <View style={{ alignSelf: "flex-end", marginRight: 148 }}>
+          <Pager
+            start={this.state.index}
+            end={this.state.index + this.state.size - 1}
+            count={currentDataState.datablock.totalTransactions}
+            onLeft={() => {
+              this.indexMove(-20);
+            }}
+            onRight={() => {
+              this.indexMove(20);
+            }}
+          />
         </View>
-        <View style={{ marginLeft: 0, marginRight: 130 }}>
-          <Text style={styles.headerFieldText}>Block</Text>
-        </View>
-        <View style={{ marginLeft: 0, marginRight: 90 }}>
-          <Text style={styles.headerFieldText}>Age</Text>
-        </View>
-        <View style={{ marginLeft: 0, marginRight: 110 }}>
-          <Text style={styles.headerFieldText}>Type</Text>
-        </View>
-        <View style={{ marginLeft: 0, marginRight: 360 }}>
-          <Text style={styles.headerFieldText}>Asset(s)</Text>
-        </View>
-        <View style={{ marginLeft: 0, marginRight: 155 }}>
-          <Text style={styles.headerFieldText}>Fees</Text>
+        <View
+          style={{
+            flex: 1,
+            marginBottom: 8,
+            flexDirection: "row",
+            alignItems: "flex-start"
+          }}
+        >
+          <View style={{ marginLeft: 0, marginRight: 280 }}>
+            <Text style={styles.headerFieldText}>Transaction Hash</Text>
+          </View>
+          <View style={{ marginLeft: 0, marginRight: 130 }}>
+            <Text style={styles.headerFieldText}>Block</Text>
+          </View>
+          <View style={{ marginLeft: 0, marginRight: 90 }}>
+            <Text style={styles.headerFieldText}>Age</Text>
+          </View>
+          <View style={{ marginLeft: 0, marginRight: 110 }}>
+            <Text style={styles.headerFieldText}>Type</Text>
+          </View>
+          <View style={{ marginLeft: 0, marginRight: 360 }}>
+            <Text style={styles.headerFieldText}>Asset(s)</Text>
+          </View>
+          <View style={{ marginLeft: 0, marginRight: 155 }}>
+            <Text style={styles.headerFieldText}>Fees</Text>
+          </View>
         </View>
       </View>
     );

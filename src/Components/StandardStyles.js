@@ -857,7 +857,7 @@ var styles = StyleSheet.create({
     },
     blocksMiner: {
         marginLeft : 50,
-        width : 450,
+        width : 460,
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         textAlign : 'right',

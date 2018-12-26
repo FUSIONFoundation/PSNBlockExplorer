@@ -383,7 +383,7 @@ export default class Blocks extends Component {
               {" "}
               {transactions.length}{" "}
             </Text>
-            <Text style={styles.blocksMiner}> {miner} </Text>
+            <Text style={styles.blocksMiner}> {miner.toLowerCase()} </Text>
             <Text style={styles.blocksGasUsed}> {gasUsed} </Text>
             <Text style={styles.blocksGasLimit}> {gasLimit} </Text>
             <View style={{ width: 140, alignItems: "flex-end" }}>
