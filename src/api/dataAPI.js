@@ -374,9 +374,9 @@ export default class currentDataState {
       });
   }
 
-  static generateTransactionListFromTime( pageNumber, sortField, direction, size , callback ) {
+  static generateTransactionListFromTime( index, sortField, direction, size , callback ) {
     let uri = server + "/transactions/all";
-    let qs = { pageNumber, sortField , direction }
+    let qs = { index, sortField , direction }
     let qsStringify = JSON.stringify(qs)
 
     if (  datablock.letPageTransactionCache[qsStringify] ) {
@@ -395,7 +395,7 @@ export default class currentDataState {
       method: "GET",
       uri,
       qs: {
-        page : pageNumber,
+        index : index,
         size : size,
         sort : direction,
         field : sortField
