@@ -14,7 +14,7 @@ import dataStore from "../api/dataAPI";
 import TransactionListLine from "./TransactionListLine";
 import Utils from "../utils";
 import moment from "moment";
-import Colors from "./colors.js";
+import colors from "./colors.js";
 import BigNumber from "big-number";
 import history from "../history.js";
 
@@ -174,7 +174,7 @@ export default class Transactions extends Component {
                 width: 1216,
                 backgroundColor:
                   index++ < transactions.length
-                    ? Colors.orderGrey
+                    ? colors.orderGrey
                     : "transparent"
               }}
             />
@@ -203,7 +203,7 @@ export default class Transactions extends Component {
                 flexDirection: "row",
                 overflow: "hidden",
                 padding: 4,
-                backgroundColor: Colors.tagGrey
+                backgroundColor: colors.tagGrey
               }}
             >
               <TouchableOpacity
@@ -270,13 +270,15 @@ export default class Transactions extends Component {
           >
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ width: 503 }}>
-                <Text>{Utils.getFusionCmdDisplayName(fusionCommand,data)}</Text>
+                <Text>
+                  {Utils.getFusionCmdDisplayName(fusionCommand, data)}
+                </Text>
               </View>
               <View
                 style={{
                   width: 1,
                   height: 480,
-                  backgroundColor: Colors.orderGrey
+                  backgroundColor: colors.orderGrey
                 }}
               />
               <View
@@ -297,7 +299,7 @@ export default class Transactions extends Component {
                     Transaction Type
                   </Text>
                   <Text style={styles.transactionDetailValue}>
-                    {Utils.getFusionCmdDisplayName(fusionCommand,data)}
+                    {Utils.getFusionCmdDisplayName(fusionCommand, data)}
                   </Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
@@ -305,16 +307,14 @@ export default class Transactions extends Component {
                   <Text style={styles.transactionDetailLabel}>
                     Transaction Hash
                   </Text>
-                  <Text style={styles.transactionDetailValue}>
-                    {hash}
-                  </Text>
+                  <Text style={styles.transactionDetailValue}>{hash}</Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
                 <View style={styles.transactionDetailRow}>
                   <Text style={styles.transactionDetailLabel}>Block</Text>
                   <TouchableOpacity
                     onPress={() => {
-                      window.scrollTo(0,0)
+                      window.scrollTo(0, 0);
                       dataStore.setMenuPath("Blocks");
                       history.push(`/blocks/${tr.height}`);
                     }}
@@ -360,6 +360,38 @@ export default class Transactions extends Component {
     }
   }
 
+  renderHeader() {
+    return (
+      <View
+        style={{
+          flex: 1,
+          marginBottom: 8,
+          flexDirection: "row",
+          alignItems: "flex-start"
+        }}
+      >
+        <View style={{ marginLeft: 0, marginRight: 280 }}>
+          <Text style={styles.headerFieldText}>Transaction Hash</Text>
+        </View>
+        <View style={{ marginLeft: 0, marginRight: 130 }}>
+          <Text style={styles.headerFieldText}>Block</Text>
+        </View>
+        <View style={{ marginLeft: 0, marginRight: 90 }}>
+          <Text style={styles.headerFieldText}>Age</Text>
+        </View>
+        <View style={{ marginLeft: 0, marginRight: 110 }}>
+          <Text style={styles.headerFieldText}>Type</Text>
+        </View>
+        <View style={{ marginLeft: 0, marginRight: 360 }}>
+          <Text style={styles.headerFieldText}>Asset(s)</Text>
+        </View>
+        <View style={{ marginLeft: 0, marginRight: 155 }}>
+          <Text style={styles.headerFieldText}>Fees</Text>
+        </View>
+      </View>
+    );
+  }
+
   render() {
     let title;
     if (this.props.history) {
@@ -398,7 +430,14 @@ export default class Transactions extends Component {
             }}
           >
             <View style={{ marginLeft: 16 }}>
-              <Text>Transactions</Text>
+              {this.renderHeader()}
+              <View
+                style={{
+                  height: 1,
+                  width: 1216,
+                  backgroundColor: colors.orderGrey
+                }}
+              />
               {this.generateTransactionList()}
               <View />
             </View>
