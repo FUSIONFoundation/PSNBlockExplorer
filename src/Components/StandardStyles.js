@@ -992,6 +992,47 @@ var styles = StyleSheet.create({
         alignItems : 'center',
         justifyContent : 'space-between',
     },
+    addressShortHash : {
+        width : 218,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    addressAddress : {
+        width : 420,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.primaryBlue,
+        fontWeight : constants.regularFont,
+    },
+    addressBalance : {
+        width : 240,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        letterSpacing : 0,
+        color : colors.textBlue,
+        textAlign : 'center',
+        fontWeight : constants.regularFont,
+    },
+    addressAssetsHeld : {
+        width : 280,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        textAlign : 'center',
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
+    addressCmds : {
+        width : 240,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        textAlign : 'right',
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+    },
 });
 
 export default styles;

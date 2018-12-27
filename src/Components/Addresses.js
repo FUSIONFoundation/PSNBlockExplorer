@@ -137,7 +137,7 @@ export default class Transactions extends Component {
                   history.push(`/Addresses/${ar._id}`);
                 }}
               >
-                <Text style={styles.transactionShortHash}>{san}</Text>
+                <Text style={styles.addressShortHash}>{san}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -145,11 +145,11 @@ export default class Transactions extends Component {
                   history.push(`/Addresses/${ar._id}`);
                 }}
               >
-                <Text style={styles.transactionShortHash}>{ar._id}</Text>
+                <Text style={styles.addressAddress}>{ar._id}</Text>
               </TouchableOpacity>
-              <Text style={styles.transactionBlock}>{ar.fsnBalance}</Text>
-              <Text style={styles.transactionAge}>{ar.assetsHeld}</Text>
-              <Text style={styles.transactionCmd}>
+              <Text style={styles.addressBalance}>{Utils.formatWei(ar.fsnBalance)+" FSN"}</Text>
+              <Text style={styles.addressAssetsHeld}>{ar.assetsHeld}</Text>
+              <Text style={styles.addressCmds}>
                 {ar.numberOfTransactions}
               </Text>
             </View>
@@ -316,8 +316,8 @@ export default class Transactions extends Component {
     let sortField = this.state.sortField;
     let direction = this.state.direction;
     return (
-      <View>
-        <View style={{ alignSelf: "flex-end", marginRight: 0 }}>
+      <View style={{width:1280}}>
+        <View style={{ alignSelf: "flex-end", marginRight: 64 }}>
           <Pager
             start={this.state.index}
             end={this.state.index + this.state.size - 1}
@@ -345,7 +345,7 @@ export default class Transactions extends Component {
           <View
             style={{
               marginLeft: 0,
-              marginRight: 255,
+              marginRight: 120,
               flexDirection: "row",
               alignItems: "flex-start",
               justifyContent: "center"
@@ -363,7 +363,7 @@ export default class Transactions extends Component {
             />
           </View>
           <View
-            style={{ marginLeft: 0, marginRight: 106, flexDirection: "row" }}
+            style={{ marginLeft: 0, marginRight: 390, flexDirection: "row" }}
           >
             <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
               Address
@@ -381,7 +381,7 @@ export default class Transactions extends Component {
             />
           </View>
           <View
-            style={{ marginLeft: 0, marginRight: 66, flexDirection: "row" }}
+            style={{ marginLeft: 0, marginRight: 130, flexDirection: "row" }}
           >
             <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
               FSN Balance
@@ -399,7 +399,7 @@ export default class Transactions extends Component {
             />
           </View>
           <View
-            style={{ marginLeft: 0, marginRight: 86, flexDirection: "row" }}
+            style={{ marginLeft: 0, marginRight: 146, flexDirection: "row" }}
           >
             <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
               AssetsHeld
