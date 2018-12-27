@@ -16,11 +16,18 @@ var datablock = {
   pendingLoad: {},
   pendingTLoad: {},
   cacheTLoad: {},
-  letPageTransactionCache : {},
-  letPageTransactionCachePending : {},
-  letPageBlockCache : {},
-  letPageBlockCachePending : {},
-  maxBlock: 0
+  pendingALoad: {},
+  cacheALoad: {},
+  letPageTransactionCache: {},
+  letPageTransactionCachePending: {},
+  letPageBlockCache: {},
+  letPageBlockCachePending: {},
+  letPageAddressCache: {},
+  letPageAddressCachePending: {},
+  totalAddresses: 0,
+  totalAssets: 0,
+  maxBlock: 0,
+  address: {}
 };
 
 let eventEmitter = new EventEmitter();
@@ -67,6 +74,9 @@ function getServerRefresh() {
         datablock.totalTransactions = response.totalTransactions;
         datablock.priceInfo = response.priceInfo;
         datablock.lastTwoBlocks = response.lastTwoBlocks;
+        datablock.totalAddresses = response.totalAddresses;
+        datablock.totalAssets = response.totalAssets;
+
         datablock.lastUpdateTime = new Date();
         if (getNext5) {
           fetchNext5();
@@ -110,7 +120,7 @@ function fetchNext5() {
     gzip: true
   };
 
-   rp(requestOptions)
+  rp(requestOptions)
     .then(response => {
       if (response) {
         console.log("555555");
@@ -299,17 +309,16 @@ export default class currentDataState {
   // cacheTLoad : {},
 
   static getTransaction(t) {
+    t= t.toLowerCase()
     let tr = datablock.transactions[t];
     if (tr) {
-      if ( !tr.parsed ) {
-        tr.transaction = JSON.parse(tr.transaction)
+      if (!tr.parsed) {
+        tr.transaction = JSON.parse(tr.transaction);
         try {
-        tr.data = JSON.parse(tr.data)
-        } catch(e) {
-
-        }
-        tr.receipt = JSON.parse(tr.receipt)
-        tr.parsed = true
+          tr.data = JSON.parse(tr.data);
+        } catch (e) {}
+        tr.receipt = JSON.parse(tr.receipt);
+        tr.parsed = true;
       }
       return tr;
     }
@@ -333,13 +342,13 @@ export default class currentDataState {
 
   static executeLoadOfTransactions(c) {
     let uri = server + "/transactions/ts";
-    
-    let cacheToProces = c ? c : Object.keys( datablock.cacheTLoad );
+
+    let cacheToProces = c ? c : Object.keys(datablock.cacheTLoad);
     if (!c) {
       datablock.cacheTLoad = {};
     }
-    if ( cacheToProces.length === 0 ) {
-      return
+    if (cacheToProces.length === 0) {
+      return;
     }
     datablock.disableTLoader = true;
 
@@ -379,20 +388,20 @@ export default class currentDataState {
       });
   }
 
-  static generateTransactionListFromTime( index, sortField, direction, size , callback ) {
-    let uri = server + "/transactions/all";
-    let qs = { index, sortField , direction }
-    let qsStringify = JSON.stringify(qs)
+  static generateAddressList(index, sortField, direction, size, callback) {
+    let uri = server + "/balances/all";
+    let qs = { index, sortField, direction };
+    let qsStringify = JSON.stringify(qs);
 
-    if (  datablock.letPageTransactionCache[qsStringify] ) {
-      return datablock.letPageTransactionCache[qsStringify]
+    if (datablock.letPageAddressCache[qsStringify]) {
+      return datablock.letPageAddressCache[qsStringify];
     }
 
-    if ( datablock.letPageTransactionCachePending[qsStringify] ) {
-      return "loading"
+    if (datablock.letPageAddressCachePending[qsStringify]) {
+      return "loading";
     }
 
-    datablock.letPageTransactionCachePending[qsStringify] = true
+    datablock.letPageAddressCachePending[qsStringify] = true;
 
     // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
 
@@ -400,10 +409,10 @@ export default class currentDataState {
       method: "GET",
       uri,
       qs: {
-        index : index,
-        size : size,
-        sort : direction,
-        field : sortField
+        index: index,
+        size: size,
+        sort: direction,
+        field: sortField
       },
       headers: {
         "X-Content-Type-Options": "nosniff"
@@ -415,39 +424,44 @@ export default class currentDataState {
     rp(requestOptions)
       .then(response => {
         if (response) {
-          let tss = []
-          for ( let t of response ) {
-            datablock.transactions[t.hash] = t
-            tss.push( t.hash )
+          let tss = [];
+          for (let t of response) {
+            datablock.address[t._id] = t;
+            tss.push(t._id);
           }
-          datablock.letPageTransactionCache[qsStringify] = tss
-          callback( null, datablock.letPageTransactionCache[qsStringify]  )
+          datablock.letPageAddressCache[qsStringify] = tss;
+          callback(null, datablock.letPageAddressCache[qsStringify]);
         }
-        delete datablock.letPageTransactionCachePending[qsStringify] 
+        delete datablock.letPageAddressCachePending[qsStringify];
         return true;
       })
       .catch(err => {
-        delete datablock.letPageTransactionCachePending[qsStringify] 
-        callback( err, null )
+        delete datablock.letPageAddressCachePending[qsStringify];
+        callback(err, null);
       });
 
-    return "loading"
+    return "loading";
   }
+  static generateTransactionListFromTime(
+    index,
+    sortField,
+    direction,
+    size,
+    callback
+  ) {
+    let uri = server + "/transactions/all";
+    let qs = { index, sortField, direction };
+    let qsStringify = JSON.stringify(qs);
 
-  static generateBlockList( index, sortField, direction, size , callback ) {
-    let uri = server + "/blocks/all";
-    let qs = { index, sortField , direction }
-    let qsStringify = JSON.stringify(qs)
-
-    if (  datablock.letPageBlockCache[qsStringify] ) {
-      return datablock.letPageBlockCache[qsStringify]
+    if (datablock.letPageTransactionCache[qsStringify]) {
+      return datablock.letPageTransactionCache[qsStringify];
     }
 
-    if ( datablock.letPageBlockCachePending[qsStringify] ) {
-      return "loading"
+    if (datablock.letPageTransactionCachePending[qsStringify]) {
+      return "loading";
     }
 
-    datablock.letPageBlockCachePending[qsStringify] = true
+    datablock.letPageTransactionCachePending[qsStringify] = true;
 
     // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
 
@@ -455,10 +469,10 @@ export default class currentDataState {
       method: "GET",
       uri,
       qs: {
-        index : index,
-        size : size,
-        sort : direction,
-        field : sortField
+        index: index,
+        size: size,
+        sort: direction,
+        field: sortField
       },
       headers: {
         "X-Content-Type-Options": "nosniff"
@@ -467,30 +481,161 @@ export default class currentDataState {
       gzip: true
     };
 
-     rp(requestOptions)
+    rp(requestOptions)
       .then(response => {
         if (response) {
-          let bbb = []
-          for ( let b of response ) {
-            b.parsed = JSON.parse(b.block);
-            datablock.blockCache[b.hash] = b;
-            datablock.blockCache[b.height] = b;
-            bbb.push( b )
+          let tss = [];
+          for (let t of response) {
+            datablock.transactions[t.hash] = t;
+            tss.push(t.hash);
           }
-          datablock.letPageBlockCache[qsStringify] = bbb
-          //debugger
-          callback( null, bbb  )
+          datablock.letPageTransactionCache[qsStringify] = tss;
+          callback(null, datablock.letPageTransactionCache[qsStringify]);
         }
-        delete datablock.letPageBlockCachePending[qsStringify]
+        delete datablock.letPageTransactionCachePending[qsStringify];
         return true;
       })
       .catch(err => {
-        delete datablock.letPageBlockCachePending[qsStringify]
-        callback( err, null )
-
+        delete datablock.letPageTransactionCachePending[qsStringify];
+        callback(err, null);
       });
 
-    return "loading"
+    return "loading";
   }
 
+  static generateBlockList(index, sortField, direction, size, callback) {
+    let uri = server + "/blocks/all";
+    let qs = { index, sortField, direction };
+    let qsStringify = JSON.stringify(qs);
+
+    if (datablock.letPageBlockCache[qsStringify]) {
+      return datablock.letPageBlockCache[qsStringify];
+    }
+
+    if (datablock.letPageBlockCachePending[qsStringify]) {
+      return "loading";
+    }
+
+    datablock.letPageBlockCachePending[qsStringify] = true;
+
+    // http://localhost:3000/transactions/all?sort=asc&page=20&size=10&field=height
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        index: index,
+        size: size,
+        sort: direction,
+        field: sortField
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    rp(requestOptions)
+      .then(response => {
+        if (response) {
+          let bbb = [];
+          for (let b of response) {
+            b.parsed = JSON.parse(b.block);
+            datablock.blockCache[b.hash] = b;
+            datablock.blockCache[b.height] = b;
+            bbb.push(b);
+          }
+          datablock.letPageBlockCache[qsStringify] = bbb;
+          //debugger
+          callback(null, bbb);
+        }
+        delete datablock.letPageBlockCachePending[qsStringify];
+        return true;
+      })
+      .catch(err => {
+        delete datablock.letPageBlockCachePending[qsStringify];
+        callback(err, null);
+      });
+
+    return "loading";
+  }
+
+  static getAddress(t) {
+    t= t.toLowerCase()
+    let tr = datablock.address[t];
+    if (tr) {
+      if (!tr.parsed) {
+        tr.balanceInfo = JSON.parse(tr.balanceInfo);
+        tr.parsed = true;
+      }
+      return tr;
+    }
+
+    if (datablock.pendingALoad[t]) {
+      return "loading";
+    }
+
+    let startTimer = Object.keys(datablock.cacheALoad).length === 0;
+
+    datablock.pendingALoad[t] = true;
+
+    datablock.cacheALoad[t] = true;
+
+    if (startTimer && !datablock.disableALoader) {
+      setTimeout(currentDataState.executeLoadOfAddresses, 1);
+    }
+
+    return "loading";
+  }
+
+  static executeLoadOfAddresses(c) {
+    let uri = server + "/balances/ts";
+
+    let cacheToProces = c ? c : Object.keys(datablock.cacheALoad);
+    if (!c) {
+      datablock.cacheALoad = {};
+    }
+    if (cacheToProces.length === 0) {
+      return;
+    }
+    datablock.disableALoader = true;
+
+    // "https://api.fusionnetwork.io/balances/ts?ts=0xfa37b7c3f21060458361ed5322be5af3740bce3c
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        ts: cacheToProces.join("-")
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    return rp(requestOptions)
+      .then(response => {
+        if (response) {
+          console.log("AAAAAA" + cacheToProces.join("-"), requestOptions);
+          console.log(response);
+
+          for (let t of response) {
+            datablock.address[t._id] = t;
+            delete datablock.pendingALoad[t._id];
+          }
+          datablock.disableALoader = false;
+          eventEmitter.emit("addressesLoaded", datablock, false);
+        }
+        return true;
+      })
+      .catch(err => {
+        console.log("Fetch next addresses API call error:", err);
+        setTimeout(() => {
+          currentDataState.executeLoadOfAddresses(cacheToProces);
+        }, 1000);
+      });
+  }
 }

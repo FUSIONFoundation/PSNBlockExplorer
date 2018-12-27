@@ -17,7 +17,6 @@ export default class Pager extends Component {
     super(props);
     let { start, end, count } = this.props;
     let pageSize = end - start + 1;
-    let pages = Math.floor(count / pageSize) + 1;
     let pageNumber = Math.floor(start / pageSize) + 1;
 
     this.state = {
@@ -30,8 +29,24 @@ export default class Pager extends Component {
   render() {
     let { start, end, count } = this.props;
     let pageSize = end - start + 1;
-    let pages = Math.floor(count / pageSize) + 1;
-    let pageNumber = Math.floor(start / pageSize) + 1;
+
+    let pages 
+    let pageNumber
+
+    if ( count === 0 ) {
+        count = 1
+    }
+   
+    if ( count < pageSize ) {
+        end = count - 1
+        pageSize = count
+        pages = 1
+        pageNumber = 1
+    } else {
+
+     pages = Math.floor(count / pageSize) + 1;
+     pageNumber = Math.floor(start / pageSize) + 1;
+    }
 
     let maxPage = pages;
 
@@ -41,6 +56,7 @@ export default class Pager extends Component {
       pageInput = (
         <TouchableOpacity
           key="tpai"
+          disabled={count<=pageSize}
           onPress={() => {
             this.setState({ inputOn: true, pageNumber: pageNumber });
           }}
@@ -101,7 +117,7 @@ export default class Pager extends Component {
         >{` ${start + 1}-${end + 1} of ${count}`}</Text>
         {pageInput}
         <Text style={styles.pagePageCountText}>{` of ${pages}`}</Text>
-        <TouchableOpacity
+        <TouchableOpacity disabled={count<=pageSize}
           onPress={() => {
             if (this.props.onLeft) {
               this.props.onLeft();
@@ -118,7 +134,7 @@ export default class Pager extends Component {
             className="fa fa-angle-left"
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        <TouchableOpacity disabled={count<=pageSize}
           onPress={() => {
             if (this.props.onRight) {
               this.props.onRight();

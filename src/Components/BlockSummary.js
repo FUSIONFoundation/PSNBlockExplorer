@@ -57,10 +57,15 @@ export default class BlockSummary extends Component {
             {t}
           </Text>
         </View>
+        <TouchableOpacity onPress={() => {
+                dataStore.setMenuPath(  "Addresses" );
+                history.push(`/Addresses/${miner}`);
+          }}>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Mined By</Text>
           <Text style={styles.summaryLine2Text}>{miner}</Text>
         </View>
+        </TouchableOpacity>
         <View style={styles.summaryDetailRow}>
           <Text style={styles.summaryLabel}>Reward</Text>
           <View style={{ backgroundColor: Colors.lightSuccessGreen }}>

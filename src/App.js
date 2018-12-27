@@ -31,6 +31,7 @@ class App extends Component {
               <Route path="/Transactions/:transactionHash" component={Transactions} />
               <Route path="/Transactions" component={Transactions} />
               <Route path="/Assets" component={Assets} />
+              <Route path="/Addresses/:addressHash" component={Addresses}/>
               <Route path="/Addresses" component={Addresses}/>
               </Switch>
             </div>

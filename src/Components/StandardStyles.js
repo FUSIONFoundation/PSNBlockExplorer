@@ -979,6 +979,19 @@ var styles = StyleSheet.create({
         paddingTop: 4,
         paddingBottom: 4,
       },
+      addressDetailBorder : {
+        height : 1,
+        width : 592,
+        backgroundColor : colors.orderGrey
+    },
+    addressDetailRow : {
+        width : 592,
+        height : 40,
+        flex : 1,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'space-between',
+    },
 });
 
 export default styles;

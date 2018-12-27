@@ -104,7 +104,7 @@ export default class Blocks extends Component {
       return (
         <View
           style={{
-            flex: '1 0 0',
+            flex: "1 0 0",
             flexDirection: "row",
             marginLeft: 80,
             marginTop: 16,
@@ -137,7 +137,7 @@ export default class Blocks extends Component {
       >
         <View
           style={{
-            flex: '1 0 0',
+            flex: "1 0 0",
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center"
@@ -153,7 +153,7 @@ export default class Blocks extends Component {
           />
           <View
             style={{
-              flex: '1 0 0',
+              flex: "1 0 0",
               flexDirection: "row",
               justifyContent: "flex-end",
               alignItems: "center",
@@ -202,7 +202,7 @@ export default class Blocks extends Component {
         <View style={styles.detailBox}>
           <View
             style={{
-              flex: '1 0 0',
+              flex: "1 0 0",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center"
@@ -253,8 +253,8 @@ export default class Blocks extends Component {
   }
 
   render() {
-    let sortField = this.state.sortField
-    let direction = this.state.direction
+    let sortField = this.state.sortField;
+    let direction = this.state.direction;
 
     if (!isNaN(this.state.block) && this.state.block >= 0) {
       return this.returnSingleBlock();
@@ -264,7 +264,7 @@ export default class Blocks extends Component {
       <View key={"block"} style={{ width: 1280, marginTop: 32 }}>
         <View
           style={{
-            flex: '1 0 0',
+            flex: "1 0 0",
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center"
@@ -292,7 +292,7 @@ export default class Blocks extends Component {
           </View>
           <View
             style={{
-              flex: '1 0 0',
+              flex: "1 0 0",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center"
@@ -301,16 +301,24 @@ export default class Blocks extends Component {
             <View style={{ marginLeft: 16 }}>
               <View
                 style={{
-                  flex: '1 0 0',
+                  flex: "1 0 0",
                   marginBottom: 8,
                   flexDirection: "row",
                   alignItems: "flex-start"
                 }}
               >
-                <View style={{ marginLeft: 0, marginRight: 125, flexDirection : 'row' }}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Block</Text>
+                <View
+                  style={{
+                    marginLeft: 0,
+                    marginRight: 125,
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Block
+                  </Text>
                   <Sorter
-                    active={sortField==="block"}
+                    active={sortField === "block"}
                     direction={direction}
                     onPress={dir => {
                       this.setState({
@@ -321,10 +329,18 @@ export default class Blocks extends Component {
                     }}
                   />
                 </View>
-                <View style={{ marginLeft: 0, marginRight: 60, flexDirection : 'row' }}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Age</Text>
+                <View
+                  style={{
+                    marginLeft: 0,
+                    marginRight: 60,
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Age
+                  </Text>
                   <Sorter
-                    active={sortField==="timestamp"}
+                    active={sortField === "timestamp"}
                     direction={direction}
                     onPress={dir => {
                       this.setState({
@@ -335,10 +351,18 @@ export default class Blocks extends Component {
                     }}
                   />
                 </View>
-                <View style={{ marginLeft: 0, marginRight: 35 , flexDirection : 'row'}}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Transactions</Text>
+                <View
+                  style={{
+                    marginLeft: 0,
+                    marginRight: 35,
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Transactions
+                  </Text>
                   <Sorter
-                    active={sortField==="numberOfTransactions"}
+                    active={sortField === "numberOfTransactions"}
                     direction={direction}
                     onPress={dir => {
                       this.setState({
@@ -349,10 +373,18 @@ export default class Blocks extends Component {
                     }}
                   />
                 </View>
-                <View style={{ marginLeft: 0, marginRight: 360, flexDirection : 'row' }}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Miner</Text>
+                <View
+                  style={{
+                    marginLeft: 0,
+                    marginRight: 360,
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Miner
+                  </Text>
                   <Sorter
-                    active={sortField==="miner"}
+                    active={sortField === "miner"}
                     direction={direction}
                     onPress={dir => {
                       this.setState({
@@ -364,13 +396,19 @@ export default class Blocks extends Component {
                   />
                 </View>
                 <View style={{ marginLeft: 0, marginRight: 90 }}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Gas Used</Text>
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Gas Used
+                  </Text>
                 </View>
                 <View style={{ marginLeft: 0, marginRight: 155 }}>
-                  <Text style={[styles.headerFieldText, {marginTop: 6}]}>Gas Limit</Text>
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Gas Limit
+                  </Text>
                 </View>
                 <View style={{ marginLeft: 0, marginRight: 0 }}>
-                  <Text style={[styles.headerFieldText, {marginTop:6}]}>Reward</Text>
+                  <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+                    Reward
+                  </Text>
                 </View>
               </View>
               <View
@@ -418,7 +456,7 @@ export default class Blocks extends Component {
             style={{
               width: 1216,
               height: 40,
-              flex: '1 0 0',
+              flex: "1 0 0",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start"
@@ -438,7 +476,15 @@ export default class Blocks extends Component {
               {" "}
               {transactions.length}{" "}
             </Text>
-            <Text style={styles.blocksMiner}> {miner.toLowerCase()} </Text>
+            <TouchableOpacity
+              disabled={miner === "0x0000000000000000000000000000000000000000"}
+              onPress={() => {
+                dataStore.setMenuPath("Addresses");
+                history.push(`/Addresses/${miner}`);
+              }}
+            >
+              <Text style={styles.blocksMiner}> {miner.toLowerCase()} </Text>
+            </TouchableOpacity>
             <Text style={styles.blocksGasUsed}> {gasUsed} </Text>
             <Text style={styles.blocksGasLimit}> {gasLimit} </Text>
             <View style={{ width: 140, alignItems: "flex-end" }}>
