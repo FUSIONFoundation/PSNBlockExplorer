@@ -47,8 +47,8 @@ export default class Menu extends Component {
         <MenuButton text="Dashboard" link="/" onpress={this.redraw} />
         <MenuButton text="Blocks" link="/Blocks"  onpress={this.redraw} />
         <MenuButton text="Transactions" link="/Transactions"  onpress={this.redraw}  />
-        <MenuButton text="Assets" link="Assets"  onpress={this.redraw} />
-        <MenuButton text="Addresses" link="Addresses"  onpress={this.redraw} />
+        <MenuButton text="Assets" link="/Assets"  onpress={this.redraw} />
+        <MenuButton text="Addresses" link="/Addresses"  onpress={this.redraw} />
       </View>
     );
   }
