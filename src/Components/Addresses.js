@@ -20,8 +20,9 @@ import history from "../history.js";
 import Pager from "./Pager";
 import Sorter from "./Sorter";
 import currentDataState from "../api/dataAPI.js";
+import Transactions from "./Transactions"
 
-export default class Transactions extends Component {
+export default class Addresses extends Component {
   constructor(props) {
     super(props);
     let hash =
@@ -262,7 +263,7 @@ export default class Transactions extends Component {
                   Fusion Balance
                 </Text>
                 <Text style={styles.transactionDetailValue}>
-                  {tr.fsnBalance}
+                  {Utils.formatWei(tr.fsnBalance)+ " FSN"}
                 </Text>
                 </View>
               </View>
@@ -293,6 +294,9 @@ export default class Transactions extends Component {
               </View>
               </View>
             </View>
+          </View>
+          <View style={{width:1280, marginLeft : 80}}>
+            <Transactions address={tr._id} totalCount={tr.numberOfTransactions}/>
           </View>
         </View>
       );

@@ -447,7 +447,8 @@ export default class currentDataState {
     sortField,
     direction,
     size,
-    callback
+    callback,
+    onlyThisAddress
   ) {
     let uri = server + "/transactions/all";
     let qs = { index, sortField, direction };
@@ -472,7 +473,8 @@ export default class currentDataState {
         index: index,
         size: size,
         sort: direction,
-        field: sortField
+        field: sortField,
+        address : onlyThisAddress
       },
       headers: {
         "X-Content-Type-Options": "nosniff"

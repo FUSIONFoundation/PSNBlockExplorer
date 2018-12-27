@@ -31,6 +31,7 @@ export default class Transactions extends Component {
 
     this.state = {
       block: props.block,
+      address : props.address,
       transaction: props.transaction,
       sortField: "timestamp",
       direction: "desc",
@@ -93,7 +94,8 @@ export default class Transactions extends Component {
           if (this.mounted) {
             this.setState({ update: this.state.update + 1 });
           }
-        }
+        },
+        this.state.address
       );
       if (transactions === "loading") {
         return <Text>Loading Transaction List...</Text>;
@@ -399,7 +401,7 @@ export default class Transactions extends Component {
           <Pager
             start={this.state.index}
             end={this.state.index + this.state.size - 1}
-            count={currentDataState.datablock.totalTransactions}
+            count={this.props.totalCount||currentDataState.datablock.totalTransactions}
             onLeft={() => {
               this.indexMove(-20);
             }}
@@ -466,6 +468,10 @@ export default class Transactions extends Component {
     }
     if (this.state.hash) {
       return this.renderOneTransaction();
+    }
+
+    if ( this.props.address ) {
+        title = undefined
     }
 
     return (
