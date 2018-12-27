@@ -18,7 +18,7 @@ import colors from "./colors.js";
 import BigNumber from "big-number";
 import history from "../history.js";
 import Pager from "./Pager";
-import Sorter from "./Sorter"
+import Sorter from "./Sorter";
 import currentDataState from "../api/dataAPI.js";
 
 export default class Transactions extends Component {
@@ -31,7 +31,7 @@ export default class Transactions extends Component {
 
     this.state = {
       block: props.block,
-      address : props.address,
+      address: props.address,
       transaction: props.transaction,
       sortField: "timestamp",
       direction: "desc",
@@ -70,7 +70,7 @@ export default class Transactions extends Component {
     if (this.props.match) {
       this.setState({ hash: newProps.match.params.transactionHash });
     } else {
-      this.setState({ hash: undefined });
+      this.setState({ hash: undefined, address : undefined });
     }
   }
 
@@ -152,7 +152,7 @@ export default class Transactions extends Component {
               style={{
                 width: 1216,
                 height: 40,
-                flex: '1 0 0',
+                flex: "1 0 0",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "flex-start"
@@ -198,13 +198,17 @@ export default class Transactions extends Component {
     let title = (
       <View
         key="title"
-        style={{ flex: '1 0 0', flexDirection: "row", justifyContent: "flex-start" }}
+        style={{
+          flex: "1 0 0",
+          flexDirection: "row",
+          justifyContent: "flex-start"
+        }}
       >
         <TitleBar key="title" title="Transaction" noUpdateTime={true}>
           <View>
             <View
               style={{
-                flex: '1 0 0',
+                flex: "1 0 0",
                 flexDirection: "row",
                 overflow: "hidden",
                 padding: 4,
@@ -256,13 +260,13 @@ export default class Transactions extends Component {
       let commandExtra = tr.commandExtra;
       let index = 0;
 
-      if ( !data ) {
-          data = {}
+      if (!data) {
+        data = {};
       }
 
-      let toAddress = data.ToAddress || tr.toAddress
-      let value = data.Value
-      let AssetID = data.AssetID
+      let toAddress = data.ToAddress || tr.toAddress;
+      let value = data.Value;
+      let AssetID = data.AssetID;
 
       let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
         tr.receipt.gasUsed
@@ -270,6 +274,87 @@ export default class Transactions extends Component {
 
       gasPrice = Utils.formatWei(gasPrice.toString());
       // debugger
+
+      if (toAddress === "0xffffffffffffffffffffffffffffffffffffffff") {
+        toAddress = undefined;
+      }
+
+      let fromAddress = tr.fromAddress;
+
+      if (fromAddress === "0xffffffffffffffffffffffffffffffffffffffff") {
+        fromAddress = undefined;
+      }
+
+      if (
+        AssetID ===
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ) {
+        AssetID = "FSN";
+      }
+
+      let dataFields = [];
+      let dataKeys = {};
+      if (tr.data) {
+        dataKeys = tr.data;
+        let keys = Object.keys(tr.data);
+        for (let key of keys) {
+          let val = tr.data[key];
+          if (
+            key === "AssetID" &&
+            val ===
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          ) {
+            val = "FSN";
+          }
+          if (key === "To" || key === "From") {
+            dataFields.push(
+              <View
+                key={key}
+                style={{
+                  height: 30,
+                  width: 440,
+                  flex: 1,
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    dataStore.setMenuPath("Addresses");
+                    history.push(`/Addresses/${val}`);
+                  }}
+                >
+                  <Text style={styles.transactionInfoValueLink}>{val}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          } else {
+            dataFields.push(
+              <View
+                key={key}
+                style={{
+                  height: 30,
+                  width: 440,
+                  flex: 1,
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
+                <Text style={styles.transactionInfoValue}>{val}</Text>
+              </View>
+            );
+          }
+        }
+      }
+
+      if (dataKeys["Value"]) {
+        value = undefined;
+      }
+      if (dataKeys["AssetID"]) {
+        AssetID = undefined;
+      }
 
       ret = (
         <View key={hash}>
@@ -281,18 +366,61 @@ export default class Transactions extends Component {
               { marginLeft: 80, paddingBottom: 0, paddingTop: 0 }
             ]}
           >
-            <View style={{ flex: '1 0 0', flexDirection: "row" }}>
-              <View style={{ width: 503 }}>
-                <Text>
+            <View style={{ flex: "1 0 0", flexDirection: "row" }}>
+              <View
+                style={{
+                  width: 503,
+                  padding: 32,
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start"
+                }}
+              >
+                <Text style={styles.transactionInfoCmd}>
                   {Utils.getFusionCmdDisplayName(fusionCommand, data)}
                 </Text>
-                { value && (
-                <Text>{`Value: ${value}`}</Text>)}
+                <View style={{ height: 12 }} />
+                <Text style={styles.transactionInfoTime}>
+                  {moment(d).format("LLL")}
+                </Text>
+                <View style={{ height: 12 }} />
+                {dataFields}
+                <View style={{ height: 12 }} />
+                {value && (
+                  <Text
+                    style={styles.transactionInfoLabel}
+                  >{`Value: ${value}`}</Text>
+                )}
                 {toAddress && (
-                <Text>{`To: ${toAddress}`}</Text> )}
-                <Text>{`From: ${tr.fromAddress}`}</Text>
+                  <View>
+                    <Text style={styles.transactionInfoLabel}>{"To: "}</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        dataStore.setMenuPath("Addresses");
+                        history.push(`/Addresses/${toAddress}`);
+                      }}
+                    >
+                      <Text style={styles.transactionInfoValueLink}>{toAddress}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                 {fromAddress && (
+                  <View>
+                    <Text style={styles.transactionInfoLabel}>{"From: "}</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        dataStore.setMenuPath("Addresses");
+                        history.push(`/Addresses/${fromAddress}`);
+                      }}
+                    >
+                      <Text style={styles.transactionInfoValueLink}>{fromAddress}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
                 {AssetID && (
-                <Text>{`AssetID: ${AssetID}`}</Text> )}
+                  <Text
+                    style={styles.transactionInfoLabel}
+                  >{`AssetID: ${AssetID}`}</Text>
+                )}
               </View>
               <View
                 style={{
@@ -311,7 +439,7 @@ export default class Transactions extends Component {
               >
                 <View style={styles.transactionDetailRow}>
                   <Text style={styles.transactionDetailLabel}>Status</Text>
-                  <Text style={styles.transactionDetailValue}>true</Text>
+                  <Text style={styles.transactionDetailValue}>{tr.receipt.status?"Success":"Failed"}</Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
                 <View style={styles.transactionDetailRow}>
@@ -380,79 +508,127 @@ export default class Transactions extends Component {
     }
   }
 
-  indexMove( amount ) {
-    let index = this.state.index
-    index += amount
-    if ( index < 0 ) {
-        index = 0
+  indexMove(amount) {
+    let index = this.state.index;
+    index += amount;
+    if (index < 0) {
+      index = 0;
     }
-    if ( index + this.state.size > currentDataState.datablock.totalTransactions ) {
-        index = currentDataState.datablock.totalTransactions  - this.state.size
+    if (
+      index + this.state.size >
+      currentDataState.datablock.totalTransactions
+    ) {
+      index = currentDataState.datablock.totalTransactions - this.state.size;
     }
-    this.setState( {index : index })
+    this.setState({ index: index });
   }
 
   renderHeader() {
-    let sortField = this.state.sortField
-    let direction = this.state.direction
+    let sortField = this.state.sortField;
+    let direction = this.state.direction;
     return (
       <View>
         <View style={{ alignSelf: "flex-end", marginRight: 0 }}>
           <Pager
             start={this.state.index}
             end={this.state.index + this.state.size - 1}
-            count={this.props.totalCount||currentDataState.datablock.totalTransactions}
+            count={
+              this.props.totalCount ||
+              currentDataState.datablock.totalTransactions
+            }
             onLeft={() => {
               this.indexMove(-20);
             }}
             onRight={() => {
               this.indexMove(20);
             }}
-            onNewPage={(page,index)=>{
-                this.setState( {index :index } )
+            onNewPage={(page, index) => {
+              this.setState({ index: index });
             }}
           />
         </View>
         <View
           style={{
-            flex: '1 0 0',
+            flex: "1 0 0",
             marginBottom: 8,
             flexDirection: "row",
             justifyContent: "flex-start",
-            alignItems : 'center'
+            alignItems: "center"
           }}
         >
-          <View style={{ marginLeft: 0, marginRight: 255 , flexDirection : 'row', 
-          alignItems : 'flex-start', justifyContent : 'center' }}>
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Transaction Hash</Text>
-            <Sorter active={sortField==="hash"} direction={direction} onPress={(dir)=>{
-                this.setState( { sortField : 'hash', index : 0, direction : dir})
-            }}/>
-          </View>
-          <View style={{ marginLeft: 0, marginRight: 106, flexDirection : 'row' }}>
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Block</Text>
-            <Sorter active={sortField==="block"} direction={direction} onPress={(dir)=>{
-                this.setState( { sortField : 'block', index : 0, direction : dir})
+          <View
+            style={{
+              marginLeft: 0,
+              marginRight: 255,
+              flexDirection: "row",
+              alignItems: "flex-start",
+              justifyContent: "center"
             }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+              Transaction Hash
+            </Text>
+            <Sorter
+              active={sortField === "hash"}
+              direction={direction}
+              onPress={dir => {
+                this.setState({ sortField: "hash", index: 0, direction: dir });
+              }}
             />
           </View>
-          <View style={{ marginLeft: 0, marginRight: 66 , flexDirection : 'row' }} >
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Age</Text>
-            <Sorter active={sortField==="timestamp"} direction={direction} onPress={(dir)=>{
-                this.setState( { sortField : 'timestamp', index : 0, direction : dir})
-            }}/>
+          <View
+            style={{ marginLeft: 0, marginRight: 106, flexDirection: "row" }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+              Block
+            </Text>
+            <Sorter
+              active={sortField === "block"}
+              direction={direction}
+              onPress={dir => {
+                this.setState({ sortField: "block", index: 0, direction: dir });
+              }}
+            />
           </View>
-          <View style={{ marginLeft: 0, marginRight: 86, flexDirection : 'row'  }}>
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Type</Text>
-            <Sorter active={sortField==="type"} direction={direction} onPress={(dir)=>{
-                this.setState( { sortField : 'type', index : 0, direction : dir})
-            }}/>
+          <View
+            style={{ marginLeft: 0, marginRight: 66, flexDirection: "row" }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>Age</Text>
+            <Sorter
+              active={sortField === "timestamp"}
+              direction={direction}
+              onPress={dir => {
+                this.setState({
+                  sortField: "timestamp",
+                  index: 0,
+                  direction: dir
+                });
+              }}
+            />
           </View>
-          <View style={{ marginLeft: 0, marginRight: 300, flexDirection : 'row'  }}>
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Asset(s)</Text>
+          <View
+            style={{ marginLeft: 0, marginRight: 86, flexDirection: "row" }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>Type</Text>
+            <Sorter
+              active={sortField === "type"}
+              direction={direction}
+              onPress={dir => {
+                this.setState({ sortField: "type", index: 0, direction: dir });
+              }}
+            />
           </View>
-          <View style={{ marginLeft: 60, marginRight: 0, flexDirection : 'row' }}>
-            <Text style={[styles.headerFieldText, {marginTop: 6}]}>Fees</Text>
+          <View
+            style={{ marginLeft: 0, marginRight: 300, flexDirection: "row" }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>
+              Asset(s)
+            </Text>
+          </View>
+          <View
+            style={{ marginLeft: 60, marginRight: 0, flexDirection: "row" }}
+          >
+            <Text style={[styles.headerFieldText, { marginTop: 6 }]}>Fees</Text>
           </View>
         </View>
       </View>
@@ -470,15 +646,15 @@ export default class Transactions extends Component {
       return this.renderOneTransaction();
     }
 
-    if ( this.props.address ) {
-        title = undefined
+    if (this.props.address) {
+      title = undefined;
     }
 
     return (
       <View key={"hash"} style={{ width: 1280, marginTop: 32 }}>
         <View
           style={{
-            flex: '1 0 0',
+            flex: "1 0 0",
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center"
@@ -494,7 +670,7 @@ export default class Transactions extends Component {
         >
           <View
             style={{
-              flex: '1 0 0',
+              flex: "1 0 0",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center"

@@ -1033,6 +1033,38 @@ var styles = StyleSheet.create({
         color : colors.textBlue,
         fontWeight : constants.regularFont,
     },
+    transactionInfoCmd : {
+        fontFamily : constants.fontFamily,
+        fontSize : 18 ,
+        color : colors.textBlue,
+        fontWeight : constants.boldFont,
+    },
+    transactionInfoTime : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    },
+    transactionInfoLabel : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.labelGrey,
+        fontWeight : constants.regularFont,
+    },
+    transactionInfoValue : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.labelGrey,
+        textAlign : 'right',
+        fontWeight : constants.regularFont,
+    },
+    transactionInfoValueLink : {
+        fontFamily : constants.fontFamily,
+        fontSize : 12 ,
+        color : colors.linkBlue,
+        textAlign : 'right',
+        fontWeight : constants.regularFont,
+    },
 });
 
 export default styles;

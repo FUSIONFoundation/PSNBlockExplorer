@@ -30,6 +30,10 @@ export default class TransactionSummary extends Component {
     let midTo = Utils.midHashDisplay( to )
     let midFrom = Utils.midHashDisplay( from )
 
+    if ( to === '0xffffffffffffffffffffffffffffffffffffffff') {
+        to = undefined
+    }
+
     return (
       <View style={styles.SummaryBoxColum}>
         <View style={{ height: 8 }} />
@@ -59,8 +63,22 @@ export default class TransactionSummary extends Component {
           <Text style={styles.summaryLine2Text}>{Utils.getFusionCmdDisplayName(fusionCommand, t.data)}</Text>
         </View>
         <View style={styles.summaryDetailRow}>
-          <Text style={styles.summaryLabel}>From/To</Text>
-            <Text style={[styles.summaryLine3Text,{color: Colors.primaryBlue,fontSize : 14}]}>{midFrom} / {midTo}</Text>
+          <Text style={styles.summaryLabel}>{ to ? "From/To" : "From"}</Text>
+
+            <TouchableOpacity onPress={()=>{
+                      dataStore.setMenuPath(  "Addresses" );
+                      history.push(`/Addresses/${from}`);
+            }}>
+                 <Text style={[styles.summaryLine3Text,{color: Colors.primaryBlue,fontSize : 14}]}>{to?midFrom:from}</Text>
+            </TouchableOpacity>
+            { to && (
+                 <TouchableOpacity onPress={()=>{
+                    dataStore.setMenuPath(  "Addresses" );
+                    history.push(`/Addresses/${to}`);
+          }}>
+               <Text style={[styles.summaryLine3Text,{color: Colors.primaryBlue,fontSize : 14}]}>{" / " + midTo}</Text>
+          </TouchableOpacity>
+            )}
         </View>
         <View
           style={{
