@@ -673,8 +673,21 @@ var styles = StyleSheet.create({
         padding : 8,
         marginLeft : 16,
     },
+    blockWhiteBox: { 
+        borderRadius : 3,
+        overflow : 'visible',
+        backgroundColor : colors.white,
+        textAlign : 'center',
+        fontWeight : constants.boldFont,
+        padding : 8,
+        marginLeft : 8,
+        marginRight : 16,
+        borderWidth : 1,
+        borderColor : colors.orderGrey
+    },
     blockGrayInput: {
         width: 110,
+        borderWidth : 1,
         borderRadius: 3,
         alignSelf : 'flex-start',
         flex: '1 0 0',
@@ -687,7 +700,7 @@ var styles = StyleSheet.create({
       blockNodeInput: {
         borderColor: colors.orderGrey,
         borderRadius: 3,
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderWidth: 1,
         fontSize: 12,
         fontFamily: constants.mediumFont,
@@ -699,9 +712,10 @@ var styles = StyleSheet.create({
         paddingRight: 2,
         paddingTop: 4,
         paddingBottom: 4,
-        marginLeft: 16,
+        marginLeft: 8,
         marginTop : 3,
-        marginBottom : 2
+        marginBottom : 2,
+        marginRight : 16,
         //clearButtonMode : 'always'
       },
     blockNumberText : {
@@ -809,11 +823,13 @@ var styles = StyleSheet.create({
         fontFamily : constants.fontFamily,
         fontSize : 14 ,
         letterSpacing : 0,
+        textAlign : 'center',
         color : colors.textBlue,
         fontWeight : constants.regularFont,
     },
     transactionExtra: {
         width : 270,
+        textAlign : 'center',
         fontFamily : constants.fontFamily,
         fontSize : 12 ,
         letterSpacing : 0,

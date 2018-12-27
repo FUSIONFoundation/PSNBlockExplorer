@@ -75,7 +75,7 @@ export default class BlockSelect extends Component {
           this.setState({ inputNodeMode: true });
         }}
       >
-            <Text style={[styles.blockGrayBox, { marginRight: 4 }]}>
+            <Text style={[styles.blockWhiteBox]}>
               {this.state.block}
             </Text>
       </TouchableOpacity>

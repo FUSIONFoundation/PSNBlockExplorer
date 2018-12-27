@@ -144,13 +144,7 @@ export default class Blocks extends Component {
           }}
         >
           <Text style={styles.largerTitleBar}>Block</Text>
-          <BlockSelect
-            block={b.height}
-            onPress={b => {
-              dataStore.setMenuPath("Blocks");
-              history.push(`/blocks/${b}`);
-            }}
-          />
+          
           <View
             style={{
               flex: "1 0 0",
@@ -184,6 +178,15 @@ export default class Blocks extends Component {
                 {`${leftBlock}`}
               </Text>
             </TouchableOpacity>
+            <View>
+            <BlockSelect
+            block={b.height}
+            onPress={b => {
+              dataStore.setMenuPath("Blocks");
+              history.push(`/blocks/${b}`);
+            }}
+          />
+          </View>
             <TouchableOpacity
               disabled={!rightEnabled}
               onPress={() => {

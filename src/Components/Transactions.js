@@ -75,7 +75,16 @@ export default class Transactions extends Component {
   }
 
   renderAssetField(tr) {
-    return <Text style={styles.transactionExtra}>loading...</Text>;
+    let data = tr.data || {}
+    if ( data.AssetID ) {
+        let asset = data.AssetID
+        if ( asset === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') {
+            asset = "FSN"
+        }
+        return <Text style={styles.transactionExtra}>{asset}</Text>;
+    } else {
+        return <Text style={styles.transactionExtra}>FSN</Text>;
+    }
   }
 
   generateTransactionList() {
@@ -127,16 +136,12 @@ export default class Transactions extends Component {
           tr.fusionCommand,
           data
         );
-        let extraCommand = tr.extraCommand;
+
 
         let shortHash = hash.substr(0, 33) + "...";
 
         let tm = Utils.timeAgo(new Date(tr.timeStamp * 1000));
 
-        let midTo = Utils.midHashDisplay(to);
-        let midFrom = Utils.midHashDisplay(from);
-
-        let commandExtra = tr.commandExtra;
         let index = 0;
 
         let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
@@ -170,7 +175,7 @@ export default class Transactions extends Component {
               <Text style={styles.transactionAge}>{tm}</Text>
 
               <Text style={styles.transactionCmd}>{fusionCommand}</Text>
-              {this.renderAssetField()}
+              {this.renderAssetField(tr)}
               <Text style={styles.transactionFee}>{gasPrice}</Text>
             </View>
             <View
@@ -243,22 +248,15 @@ export default class Transactions extends Component {
       );
     } else {
       let hash = tr.hash;
-      let from = tr.fromAddress;
-      let to = tr.toAddress;
+
       let data = tr.data;
       let fusionCommand = Utils.getFusionCmdDisplayName(tr.fusionCommand, data);
-      let extraCommand = tr.extraCommand;
 
-      let shortHash = hash.substr(0, 33) + "...";
 
       let d = new Date(tr.timeStamp * 1000);
       let tm = Utils.timeAgo(d) + " (" + moment(d).format("LLL") + ")";
 
-      let midTo = Utils.midHashDisplay(to);
-      let midFrom = Utils.midHashDisplay(from);
-
-      let commandExtra = tr.commandExtra;
-      let index = 0;
+ 
 
       if (!data) {
         data = {};
@@ -315,7 +313,8 @@ export default class Transactions extends Component {
                   width: 440,
                   flex: 1,
                   alignItems: "flex-start",
-                  justifyContent: "flex-start"
+                  justifyContent: "flex-start",
+                  marginBottom : 6
                 }}
               >
                 <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
@@ -338,7 +337,8 @@ export default class Transactions extends Component {
                   width: 440,
                   flex: 1,
                   alignItems: "flex-start",
-                  justifyContent: "flex-start"
+                  justifyContent: "flex-start",
+                  marginBottom : 6
                 }}
               >
                 <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
@@ -383,7 +383,9 @@ export default class Transactions extends Component {
                   {moment(d).format("LLL")}
                 </Text>
                 <View style={{ height: 12 }} />
+                <View>
                 {dataFields}
+                </View>
                 <View style={{ height: 12 }} />
                 {value && (
                   <Text
