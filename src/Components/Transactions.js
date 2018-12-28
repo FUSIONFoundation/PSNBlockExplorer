@@ -70,20 +70,64 @@ export default class Transactions extends Component {
     if (this.props.match) {
       this.setState({ hash: newProps.match.params.transactionHash });
     } else {
-      this.setState({ hash: undefined, address : undefined });
+      this.setState({ hash: undefined, address: undefined });
     }
   }
 
+  hex2a(hexData) {
+    hexData = hexData.replace("0x", "");
+    let hex = hexData.toString(); //force conversion
+    let str = "";
+    for (let i = 0; i < hex.length && hex.substr(i, 2) !== "00"; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str
+}
+
   renderAssetField(tr) {
-    let data = tr.data || {}
-    if ( data.AssetID ) {
-        let asset = data.AssetID
-        if ( asset === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') {
-            asset = "FSN"
-        }
-        return <Text style={styles.transactionExtra}>{asset}</Text>;
+    let data = tr.data || {};
+    let value;
+    if (data.Value) {
+      if (
+        !data.AssetID ||
+        data.AssetID ===
+          "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ) {
+        value = (
+          <Text style={styles.transactionExtra}>
+            {Utils.formatWei(data.Value.toString())}
+          </Text>
+        );
+      } else {
+        value = <Text style={styles.transactionExtra}>{data.Value}</Text>;
+      }
+    }
+    if (data.AssetID) {
+      let asset = data.AssetID;
+      if (
+        asset ===
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ) {
+        asset = "FSN";
+      } else {
+        asset = Utils.midHashDisplay(asset);
+      }
+      return (
+        <View key="aff">
+          <Text key="asset" style={styles.transactionExtra}>
+            {asset}
+          </Text>
+          {value}
+        </View>
+      );
     } else {
-        return <Text style={styles.transactionExtra}>FSN</Text>;
+      return (
+        <View key="aff">
+          <Text key="asset" style={styles.transactionExtra}>
+            FSN
+          </Text>
+          {value}
+        </View>
+      );
     }
   }
 
@@ -136,7 +180,6 @@ export default class Transactions extends Component {
           tr.fusionCommand,
           data
         );
-
 
         let shortHash = hash.substr(0, 33) + "...";
 
@@ -252,11 +295,8 @@ export default class Transactions extends Component {
       let data = tr.data;
       let fusionCommand = Utils.getFusionCmdDisplayName(tr.fusionCommand, data);
 
-
       let d = new Date(tr.timeStamp * 1000);
       let tm = Utils.timeAgo(d) + " (" + moment(d).format("LLL") + ")";
-
- 
 
       if (!data) {
         data = {};
@@ -294,6 +334,7 @@ export default class Transactions extends Component {
       let dataKeys = {};
       if (tr.data) {
         dataKeys = tr.data;
+
         let keys = Object.keys(tr.data);
         for (let key of keys) {
           let val = tr.data[key];
@@ -314,7 +355,7 @@ export default class Transactions extends Component {
                   flex: 1,
                   alignItems: "flex-start",
                   justifyContent: "flex-start",
-                  marginBottom : 6
+                  marginBottom: 6
                 }}
               >
                 <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
@@ -338,7 +379,7 @@ export default class Transactions extends Component {
                   flex: 1,
                   alignItems: "flex-start",
                   justifyContent: "flex-start",
-                  marginBottom : 6
+                  marginBottom: 6
                 }}
               >
                 <Text style={styles.transactionInfoLabel}>{key + ":"}</Text>
@@ -383,9 +424,7 @@ export default class Transactions extends Component {
                   {moment(d).format("LLL")}
                 </Text>
                 <View style={{ height: 12 }} />
-                <View>
-                {dataFields}
-                </View>
+                <View>{dataFields}</View>
                 <View style={{ height: 12 }} />
                 {value && (
                   <Text
@@ -401,11 +440,13 @@ export default class Transactions extends Component {
                         history.push(`/Addresses/${toAddress}`);
                       }}
                     >
-                      <Text style={styles.transactionInfoValueLink}>{toAddress}</Text>
+                      <Text style={styles.transactionInfoValueLink}>
+                        {toAddress}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 )}
-                 {fromAddress && (
+                {fromAddress && (
                   <View>
                     <Text style={styles.transactionInfoLabel}>{"From: "}</Text>
                     <TouchableOpacity
@@ -414,7 +455,9 @@ export default class Transactions extends Component {
                         history.push(`/Addresses/${fromAddress}`);
                       }}
                     >
-                      <Text style={styles.transactionInfoValueLink}>{fromAddress}</Text>
+                      <Text style={styles.transactionInfoValueLink}>
+                        {fromAddress}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 )}
@@ -441,7 +484,9 @@ export default class Transactions extends Component {
               >
                 <View style={styles.transactionDetailRow}>
                   <Text style={styles.transactionDetailLabel}>Status</Text>
-                  <Text style={styles.transactionDetailValue}>{tr.receipt.status?"Success":"Failed"}</Text>
+                  <Text style={styles.transactionDetailValue}>
+                    {tr.receipt.status ? "Success" : "Failed"}
+                  </Text>
                 </View>
                 <View style={styles.transactionDetailBorder} />
                 <View style={styles.transactionDetailRow}>
@@ -496,7 +541,7 @@ export default class Transactions extends Component {
                 <View style={styles.transactionDetailBorder} />
                 <View style={styles.transactionDetailRow}>
                   <Text style={styles.transactionDetailLabel}>Input</Text>
-                  <Text style={styles.transactionDetailValue}>
+                  <Text style={styles.transactionDetailValueInput}>
                     {tr.transaction.input}
                   </Text>
                 </View>

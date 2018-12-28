@@ -751,7 +751,11 @@ var styles = StyleSheet.create({
         color : colors.textBlue,
         fontWeight : constants.regularFont,
         marginTop : 9,
-        marginBottom : 11
+        marginBottom : 11,
+        wordWrap: 'break-word',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        marginLeft : 10
     },
     extraDataLineBlock: {
         fontFamily : constants.fontFamily,
@@ -760,8 +764,11 @@ var styles = StyleSheet.create({
         color : colors.textBlue,
         fontWeight : constants.regularFont,
         alignSelf : 'flex-end',
-        marginRight : 16
-
+        marginRight : 16,
+        width : 200,
+        wordWrap: 'break-word',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
     },
     leftBlockText : {
         marginRight : 12,
@@ -936,6 +943,17 @@ var styles = StyleSheet.create({
         textAlign : 'right',
         color : colors.textBlue,
         fontWeight : constants.regularFont,
+    },
+    transactionDetailValueInput : {
+        width : 500,
+        fontFamily : constants.fontFamily,
+        fontSize : 14 ,
+        textAlign : 'right',
+        color : colors.textBlue,
+        fontWeight : constants.regularFont,
+        wordWrap: 'break-word',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
     },
     transactionDetailBorder : {
         height : 1,

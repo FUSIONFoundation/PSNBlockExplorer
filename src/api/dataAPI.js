@@ -18,16 +18,21 @@ var datablock = {
   cacheTLoad: {},
   pendingALoad: {},
   cacheALoad: {},
+  pendingAsLoad: {},
+  cacheAsLoad: {},
   letPageTransactionCache: {},
   letPageTransactionCachePending: {},
   letPageBlockCache: {},
   letPageBlockCachePending: {},
   letPageAddressCache: {},
   letPageAddressCachePending: {},
+  letPageAssetCache: {},
+  letPageAssetCachePending: {},
   totalAddresses: 0,
   totalAssets: 0,
   maxBlock: 0,
-  address: {}
+  address: {},
+  asset : {}
 };
 
 let eventEmitter = new EventEmitter();
@@ -308,6 +313,26 @@ export default class currentDataState {
   // pendingTLoad : {},
   // cacheTLoad : {},
 
+  static convertNumberToStringJSON( str , item ) {
+    item = '"' + item + '"' + ":" 
+    let i = str.indexOf( item )
+    if ( i < 1) {
+      return
+    }
+    let val = str.substr( i + item.length )
+    let ret = ""
+    let len = val.length
+    for ( let x = 0 ; x < len ; x++ ) {
+      let c = val.charAt( x )
+      if ( c >= "0" && c <= "9" ) {
+        ret += c
+      } else {
+        break
+      }
+    }
+    return ret 
+  }
+
   static getTransaction(t) {
     t= t.toLowerCase()
     let tr = datablock.transactions[t];
@@ -315,7 +340,11 @@ export default class currentDataState {
       if (!tr.parsed) {
         tr.transaction = JSON.parse(tr.transaction);
         try {
+          tr.rawData = tr.data
           tr.data = JSON.parse(tr.data);
+          if ( tr.data.Value ) {
+            tr.data.Value = currentDataState.convertNumberToStringJSON( tr.rawData, "Value" )
+          }
         } catch (e) {}
         tr.receipt = JSON.parse(tr.receipt);
         tr.parsed = true;
@@ -640,4 +669,134 @@ export default class currentDataState {
         }, 1000);
       });
   }
+
+  static generateAssetList(index, sortField, direction, size, callback) {
+    let uri = server + "/assets/all";
+    let qs = { index, sortField, direction };
+    let qsStringify = JSON.stringify(qs);
+
+    if (datablock.letPageAssetCache[qsStringify]) {
+      return datablock.letPageAssetCache[qsStringify];
+    }
+
+    if (datablock.letPageAssetCachePending[qsStringify]) {
+      return "loading";
+    }
+
+    datablock.letPageAssetCachePending[qsStringify] = true;
+
+    // http://localhost:3000/assets/all?sort=asc&page=20&size=10&field=height
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        index: index,
+        size: size,
+        sort: direction,
+        field: sortField
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    rp(requestOptions)
+      .then(response => {
+        if (response) {
+          let tss = [];
+          for (let t of response) {
+            datablock.asset[t._id] = t;
+            tss.push(t._id);
+          }
+          datablock.letPageAssetCache[qsStringify] = tss;
+          callback(null, datablock.letPageAssetCache[qsStringify]);
+        }
+        delete datablock.letPageAssetCachePending[qsStringify];
+        return true;
+      })
+      .catch(err => {
+        delete datablock.letPageAssetCachePending[qsStringify];
+        callback(err, null);
+      });
+
+    return "loading";
+  }
+
+  static getAssets(t) {
+    t= t.toLowerCase()
+    let tr = datablock.asset[t];
+    if (tr) {
+      return tr;
+    }
+
+    if (datablock.pendingAsLoad[t]) {
+      return "loading";
+    }
+
+    let startTimer = Object.keys(datablock.cacheAsLoad).length === 0;
+
+    datablock.pendingAsLoad[t] = true;
+
+    datablock.cacheAsLoad[t] = true;
+
+    if (startTimer && !datablock.disableAsLoader) {
+      setTimeout(currentDataState.executeLoadOfAssets, 1);
+    }
+
+    return "loading";
+  }
+
+  static executeLoadOfAssets(c) {
+    let uri = server + "/assets/ts";
+
+    let cacheToProces = c ? c : Object.keys(datablock.cacheAsLoad);
+    if (!c) {
+      datablock.cacheAsLoad = {};
+    }
+    if (cacheToProces.length === 0) {
+      return;
+    }
+    datablock.disableAsLoader = true;
+
+    // "https://api.fusionnetwork.io/assets/ts?ts=0xfa37b7c3f21060458361ed5322be5af3740bce3c
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+        ts: cacheToProces.join("-")
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    return rp(requestOptions)
+      .then(response => {
+        if (response) {
+          console.log("AsAsAsAsAAs" + cacheToProces.join("-"), requestOptions);
+          console.log(response);
+
+          for (let t of response) {
+            datablock.asset[t._id] = t;
+            delete datablock.pendingAsLoad[t._id];
+          }
+          datablock.disableAsLoader = false;
+          eventEmitter.emit("assetsLoaded", datablock, false);
+        }
+        return true;
+      })
+      .catch(err => {
+        console.log("Fetch next addresses API call error:", err);
+        setTimeout(() => {
+          currentDataState.executeLoadOfAssets(cacheToProces);
+        }, 1000);
+      });
+  }
+
 }

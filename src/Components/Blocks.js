@@ -243,9 +243,9 @@ export default class Blocks extends Component {
                 hideBorder={true}
                 val={b.parsed.extraData}
               />
-              <Text style={styles.extraDataLineBlock}>
+              {/* <Text style={styles.extraDataLineBlock}>
                 {Utils.toAscii(b.parsed.extraData)}
-              </Text>
+              </Text> */}
             </View>
             <View />
           </View>
