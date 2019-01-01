@@ -430,6 +430,7 @@ export default class Addresses extends Component {
               active={sortField === "numberOfTransactions"}
               direction={direction}
               onPress={dir => {
+                debugger
                 this.setState({
                   sortField: "numberOfTransactions",
                   index: 0,

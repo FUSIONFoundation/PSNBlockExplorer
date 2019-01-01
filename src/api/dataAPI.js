@@ -1,5 +1,6 @@
 import moment from "moment";
 import EventEmitter from "events";
+import history from "../history.js";
 import { debug } from "util";
 const rp = require("request-promise");
 
@@ -618,6 +619,48 @@ export default class currentDataState {
     }
 
     return "loading";
+  }
+
+  static async doSearch(searchText) {
+    let uri = server + "/search/" + searchText;
+
+    const requestOptions = {
+      method: "GET",
+      uri,
+      qs: {
+      },
+      headers: {
+        "X-Content-Type-Options": "nosniff"
+      },
+      json: true,
+      gzip: true
+    };
+
+    try {
+      let response = await rp(requestOptions);
+      if ( response ) {
+        if ( response.address ) {
+            let address = response.address[0]._id
+            currentDataState.setMenuPath("Addresses");
+            history.push(`/Addresses/${address}`);
+        } else if ( response.block ) {
+          let address = response.block[0].hash
+          currentDataState.setMenuPath("Blocks");
+          history.push(`/Blocks/${address}`);
+        } else if ( response.transaction ) {
+          let address = response.transaction[0].hash
+          currentDataState.setMenuPath("Transactions");
+          history.push(`/Transactions/${address}`);
+        }
+        return true
+      } else {
+        window.alert("no items found")
+        return false
+      }
+    } catch ( ee ) {
+      window.alert("unable to talk to server")
+      return false
+    }
   }
 
   static executeLoadOfAddresses(c) {
