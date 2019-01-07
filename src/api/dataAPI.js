@@ -751,8 +751,8 @@ export default class currentDataState {
         if (response) {
           let tss = [];
           for (let t of response) {
-            datablock.asset[t._id] = t;
-            tss.push(t._id);
+            datablock.asset[t.commandExtra] = t;
+            tss.push(t.commandExtra);
           }
           datablock.letPageAssetCache[qsStringify] = tss;
           callback(null, datablock.letPageAssetCache[qsStringify]);
@@ -768,7 +768,7 @@ export default class currentDataState {
     return "loading";
   }
 
-  static getAssets(t) {
+  static getAsset(t) {
     t= t.toLowerCase()
     let tr = datablock.asset[t];
     if (tr) {
@@ -826,8 +826,8 @@ export default class currentDataState {
           console.log(response);
 
           for (let t of response) {
-            datablock.asset[t._id] = t;
-            delete datablock.pendingAsLoad[t._id];
+            datablock.asset[t.commandExra] = t;
+            delete datablock.pendingAsLoad[t.commandExra];
           }
           datablock.disableAsLoader = false;
           eventEmitter.emit("assetsLoaded", datablock, false);

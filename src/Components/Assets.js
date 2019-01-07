@@ -36,7 +36,7 @@ export default class Assets extends Component {
 
     this.state = {
       sortField: "name",
-      direction: "desc",
+      direction: "asc",
       index: 0,
       size: 20,
       update: 0,
@@ -79,12 +79,12 @@ export default class Assets extends Component {
   generateAssetList() {
     let ret = [];
 
-    return (
-        <Text>Coming Soon</Text> 
-    )
+    // return (
+    //     <Text>Coming Soon</Text> 
+    // )
 
     let { index, sortField, direction, size } = this.state;
-    let addresses = dataStore.generateAssetList(
+    let assets = dataStore.generateAssetList(
       index,
       sortField,
       direction,
@@ -95,15 +95,15 @@ export default class Assets extends Component {
         }
       }
     );
-    if (addresses === "loading") {
+    if (assets === "loading") {
       return <Text>Loading Asset List...</Text>;
     }
 
-    if (!addresses || addresses.length === 0) {
+    if (!assets || assets.length === 0) {
       return <Text>No Assets</Text>;
     }
-    for (let a of addresses) {
-      let ar = dataStore.getAddress(a);
+    for (let a of assets) {
+      let ar = dataStore.getAsset(a);
       if (ar === "loading") {
         ret.push(
           <View key={a}>
@@ -112,15 +112,6 @@ export default class Assets extends Component {
         );
       } else {
         let index = 0;
-        let san;
-        let haveSan;
-        if (ar.san === 0) {
-          san = "-";
-          haveSan = false;
-        } else {
-          san = ar.san;
-          haveSan = true;
-        }
         ret.push(
           <View key={ar._id}>
             <View
@@ -135,34 +126,35 @@ export default class Assets extends Component {
               }}
             >
               <TouchableOpacity
-                disabled={!haveSan}
+                disabled={true}
                 onPress={() => {
                   dataStore.setMenuPath("Addresses");
                   history.push(`/Addresses/${ar._id}`);
                 }}
               >
-                <Text style={styles.addressShortHash}>{san}</Text>
+                <Text style={styles.addressShortHash}>{ar.commandExtra2}</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled = {true}
                 onPress={() => {
                   dataStore.setMenuPath("Addresses");
                   history.push(`/Addresses/${ar._id}`);
                 }}
               >
-                <Text style={styles.addressAddress}>{ar._id}</Text>
+                <Text style={styles.addressAddress}>{ar.commandExtra}</Text>
               </TouchableOpacity>
-              <Text style={styles.addressBalance}>{Utils.formatWei(ar.fsnBalance)+" FSN"}</Text>
+              {/* <Text style={styles.addressBalance}>{Utils.formatWei(ar.fsnBalance)+" FSN"}</Text>
               <Text style={styles.addressAssetsHeld}>{ar.assetsHeld}</Text>
               <Text style={styles.addressCmds}>
                 {ar.numberOfTransactions}
-              </Text>
+              </Text> */}
             </View>
             <View
               style={{
                 height: 1,
                 width: 1216,
                 backgroundColor:
-                  index++ < addresses.length ? colors.orderGrey : "transparent"
+                  index++ < assets.length ? colors.orderGrey : "transparent"
               }}
             />
           </View>
@@ -172,7 +164,7 @@ export default class Assets extends Component {
     return ret;
   }
 
-  renderOneAddress() {
+  renderOneAsset() {
     let t = this.state.hash;
     let ret;
     let tr = dataStore.getAsset(t);
@@ -328,7 +320,7 @@ export default class Assets extends Component {
           <Pager
             start={this.state.index}
             end={this.state.index + this.state.size - 1}
-            count={currentDataState.datablock.totalAddresses}
+            count={currentDataState.datablock.totalAssets}
             onLeft={() => {
               this.indexMove(-20);
             }}
@@ -468,12 +460,14 @@ export default class Assets extends Component {
         >
           {title}
         </View>
+        <Text style={{marginLeft:80}}>Note: This page is still under construction!</Text>
         <View
           style={[
             styles.detailBox,
             { marginLeft: this.props.history ? 80 : 0 }
           ]}
         >
+          
           <View
             style={{
               flex: "1 0 0",
@@ -482,6 +476,7 @@ export default class Assets extends Component {
               alignItems: "center"
             }}
           >
+          
             <View style={{ marginLeft: 16 }}>
               {this.renderHeader()}
               <View
