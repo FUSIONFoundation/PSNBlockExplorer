@@ -8,6 +8,7 @@ var datablock = {
   priceInfo: {},
   transactions: {},
   blocks: {},
+  ticketNumber : "-",
   totalTransactions: "-",
   lastUpdateTime: new Date(),
   last5Blocks: [],
@@ -129,13 +130,25 @@ function fetchNext5() {
   rp(requestOptions)
     .then(response => {
       if (response) {
+        let ticketNumber 
         console.log("555555");
         console.log(response);
         datablock.last5Blocks = response;
         currentDataState.emit("data", datablock);
         for (let b of response) {
+          if ( !ticketNumber ) {
+            try {
+              ticketNumber = JSON.parse(b.tickInfo).ticketNumber
+            } catch (e ) {
+
+            }
+          }
           datablock.blockCache[b.hash] = b;
           datablock.blockCache[b.height] = b;
+        }
+        if ( ticketNumber && datablock.ticketNumber !== ticketNumber ) {
+          datablock.ticketNumber = ticketNumber
+          currentDataState.emit("ticketNumber", ticketNumber );
         }
         return getNext5Transactions();
       }

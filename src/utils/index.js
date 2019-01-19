@@ -95,6 +95,18 @@ export default class Utils {
     return after;
   }
 
+  static formatPercent( a ) {
+    if (  typeof a === 'string') {
+      return "-"
+    }
+    if ( a > 99 ) {
+      a = a.toFixed( 0 )
+    } else {
+      a = a.toFixed(2)
+    }
+    return a + "%"
+  } 
+
   static displayNumber(value, precision = 2, trimTrailingZeros = false) {
     var units = " K M G T P E Z Y".split(" ");
 
