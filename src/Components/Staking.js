@@ -64,7 +64,7 @@ export default class Staking extends Component {
   }
 
   calcDisplay(valIn, cmdPast) {
-    let val = valIn || this.stakeVal;
+    let val = valIn || this.state.stakeVal;
     let obj = Object.assign({}, this.state);
     let cmd = cmdPast || this.state.cmd;
 
@@ -215,35 +215,35 @@ export default class Staking extends Component {
               text="30d"
               active={cmd === "30d"}
               onPress={() => {
-                this.calcDisplay(null, "30d");
+                this.calcDisplay(undefined, "30d");
               }}
             />
             <BigButton
               text="60d"
               active={cmd === "60d"}
               onPress={() => {
-                this.calcDisplay(null, "60d");
+                this.calcDisplay(undefined, "60d");
               }}
             />
             <BigButton
               text="90d"
               active={cmd === "90d"}
               onPress={() => {
-                this.calcDisplay(null, "90d");
+                this.calcDisplay(undefined, "90d");
               }}
             />
             <BigButton
               text="180d"
               active={cmd === "180d"}
               onPress={() => {
-                this.calcDisplay(null, "180d");
+                this.calcDisplay(undefined, "180d");
               }}
             />
             <BigButton
               text="1yr"
               active={cmd === "1yr"}
               onPress={() => {
-                this.calcDisplay(null, "1yr");
+                this.calcDisplay(undefined, "1yr");
               }}
             />
           </View>
