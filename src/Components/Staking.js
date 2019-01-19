@@ -360,14 +360,14 @@ styles = StyleSheet.create({
     fontSize: 24,
     color: colors.white,
     fontWeight: constants.mediumFont,
-    width: 150
+    width: 100
   },
   calcAmountText: {
     fontFamily: constants.fontFamily,
     fontSize: 24,
     color: colors.white,
     fontWeight: constants.mediumFont,
-    width: 100,
+    width: 150,
     marginRight: 150,
     textAlign: "right"
   },
