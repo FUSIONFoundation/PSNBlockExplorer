@@ -11,14 +11,18 @@ import Header from "./Components/Header/Header.js";
 import AppSelect from "./Components/Header/AppSelect.js";
 import Menu from "./Components/Menu.js";
 import Staking from "./Components/Staking.js";
+import Leaderboard from "./Components/Leaderboard.js";
 import "font-awesome/css/font-awesome.min.css";
-
 import { Route, Router, Switch } from "react-router-dom";
+
 
 class App extends Component {
   render() {
     if (window.location.href.toLowerCase().indexOf( "staking") > 0  ) {
       return <Staking></Staking>
+    }
+    if (window.location.href.toLowerCase().indexOf( "leaderboard") > 0  ) {
+      return <Leaderboard/>
     }
     return (
       <View>
