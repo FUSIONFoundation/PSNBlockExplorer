@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Clipboard,
   TextInput,
+  ActivityIndicator,
   TouchableOpacity
 } from "react-native";
 
@@ -13,7 +14,6 @@ import colors from "./colors";
 import constants from "./constants";
 import utils from "../utils";
 const rp = require("request-promise");
-
 
 let server = "https://api.fusionnetwork.io";
 
@@ -29,7 +29,7 @@ class SelectButton extends Component {
       >
         <View
           style={{
-            width: 100,
+            width: 120,
             marginRight: 16,
             height: 32,
             borderRadius: 3,
@@ -37,7 +37,7 @@ class SelectButton extends Component {
             borderColor: colors.orderGrey,
             backgroundColor: this.props.active
               ? colors.disabledBlue
-              : colors.white
+              : colors.coolGrey
           }}
         >
           <Text style={styles.bigButtonText}>{this.props.text}</Text>
@@ -49,38 +49,56 @@ class SelectButton extends Component {
 
 export default class Leaderboard extends Component {
   state = {
-    loading : true,
-    thisMonth : [],
-    lastMonth : [],
-    lastYear : [],
-    cmd : "Year To Date"
-  }
+    loading: true,
+    thisMonth: [],
+    lastMonth: [],
+    lastYear: [],
+    cmd: "Year To Date"
+  };
   render() {
-    let { loading, error, cmd } = this.state
-    if ( loading ) {
-      return (<View>
-          <Text>Loading...</Text>
-      </View>)
+    let { loading, error, cmd } = this.state;
+    if (loading) {
+      return (
+        <View style={{flex:1,flexDirection:'row', marginTop: 32, marginLeft: 32}}>
+         <ActivityIndicator size="small" color={colors.primaryBlue} />
+          <Text style={[styles.titleText, {marginTop:12,marginLeft:16}]}>Loading...</Text>
+         
+        </View>
+      );
     }
-    if ( error ) {
-      return (<View>
-        <Text>{error}</Text>
-    </View>)
+    if (error) {
+      return (
+        <View>
+          <Text style={styles.titleText}>{error}</Text>
+        </View>
+      );
     }
     return (
       <View style={styles.container}>
         <View>
           <Text style={styles.titleText}>Top 10 Staking Leaderboard</Text>
           <View style={{ flex: 1, flexDirection: "row" }}>
-            <SelectButton text="Year To Date" active={cmd==='Year To Date'} onPress={()=>{
-              this.setState( { cmd : "Year To Date"})
-            }}/>
-            <SelectButton text="Current Month"  active={cmd==='Current Month'}  onPress={()=>{
-              this.setState( { cmd : "Current Month"})
-            }} />
-            <SelectButton text="Prior Month"  active={cmd==='Prior Month'}  onPress={()=>{
-              this.setState( { cmd : "Prior Month"})
-            }}/>
+            <SelectButton
+              text="Year To Date"
+              active={cmd === "Year To Date"}
+              onPress={() => {
+                this.setState({ cmd: "Year To Date" });
+              }}
+            />
+            <SelectButton
+              text="Current Month"
+              active={cmd === "Current Month"}
+              onPress={() => {
+                this.setState({ cmd: "Current Month" });
+              }}
+            />
+            <SelectButton
+              text="Prior Month"
+              active={cmd === "Prior Month"}
+              onPress={() => {
+                this.setState({ cmd: "Prior Month" });
+              }}
+            />
           </View>
           {this.renderTitle()}
           {this.renderTable()}
@@ -90,53 +108,71 @@ export default class Leaderboard extends Component {
   }
 
   renderTitle() {
-    return ( <View style={{flex:1,flexDirection:'row', justifyContent:'flex-start'}}>
-      <Text>Wallet</Text>
-      <Text>pFSN</Text>
-      <Text>FSN</Text>
-    </View>)
+    return (
+      <View
+        style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start", marginTop : 16 , marginBottom : 4}}
+      >
+        <Text style={[styles.headerText, { width: 340, marginRight: 4 }]}>
+          Wallet
+        </Text>
+        <Text style={[styles.headerText, { textAlign: 'center', width: 180, marginRight: 4 }]}>P-FSN Earned</Text>
+        <Text style={[styles.headerText, { textAlign: 'center', width: 180, marginRight: 4 }]}>FSN Earned</Text>
+      </View>
+    );
   }
 
   renderTable() {
-    let ret = []
+    let ret = [];
 
-    let data
+    let data;
     switch (this.state.cmd) {
-      case 'Prior Month':
-        data = this.state.lastMonth
-        break
-      case 'Current Month':
-        data = this.state.thisMonth
-        break
+      case "Prior Month":
+        data = this.state.lastMonth;
+        break;
+      case "Current Month":
+        data = this.state.thisMonth;
+        break;
       default:
-        data = this.state.lastYear
-        break
-
+        data = this.state.lastYear;
+        break;
     }
 
-    for ( let row of data ) {
-      let count = row['count(miner)']
+    for (let row of data) {
+      let count = row["count(miner)"];
+      let miner = row.miner.toLowerCase()
 
       ret.push(
-     <View key={row.miner} style={{flex:1,flexDirection:'row', justifyContent:'flex-start'}}>
-        <Text>{row.miner.toLowerCase()}</Text>
-        <Text>{this.pfsnEarned(count)}</Text>
-        <Text>{this.fsnEarned(count)}</Text>
-      </View>
-      )
+        <View
+          key={row.miner}
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            marginBottom : 4
+          }}
+        >
+        <TouchableOpacity onPress={()=>{
+            window.open("https://blocks.fusionnetwork.io/Addresses/" + miner)
+        }}>
+          <Text style={[styles.rowText, { width: 340, marginRight: 4 }]}>{miner}</Text>
+        </TouchableOpacity>
+          <Text style={[styles.rowText, { textAlign: 'right', width: 180, marginRight: 4 }]}>{this.pfsnEarned(count)}</Text>
+          <Text style={[styles.rowText, { textAlign: 'right', width: 180, marginRight: 4 }]}>{this.fsnEarned(count)}</Text>
+        </View>
+
+      );
     }
 
-    return ret
+    return ret;
   }
 
-  pfsnEarned( count ) {
-    return count * 2.5
+  pfsnEarned(count) {
+    return (count * 2.5).toFixed(2);
   }
 
-  fsnEarned( count ) {
-    return count * .625
+  fsnEarned(count) {
+    return (count * 0.625).toFixed(2);
   }
-
 
   componentDidMount() {
     this.mounted = true;
@@ -144,31 +180,33 @@ export default class Leaderboard extends Component {
     const requestOptions = {
       method: "GET",
       uri: server + "/leaderboard",
-      qs: {
-      },
+      qs: {},
       headers: {
         "X-Content-Type-Options": "nosniff"
       },
       json: true,
       gzip: true
     };
-  
+
     rp(requestOptions)
       .then(response => {
         if (response) {
-          if ( this.mounted ) {
-            this.setState( {
+          if (this.mounted) {
+            this.setState({
               loading: false,
-               lastMonth : response.lastMonth,
-               lastYear : response.lastYear,
-               thisMonth : response.lastMonth
-             } )
+              lastMonth: response.lastMonth,
+              lastYear: response.lastYear,
+              thisMonth: response.thisMonth
+            });
           }
         }
       })
       .catch(err => {
         console.log("API call error:", err.message);
-        this.setState( { error : "Unable to load, please refresh the page" , loading : false })
+        this.setState({
+          error: "Unable to load, please refresh the page",
+          loading: false
+        });
       });
   }
 
@@ -185,10 +223,33 @@ styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    backgroundColor: colors.primaryBlue,
-    padding: 64,
+    backgroundColor: colors.white,
+    padding: 32,
     height: 800,
     width: 800
+  },
+  titleText: {
+    fontFamily: constants.fontFamily,
+    fontSize: 20,
+    color: colors.textBlue,
+    fontWeight: constants.mediumFont,
+    marginBottom: 16
+  },
+  headerText: {
+    fontFamily: constants.fontFamily,
+    fontSize: 20,
+    color: colors.white,
+    fontWeight: constants.mediumFont,
+    backgroundColor: colors.primaryBlue,
+    padding : 4
+  },
+  rowText: {
+    fontFamily: constants.fontFamily,
+    fontSize: 14,
+    color: colors.black,
+    fontWeight: constants.mediumFont,
+    backgroundColor: colors.disabledBlue,
+    padding : 4
   },
   youStakeRowText: {
     flex: 1,
@@ -291,7 +352,7 @@ styles = StyleSheet.create({
     fontWeight: constants.regularFont,
     color: colors.textBlue,
     textAlign: "center",
-    padding: 8,
+    padding: 8
   },
   info: {
     fontSize: 16,
