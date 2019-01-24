@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import colors from "./colors";
-import constants from "./constants";
-import styles from "./StandardStyles.js";
+import { View, Image, TouchableOpacity } from "react-native";
 
 let sortUp = require( "../images/sort-up-light.svg")
 let sortUpActive = require( "../images/sort-up-dark.svg")

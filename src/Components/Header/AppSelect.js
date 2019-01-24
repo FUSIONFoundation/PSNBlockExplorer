@@ -9,10 +9,8 @@ import {
 } from "react-native";
 import colors from "../colors";
 import constants from "../constants";
-import NodeSelect from "../NodeSelect";
 import Header from "./Header";
 
-var fusionLogo = require("../../images/explorer-logo.svg");
 var wallet = require("./wallet.svg");
 var asset = require("./asset.svg");
 var autobuy = require("./autobuy.svg");

@@ -2,21 +2,16 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
-  ActivityIndicator
 } from "react-native";
 
 import "../App.css";
 import colors from "./colors";
-import constants from "./constants";
 import "font-awesome/css/font-awesome.min.css";
 import dataStore from "../api/dataAPI"
 import styles from "./StandardStyles.js";
 
-var NODESELECT_WIDTH = 180;
-var NODESELECT_HEIGHT = 44;
 
 export default class BlockSelect extends Component {
 

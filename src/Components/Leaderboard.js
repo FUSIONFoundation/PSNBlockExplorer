@@ -3,8 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Clipboard,
-  TextInput,
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
@@ -12,7 +10,6 @@ import {
 import "../App.css";
 import colors from "./colors";
 import constants from "./constants";
-import utils from "../utils";
 const rp = require("request-promise");
 
 let server = "https://api.fusionnetwork.io";
@@ -329,7 +326,6 @@ styles = StyleSheet.create({
     fontFamily: constants.mediumFont,
     color: colors.labelGrey,
     height: 48,
-    alignSelf: "flex-end",
     textAlign: "right",
     paddingRight: 4,
     paddingLeft: 4,

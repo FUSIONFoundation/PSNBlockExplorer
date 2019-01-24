@@ -1,7 +1,6 @@
-import moment from "moment";
+
 import EventEmitter from "events";
 import history from "../history.js";
-import { debug } from "util";
 const rp = require("request-promise");
 
 var datablock = {
@@ -328,7 +327,7 @@ export default class currentDataState {
   // cacheTLoad : {},
 
   static convertNumberToStringJSON( str , item ) {
-    item = '"' + item + '"' + ":" 
+    item = '"' + item + '":'
     let i = str.indexOf( item )
     if ( i < 1) {
       return

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import history from "../history.js";
 import styles from "./StandardStyles.js";
 import dataStore from "../api/dataAPI.js";
 
-var path = "Dashboard";
 
 class MenuButton extends Component {
   render() {

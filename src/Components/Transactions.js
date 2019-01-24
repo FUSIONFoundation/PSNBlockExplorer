@@ -3,15 +3,12 @@ import {
   View,
   Text,
   Clipboard,
-  TouchableOpacity,
-  Image,
-  StyleSheet
+  TouchableOpacity
 } from "react-native";
 
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
 import dataStore from "../api/dataAPI";
-import TransactionListLine from "./TransactionListLine";
 import Utils from "../utils";
 import moment from "moment";
 import colors from "./colors.js";
@@ -173,8 +170,6 @@ export default class Transactions extends Component {
         );
       } else {
         let hash = tr.hash;
-        let from = tr.fromAddress;
-        let to = tr.toAddress;
         let data = tr.data;
         let fusionCommand = Utils.getFusionCmdDisplayName(
           tr.fusionCommand,
@@ -305,13 +300,6 @@ export default class Transactions extends Component {
       let toAddress = data.ToAddress || tr.toAddress;
       let value = data.Value;
       let AssetID = data.AssetID;
-
-      let gasPrice = BigNumber(tr.transaction.gasPrice).multiply(
-        tr.receipt.gasUsed
-      );
-
-      gasPrice = Utils.formatWei(gasPrice.toString());
-      // debugger
 
       if (toAddress === "0xffffffffffffffffffffffffffffffffffffffff") {
         toAddress = undefined;

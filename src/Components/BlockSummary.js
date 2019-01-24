@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 
 import styles from "./StandardStyles.js";
 import Utils from "../utils";
-import moment from "moment";
+//import moment from "moment";
 import Colors from "./colors.js";
 import history from "../history.js";
 import dataStore from "../api/dataAPI.js";

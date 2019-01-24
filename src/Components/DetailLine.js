@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text} from "react-native";
 
 import styles from "./StandardStyles.js";
-import TitleBar from "./TitleBar.js";
-import dataStore from "../api/dataAPI.js";
-import Utils from '../utils'
 import Colors from "./colors.js";
 
 export default class DetailLine extends Component {

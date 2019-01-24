@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 
 import styles from "./StandardStyles.js";
 import Utils from "../utils";
-import moment from "moment";
+
 import Colors from "./colors.js";
 
 export default class TransactionListLine extends Component {
@@ -19,7 +19,7 @@ export default class TransactionListLine extends Component {
     let from = t.fromAddress
     let to = t.toAddress
     let fusionCommand = t.fusionCommand
-    let extraCommand = t.extraCommand
+    //let extraCommand = t.extraCommand
 
     let shortHash = hash.substr( 0, 32) + "..."
  

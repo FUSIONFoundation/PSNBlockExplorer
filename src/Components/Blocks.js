@@ -3,8 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
-  StyleSheet,
   ActivityIndicator
 } from "react-native";
 
@@ -43,7 +41,6 @@ export default class Blocks extends Component {
       direction: "asc",
       index: 0,
       size: 20,
-      update: 0
     };
     this.dataListener = this.dataListener.bind(this);
   }
@@ -122,7 +119,6 @@ export default class Blocks extends Component {
     let transactionCount = b.numberOfTransactions;
     let reward = "" + Utils.calcReward(b.height) + " FSN";
     let t = Utils.timeAgo(new Date(b.timeStamp * 1000)) + " ago";
-    let tText = transactionCount === 1 ? "Transaction" : "Transactions";
     let parentHash = b.parsed.parentHash;
 
     let leftEnabled = b.height > 0;

@@ -3,7 +3,6 @@ import { View, Text , TouchableOpacity} from "react-native";
 
 import styles from "./StandardStyles.js";
 import Utils from "../utils";
-import moment from "moment";
 import Colors from "./colors.js";
 import dataStore from "../api/dataAPI.js";
 import history from "../history.js";
@@ -21,7 +20,6 @@ export default class TransactionSummary extends Component {
     let from = t.fromAddress
     let to = t.toAddress
     let fusionCommand = t.fusionCommand
-    let extraCommand = t.extraCommand
 
     let shortHash = hash.substr( 0, 32) + "..."
  

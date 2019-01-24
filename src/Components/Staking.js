@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Clipboard,
   TextInput,
   TouchableOpacity
 } from "react-native";
@@ -71,8 +70,8 @@ export default class Staking extends Component {
     let ticketNumber = parseInt(this.state.ticketNumber);
 
     val = parseInt(val);
-    if (isNaN(val) || val <= 0 || isNaN(ticketNumber)) {
-      obj.stakeVal = "0";
+    if (isNaN(val) || val <= 0 || isNaN(ticketNumber) || valIn.length === 0) {
+      obj.stakeVal = valIn
       obj.PFSN_Amount = "-";
       obj.FSN_Amount = "-";
       obj.PFSN_Return = "-";
@@ -104,61 +103,36 @@ export default class Staking extends Component {
         break;
     }
 
-    let averageBlockTime = 15;
-    let numberOfTicketsInSystem = 10000; // update to realtime
-    let numberOfTicketsUserBuys = val;
-    let timeInvestedDays = days;
-    let pFsnToFsnExchange = 1;
+    //let averageBlockTime = 15;
+    let Total_Tickets =  ticketNumber
+    let User_FSN = val;
+    let User_Tickets = Math.floor(User_FSN/200)
 
-    let numberOfBlocksPerDay = 5760;
-    let totalExistingTicketsPlusNewTickets =
-      numberOfTicketsUserBuys + numberOfTicketsInSystem;
+    let Time_Invested = days;
+    //let pFsnToFsnExchange = 1;
 
-    let probabilityOfReward =
-      numberOfTicketsUserBuys / totalExistingTicketsPlusNewTickets;
+    let Blocks_Per_Day = 5760;
+    let New_Total_Tickets = Total_Tickets+User_Tickets
+    let Probability_Reward = User_Tickets/ (New_Total_Tickets)
+    let PFSN_Reward_Block = 2.5
+    let FSN_Reward_Block = .625
+    let Total_PFSN_Reward_Day_Possible = PFSN_Reward_Block*Blocks_Per_Day
+    let Total_FSN_Reward_Day_Possible = Blocks_Per_Day*FSN_Reward_Block
+    let PFSN_Reward_User = Time_Invested*Probability_Reward*Total_PFSN_Reward_Day_Possible
+    let ROR_PFSN = PFSN_Reward_User/User_FSN
+    let FSN_Reward_User =Time_Invested*Probability_Reward*Total_FSN_Reward_Day_Possible
+    let ROR_FSN =FSN_Reward_User/User_FSN
+    let FSN_PFSN_Reward_User = PFSN_Reward_User+FSN_Reward_User
+    let ROR_PFSN_PLUS_FSN = FSN_PFSN_Reward_User/User_FSN
 
-    let pfsnRewardPerBlock = 2.5;
-    let fsnRewardPerBlock = 0.625;
-    let totalPFSNRRewardsPerDay = pfsnRewardPerBlock * numberOfBlocksPerDay;
-    let totalFSNRRewardsPerDay = fsnRewardPerBlock * numberOfBlocksPerDay;
 
-    let pfsnDailyReturnRate =
-      (probabilityOfReward * totalPFSNRRewardsPerDay) /
-      (numberOfTicketsUserBuys * 200);
-    let pfsnEarned =
-      numberOfTicketsUserBuys *
-        Math.pow(1 + pfsnDailyReturnRate, timeInvestedDays) -
-      numberOfTicketsUserBuys;
-    let pfsnAnnualizedReturn = -1 + Math.pow(1 + pfsnDailyReturnRate, 365);
-
-    let fsnDailyReturnRate =
-      (probabilityOfReward * totalFSNRRewardsPerDay) /
-      (numberOfTicketsUserBuys * 200);
-    let fsnEarned =
-      numberOfTicketsUserBuys *
-        Math.pow(1 + fsnDailyReturnRate, timeInvestedDays) -
-      numberOfTicketsUserBuys;
-    let fsnAnnualizedReturn = -1 + Math.pow(1 + fsnDailyReturnRate, 365);
-
-    let totalReturn = pfsnEarned * pFsnToFsnExchange + fsnEarned;
-    let totalDailyReturn =
-      (probabilityOfReward *
-        (totalPFSNRRewardsPerDay * pFsnToFsnExchange +
-          totalFSNRRewardsPerDay)) /
-      (numberOfTicketsUserBuys * 200);
-    let totalQAnnualizedReturn = -1 + Math.pow(1 + totalDailyReturn, 365);
-
-    fsnEarned = fsnEarned.toFixed(2);
-    pfsnEarned = pfsnEarned.toFixed(2);
-    totalReturn = totalReturn.toFixed(2);
-
-    obj.PFSN_Amount = pfsnEarned;
-    obj.FSN_Amount = fsnEarned;
-    obj.PFSN_Return = pfsnAnnualizedReturn;
-    obj.FSN_Return = fsnAnnualizedReturn;
-    obj.Total_Amount = totalReturn;
-    obj.Total_Return = totalQAnnualizedReturn;
-    obj.stakeVal = "" + val;
+    obj.PFSN_Amount = PFSN_Reward_User.toFixed(2);
+    obj.FSN_Amount = FSN_Reward_User.toFixed(2);
+    obj.PFSN_Return = ROR_PFSN * 100;
+    obj.FSN_Return = ROR_FSN * 100;
+    obj.Total_Amount = FSN_PFSN_Reward_User.toFixed(2);
+    obj.Total_Return = ROR_PFSN_PLUS_FSN * 100;
+    obj.stakeVal = "" + valIn;
 
     obj.cmd = cmd;
     this.setState(obj);
@@ -169,7 +143,7 @@ export default class Staking extends Component {
   }
 
   componentDidMount() {
-    this.calcDisplay(100);
+    this.calcDisplay(1000);
     this.mounted = true;
     currentDataState.on("ticketNumber", this.ticketNumberChanged);
   }

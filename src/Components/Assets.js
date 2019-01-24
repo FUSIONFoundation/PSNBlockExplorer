@@ -4,18 +4,14 @@ import {
   Text,
   Clipboard,
   TouchableOpacity,
-  Image,
-  StyleSheet
+
 } from "react-native";
 
 import styles from "./StandardStyles.js";
 import TitleBar from "./TitleBar.js";
 import dataStore from "../api/dataAPI";
-import TransactionListLine from "./TransactionListLine";
 import Utils from "../utils";
-import moment from "moment";
 import colors from "./colors.js";
-import BigNumber from "big-number";
 import history from "../history.js";
 import Pager from "./Pager";
 import Sorter from "./Sorter";

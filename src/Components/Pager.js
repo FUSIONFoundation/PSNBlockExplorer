@@ -3,19 +3,15 @@ import {
   View,
   Text,
   TextInput,
-  Image,
-  StyleSheet,
   TouchableOpacity
 } from "react-native";
 import colors from "./colors";
-import constants from "./constants";
 import styles from "./StandardStyles.js";
-import currentDataState from "../api/dataAPI";
 
 export default class Pager extends Component {
   constructor(props) {
     super(props);
-    let { start, end, count } = this.props;
+    let { start, end } = this.props;
     let pageSize = end - start + 1;
     let pageNumber = Math.floor(start / pageSize) + 1;
 
