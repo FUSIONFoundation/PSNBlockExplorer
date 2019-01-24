@@ -45,7 +45,7 @@ class BigButton extends Component {
 
 export default class Staking extends Component {
   state = {
-    stakeVal: 100,
+    stakeVal: 1000,
     cmd: "30d",
     PFSN_Amount: "-",
     FSN_Amount: "-",
@@ -70,7 +70,7 @@ export default class Staking extends Component {
     let ticketNumber = parseInt(this.state.ticketNumber);
 
     val = parseInt(val);
-    if (isNaN(val) || val <= 0 || isNaN(ticketNumber) || valIn.length === 0) {
+    if (isNaN(val) || val <= 0 || isNaN(ticketNumber) || !valIn || valIn.length === 0) {
       obj.stakeVal = valIn
       obj.PFSN_Amount = "-";
       obj.FSN_Amount = "-";
@@ -140,10 +140,11 @@ export default class Staking extends Component {
 
   ticketNumberChanged(ticketNumber) {
     this.setState({ ticketNumber });
+    this.calcDisplay( this.state.stakeVal )
   }
 
   componentDidMount() {
-    this.calcDisplay(1000);
+    this.calcDisplay("1000");
     this.mounted = true;
     currentDataState.on("ticketNumber", this.ticketNumberChanged);
   }
