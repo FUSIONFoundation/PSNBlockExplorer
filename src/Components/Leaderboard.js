@@ -9,6 +9,7 @@ import {
 
 import "../App.css";
 import colors from "./colors";
+import utils from "../utils";
 import constants from "./constants";
 const rp = require("request-promise");
 
@@ -29,17 +30,24 @@ class SelectButton extends Component {
             width: 120,
             marginRight: 16,
             height: 36,
-            overflow : 'visible',
+            overflow: "visible",
             borderRadius: 3,
             // borderWidth: 1,
             // borderColor: colors.orderGrey,
-            boxShadow: '0 6px 12px 0 rgba(189, 196, 206, 0.2)',
+            boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
             backgroundColor: this.props.active
               ? colors.primaryBlue
               : colors.white
           }}
         >
-          <Text style={[styles.bigButtonText,{color:this.props.active?colors.white:colors.textBlue}]}>{this.props.text}</Text>
+          <Text
+            style={[
+              styles.bigButtonText,
+              { color: this.props.active ? colors.white : colors.textBlue }
+            ]}
+          >
+            {this.props.text}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -58,10 +66,18 @@ export default class Leaderboard extends Component {
     let { loading, error, cmd } = this.state;
     if (loading) {
       return (
-        <View style={{flex:1,flexDirection:'row', marginTop: 32, marginLeft: 32}}>
-         <ActivityIndicator size="small" color={colors.primaryBlue} />
-          <Text style={[styles.titleText, {marginTop:12,marginLeft:16}]}>Loading...</Text>
-         
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            marginTop: 32,
+            marginLeft: 32
+          }}
+        >
+          <ActivityIndicator size="small" color={colors.primaryBlue} />
+          <Text style={[styles.titleText, { marginTop: 12, marginLeft: 16 }]}>
+            Loading...
+          </Text>
         </View>
       );
     }
@@ -74,9 +90,16 @@ export default class Leaderboard extends Component {
     }
     return (
       <View style={styles.container}>
-        <View>
+        <View style={styles.subContainer}>
           <Text style={styles.titleText}>Staking Leaderboard</Text>
-          <View style={{ flex: 1, flexDirection: "row" , marginBottom : 32, marginTop : 16 }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              marginBottom: 32,
+              marginTop: 16
+            }}
+          >
             <SelectButton
               text="Current Month"
               active={cmd === "Current Month"}
@@ -91,7 +114,7 @@ export default class Leaderboard extends Component {
                 this.setState({ cmd: "Prior Month" });
               }}
             />
-             <SelectButton
+            <SelectButton
               text="Year To Date"
               active={cmd === "Year To Date"}
               onPress={() => {
@@ -99,13 +122,16 @@ export default class Leaderboard extends Component {
               }}
             />
           </View>
-          <View style = {{
- boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
- overflow : 'visible',
- padding : 32
-          }}>
-                    {this.renderTitle()}
-           {this.renderTable()}
+          <View
+            style={{
+              boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+              overflow: "visible",
+              padding: 32
+            }}
+          >
+            {this.renderTop3()}
+            {this.renderTitle()}
+            {this.renderTable()}
           </View>
         </View>
       </View>
@@ -115,16 +141,103 @@ export default class Leaderboard extends Component {
   renderTitle() {
     return (
       <View
-        style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start", marginTop : 16 , marginBottom : 4}}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          marginTop: 16,
+          marginBottom: 4
+        }}
       >
-        <Text style={[styles.headerText, { width: 32}]}>
-          #
-        </Text>
+        <Text style={[styles.headerText, { width: 32 }]}>#</Text>
         <Text style={[styles.headerText, { width: 340, marginRight: 4 }]}>
           Address
         </Text>
-        <Text style={[styles.headerText, { textAlign: 'right', width: 90, marginRight: 4 }]}>P-FSN</Text>
-        <Text style={[styles.headerText, { textAlign: 'right', width: 90, marginRight: 4 }]}>FSN Earned</Text>
+        <Text
+          style={[
+            styles.headerText,
+            { textAlign: "right", width: 90, marginRight: 4 }
+          ]}
+        >
+          P-FSN
+        </Text>
+        <Text
+          style={[
+            styles.headerText,
+            { textAlign: "right", width: 90, marginRight: 4 }
+          ]}
+        >
+          FSN Earned
+        </Text>
+      </View>
+    );
+  }
+
+  renderTop3() {
+    let ret = [];
+
+    let data;
+    switch (this.state.cmd) {
+      case "Prior Month":
+        data = this.state.lastMonth;
+        break;
+      case "Current Month":
+        data = this.state.thisMonth;
+        break;
+      default:
+        data = this.state.lastYear;
+        break;
+    }
+
+    let datas = [data[1], data[0], data[3]];
+    let heights = [134, 146, 134];
+
+    for (let index = 0; index < 3; index++) {
+      let row = datas[index];
+
+      let count = row["count(miner)"];
+      let miner = row.miner.toLowerCase();
+
+      ret.push(
+        <View
+          key={"sep1" + row.miner}
+          style={{
+            width: 226,
+            height: heights[index],
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+            overflow: "visible"
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              window.open("https://blocks.fusionnetwork.io/Addresses/" + miner);
+            }}
+          >
+            <Text style={[styles.rowText, { color: colors.linkBlue, marginBottom : 4 }]}>
+              {utils.midHashDisplay(miner)}
+            </Text>
+          </TouchableOpacity>
+          <Text style={[styles.top3Number]}>{this.pfsnEarned(count)}
+          <Text style={[styles.top3Text]}>PFSN</Text>
+          </Text>
+          <Text style={[styles.top3Number]}>{this.fsnEarned(count)}
+          <Text style={[styles.top3Text]}>FSN</Text>
+          </Text>
+        </View>
+      );
+    }
+
+    return (
+      <View
+        key="top3"
+        style={{
+          flex: 1,
+          flexDirection: "row"
+        }}
+      >
+        {ret}
       </View>
     );
   }
@@ -145,25 +258,28 @@ export default class Leaderboard extends Component {
         break;
     }
 
-    let index = 1
+    let index = 1;
 
     for (let row of data) {
+      if (index < 4) {
+        index++;
+        continue;
+      }
       let count = row["count(miner)"];
-      let miner = row.miner.toLowerCase()
+      let miner = row.miner.toLowerCase();
 
       ret.push(
         <View
-        key={"sep"+row.miner}
-        style={{
-          marginTop : 8,
-          marginBottom : 8,
-          width : 565,
-          height : 1,
-          backgroundColor : '#bdc4ce'
-        }}
-      />
-
-      )
+          key={"sep" + row.miner}
+          style={{
+            marginTop: 8,
+            marginBottom: 8,
+            width: 565,
+            height: 1,
+            backgroundColor: "#bdc4ce"
+          }}
+        />
+      );
 
       ret.push(
         <View
@@ -172,24 +288,43 @@ export default class Leaderboard extends Component {
             flex: 1,
             flexDirection: "row",
             justifyContent: "flex-start",
-            marginBottom : 4
+            marginBottom: 4
           }}
         >
-          <Text style={[styles.headerText, { width: 32}]}>
-          {index}
-        </Text>
-        <TouchableOpacity onPress={()=>{
-            window.open("https://blocks.fusionnetwork.io/Addresses/" + miner)
-        }}>
-      
-          <Text style={[styles.rowText, { color : colors.linkBlue,width: 340, marginRight: 4 }]}>{miner}</Text>
-        </TouchableOpacity>
-          <Text style={[styles.rowText, { textAlign: 'right', width: 90, marginRight: 4 }]}>{this.pfsnEarned(count)}</Text>
-          <Text style={[styles.rowText, { textAlign: 'right', width: 90, marginRight: 4 }]}>{this.fsnEarned(count)}</Text>
+          <Text style={[styles.headerText, { width: 32 }]}>{index}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              window.open("https://blocks.fusionnetwork.io/Addresses/" + miner);
+            }}
+          >
+            <Text
+              style={[
+                styles.rowText,
+                { color: colors.linkBlue, width: 340, marginRight: 4 }
+              ]}
+            >
+              {miner}
+            </Text>
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.rowText,
+              { textAlign: "right", width: 90, marginRight: 4 }
+            ]}
+          >
+            {this.pfsnEarned(count)}
+          </Text>
+          <Text
+            style={[
+              styles.rowText,
+              { textAlign: "right", width: 90, marginRight: 4 }
+            ]}
+          >
+            {this.fsnEarned(count)}
+          </Text>
         </View>
-
       );
-      index++
+      index++;
     }
 
     return ret;
@@ -251,11 +386,20 @@ styles = StyleSheet.create({
     flexShrink: 0,
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignItems: "center",
     backgroundColor: colors.white,
     padding: 32,
     height: 800,
-    width: 800
+    width: "100%"
+  },
+  subContainer: {
+    flex: 1,
+    flexGrow: 0,
+    flexShrink: 0,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: colors.white
   },
   titleText: {
     fontFamily: constants.fontFamily,
@@ -270,7 +414,7 @@ styles = StyleSheet.create({
     color: colors.labelGrey,
     fontWeight: constants.mediumFont,
     backgroundColor: colors.white,
-    padding : 4
+    padding: 4
   },
   rowText: {
     fontFamily: constants.fontFamily,
@@ -278,7 +422,21 @@ styles = StyleSheet.create({
     color: colors.labelGrey,
     fontWeight: constants.mediumFont,
     backgroundColor: colors.white,
-    padding : 4
+    padding: 4
+  },
+  top3Number: {
+    fontFamily: constants.fontFamily,
+    fontSize: 16,
+    color: colors.darkBlue,
+    fontWeight: constants.boldFont,
+    padding: 4
+  },
+  top3Text: {
+    fontFamily: constants.fontFamily,
+    fontSize: 12,
+    color: colors.darkBlue,
+    fontWeight: constants.mediumFont,
+    padding: 4
   },
   youStakeRowText: {
     flex: 1,

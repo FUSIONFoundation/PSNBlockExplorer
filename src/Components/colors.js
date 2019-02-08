@@ -72,6 +72,10 @@ export default class Colors
         return '#4a4a4a'
     }
 
+    static get darkBlue() {
+        return '#000f21'
+    }
+
     static get sexyPurple() {
         return '#462ab0;'
     } 
