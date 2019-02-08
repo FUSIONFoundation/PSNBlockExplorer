@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 
 import "../App.css";
@@ -65,10 +66,25 @@ export default class Leaderboard extends Component {
     thisMonth: [],
     lastMonth: [],
     lastYear: [],
-    cmd: "Year To Date"
+    cmd: "Year To Date",
+    width: parseInt(Dimensions.get("window").width)
   };
+
+  constructor(props) {
+    super(props);
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
   render() {
     let { loading, error, cmd } = this.state;
+
+    if (this.state.width < 640) {
+      this.stacked = true;
+      this.widthToUse = this.state.width - 64;
+    } else {
+      this.stacked = false;
+      this.widthToUse = 585;
+    }
+
     if (loading) {
       return (
         <View
@@ -128,17 +144,17 @@ export default class Leaderboard extends Component {
             />
           </View>
           {this.renderTop3()}
-            <View style={{height:20}}/>
+          <View style={{ height: 20 }} />
           <View
             style={{
               boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
               overflow: "visible",
               paddingTop: 0,
-              paddingRight: 32,
-              paddingLeft: 32,
+              paddingRight: this.stacked ? 16 : 32,
+              paddingLeft: this.stacked ? 16 : 32,
               paddingBottom: 32,
               borderWidth: 1,
-              borderColor: colors.tagGrey,
+              borderColor: colors.tagGrey
             }}
           >
             {this.renderTitle()}
@@ -150,6 +166,9 @@ export default class Leaderboard extends Component {
   }
 
   renderTitle() {
+    if (this.stacked) {
+      return undefined;
+    }
     return (
       <View
         style={{
@@ -161,9 +180,10 @@ export default class Leaderboard extends Component {
         }}
       >
         <Text style={[styles.headerText, { width: 32 }]}>#</Text>
-        <Text style={[styles.headerText, { width: 340, marginRight: 4 }]}>
+        <Text style={[styles.headerText, { width: 372, marginRight: 4 }]}>
           Address
         </Text>
+
         <Text
           style={[
             styles.headerText,
@@ -200,91 +220,178 @@ export default class Leaderboard extends Component {
         break;
     }
 
-    let datas = [data[1], data[0], data[3]];
+    let datas = [data[1], data[0], data[2]];
     let heights = [134, 146, 134];
     let heightDiff = [12, 0, 12];
     let images = [silver, gold, bronze];
     let sizes = [52, 64, 40];
-    let width = 190
+    let sizesStacked = [64, 52, 40];
+    let width = 190;
+    let imagesStacked = [gold, silver, bronze];
 
     for (let index = 0; index < 3; index++) {
-      let row = datas[index];
+      let row = this.stacked ? data[index] : datas[index];
 
       let count = row["count(miner)"];
       let miner = row.miner.toLowerCase();
 
-      ret.push(
-        <View
-          key={"sep1" + row.miner}
-          style={{
-            width: width,
-            height: 200,
-            flex: 1,
-            justifyContent: "flex-start",
-            alignItems: "space-between",
-            overflow: "visible",
-            marginRight : index === 1 ? 30 : 0,
-            marginLeft : index === 1 ? 30 : 0,
-          }}
-        >
+      if (this.stacked) {
+        ret.push(
           <View
+            key={"sep1" + row.miner}
             style={{
-              zIndex: 1,
-              height: 32 + heightDiff[index],
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-              position : 'relative' ,
-              top : sizes[index] /2
+              width: this.widthToUse + 32,
+              height: 104,
+              paddingRight: 0,
+              paddingLeft: 0,
+              // flex: 1,
+              flexDirection: "row",
+              // justifyContent: "flex-start",
+              // alignItems: "flex-start",
+              boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+              overflow: "visible",
+              borderWidth: 1,
+              borderColor: colors.tagGrey,
+              marginBottom: index === 2 ? 8 : 12
             }}
           >
-            <Image
-              source={images[index]}
-              resizeMode="contain"
-              style={{ width: sizes[index], height: sizes[index] }}
-            />
+            <View
+              style={{
+                height: 104,
+                width: 96,
+                justifyContent: "center",
+                alignItems: "center"
+                // backgroundColor : 'red'
+              }}
+            >
+              <Image
+                source={imagesStacked[index]}
+                resizeMode="contain"
+                style={{
+                  width: sizesStacked[index],
+                  height: sizesStacked[index]
+                }}
+              />
+            </View>
+            <View
+              key={"sep1" + row.miner}
+              style={{
+                width: this.widthToUse - 96,
+                height: 104,
+                justifyContent: "center",
+                alignItems: "flex-start",
+                marginTop: 28
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  window.open(
+                    "https://blocks.fusionnetwork.io/Addresses/" + miner
+                  );
+                }}
+              >
+                <Text
+                  style={[
+                    styles.rowText,
+                    { color: colors.linkBlue, marginBottom: 4 }
+                  ]}
+                >
+                  {utils.midHashDisplay(miner)}
+                </Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row"
+                }}
+              >
+                <Text style={[styles.top3Number]}>
+                  {this.pfsnEarned(count)}
+                  <Text style={[styles.top3Text]}>PFSN</Text>
+                </Text>
+                <Text style={[styles.top3Number]}>
+                  {this.fsnEarned(count)}
+                  <Text style={[styles.top3Text]}>FSN</Text>
+                </Text>
+              </View>
+            </View>
           </View>
+        );
+      } else {
+        ret.push(
           <View
             key={"sep1" + row.miner}
             style={{
               width: width,
-              height: heights[index],
-              justifyContent: "center",
-              borderWidth: 1,
-              borderColor: colors.tagGrey,
-              alignItems: "center",
-              boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+              height: 200,
+              flex: 1,
+              justifyContent: "flex-start",
+              alignItems: "space-between",
               overflow: "visible",
-              alignSelf: "flex-end",
+              marginRight: index === 1 ? 30 : 0,
+              marginLeft: index === 1 ? 30 : 0
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                window.open(
-                  "https://blocks.fusionnetwork.io/Addresses/" + miner
-                );
+            <View
+              style={{
+                zIndex: 1,
+                height: 32 + heightDiff[index],
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+                position: "relative",
+                top: sizes[index] / 2
               }}
             >
-              <Text
-                style={[
-                  styles.rowText,
-                  { color: colors.linkBlue, marginBottom: 4 }
-                ]}
+              <Image
+                source={images[index]}
+                resizeMode="contain"
+                style={{ width: sizes[index], height: sizes[index] }}
+              />
+            </View>
+            <View
+              key={"sep1" + row.miner}
+              style={{
+                width: width,
+                height: heights[index],
+                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: colors.tagGrey,
+                alignItems: "center",
+                boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+                overflow: "visible",
+                alignSelf: "flex-end",
+                marginTop: 8
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  window.open(
+                    "https://blocks.fusionnetwork.io/Addresses/" + miner
+                  );
+                }}
               >
-                {utils.midHashDisplay(miner)}
+                <Text
+                  style={[
+                    styles.rowText,
+                    { color: colors.linkBlue, marginBottom: 4 }
+                  ]}
+                >
+                  {utils.midHashDisplay(miner)}
+                </Text>
+              </TouchableOpacity>
+              <Text style={[styles.top3Number]}>
+                {this.pfsnEarned(count)}
+                <Text style={[styles.top3Text]}>PFSN</Text>
               </Text>
-            </TouchableOpacity>
-            <Text style={[styles.top3Number]}>
-              {this.pfsnEarned(count)}
-              <Text style={[styles.top3Text]}>PFSN</Text>
-            </Text>
-            <Text style={[styles.top3Number]}>
-              {this.fsnEarned(count)}
-              <Text style={[styles.top3Text]}>FSN</Text>
-            </Text>
+              <Text style={[styles.top3Number]}>
+                {this.fsnEarned(count)}
+                <Text style={[styles.top3Text]}>FSN</Text>
+              </Text>
+            </View>
           </View>
-        </View>
-      );
+        );
+      }
     }
 
     return (
@@ -292,7 +399,7 @@ export default class Leaderboard extends Component {
         key="top3"
         style={{
           flex: 1,
-          flexDirection: "row"
+          flexDirection: this.stacked ? "column" : "row"
         }}
       >
         {ret}
@@ -326,59 +433,102 @@ export default class Leaderboard extends Component {
       let count = row["count(miner)"];
       let miner = row.miner.toLowerCase();
 
-      ret.push(
-        <View
-          key={"sep" + row.miner}
-          style={{
-            marginTop: 8,
-            marginBottom: 8,
-            width: 565,
-            height: 1,
-            backgroundColor: "#bdc4ce"
-          }}
-        />
-      );
+      if (!this.stacked | (index > 4)) {
+        ret.push(
+          <View
+            key={"sep" + row.miner}
+            style={{
+              marginTop: 8,
+              marginBottom: 8,
+              width: this.widthToUse,
+              height: 1,
+              backgroundColor: "#bdc4ce"
+            }}
+          />
+        );
+      } else {
+        ret.push(
+          <View
+            key={"sep" + row.miner}
+            style={{
+              marginTop: 8,
+              marginBottom: 8,
+              width: this.widthToUse,
+              height: 1
+            }}
+          />
+        );
+      }
 
       ret.push(
         <View
           key={row.miner}
           style={{
             flex: 1,
-            flexDirection: "row",
+            flexDirection: this.stacked ? "column" : "row",
             justifyContent: "flex-start",
             marginBottom: 4
           }}
         >
-          <Text style={[styles.headerText, { width: 32 }]}>{index}</Text>
-          <TouchableOpacity
-            onPress={() => {
-              window.open("https://blocks.fusionnetwork.io/Addresses/" + miner);
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row"
             }}
           >
-            <Text
-              style={[
-                styles.rowText,
-                { color: colors.linkBlue, width: 340, marginRight: 4 }
-              ]}
+            <Text style={[styles.headerText, { width: 32 }]}>{index}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                window.open(
+                  "https://blocks.fusionnetwork.io/Addresses/" + miner
+                );
+              }}
             >
-              {miner}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.rowText,
+                  { color: colors.linkBlue, width: 340, marginRight: 4 }
+                ]}
+              >
+                {miner}
+              </Text>
+            </TouchableOpacity>
+          </View>
           <Text
             style={[
               styles.rowText,
-              { textAlign: "right", width: 90, marginRight: 4 }
+              {
+                textAlign: this.stacked ? "left" : "right",
+                width: this.stacked ? 300 : 90,
+                marginRight: 4,
+                marginLeft: this.stacked ? 32 : 0
+              }
             ]}
           >
             {this.pfsnEarned(count)}
+            {this.stacked && (
+              <Text style={[styles.headerText, { textAlign: "left" }]}>
+                P-FSN
+              </Text>
+            )}
           </Text>
           <Text
             style={[
               styles.rowText,
-              { textAlign: "right", width: 90, marginRight: 4 }
+              {
+                textAlign: this.stacked ? "left" : "right",
+                width: this.stacked ? 300 : 90,
+                marginRight: 4,
+                marginLeft: this.stacked ? 32 : 0
+              }
             ]}
           >
             {this.fsnEarned(count)}
+            {this.stacked && (
+              <Text style={[styles.headerText, { textAlign: "left" }]}>
+                FSN Earned
+              </Text>
+            )}
           </Text>
         </View>
       );
@@ -397,6 +547,7 @@ export default class Leaderboard extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
     this.mounted = true;
 
     const requestOptions = {
@@ -432,8 +583,18 @@ export default class Leaderboard extends Component {
       });
   }
 
+  updateDimensions() {
+    setTimeout(() => {
+      this.setState({ width: parseInt(Dimensions.get("window").width) });
+    }, 100);
+    setTimeout(() => {
+      this.setState({ width: parseInt(Dimensions.get("window").width) });
+    }, 500);
+  }
+
   componentWillUnmount() {
     this.mounted = false;
+    window.removeEventListener("resize", this.updateDimensions);
   }
 }
 
