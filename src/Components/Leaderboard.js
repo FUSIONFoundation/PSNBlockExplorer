@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity
@@ -16,6 +17,10 @@ const rp = require("request-promise");
 let server = "https://api.fusionnetwork.io";
 
 var styles;
+
+let bronze = require("../images/Bronze.svg");
+let gold = require("../images/Gold.svg");
+let silver = require("../images/Silver.svg");
 
 class SelectButton extends Component {
   render() {
@@ -96,7 +101,7 @@ export default class Leaderboard extends Component {
             style={{
               flex: 1,
               flexDirection: "row",
-              marginBottom: 32,
+              marginBottom: 16,
               marginTop: 16
             }}
           >
@@ -122,14 +127,20 @@ export default class Leaderboard extends Component {
               }}
             />
           </View>
+          {this.renderTop3()}
+            <View style={{height:20}}/>
           <View
             style={{
               boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
               overflow: "visible",
-              padding: 32
+              paddingTop: 0,
+              paddingRight: 32,
+              paddingLeft: 32,
+              paddingBottom: 32,
+              borderWidth: 1,
+              borderColor: colors.tagGrey,
             }}
           >
-            {this.renderTop3()}
             {this.renderTitle()}
             {this.renderTable()}
           </View>
@@ -191,6 +202,10 @@ export default class Leaderboard extends Component {
 
     let datas = [data[1], data[0], data[3]];
     let heights = [134, 146, 134];
+    let heightDiff = [12, 0, 12];
+    let images = [silver, gold, bronze];
+    let sizes = [52, 64, 40];
+    let width = 190
 
     for (let index = 0; index < 3; index++) {
       let row = datas[index];
@@ -202,29 +217,72 @@ export default class Leaderboard extends Component {
         <View
           key={"sep1" + row.miner}
           style={{
-            width: 226,
-            height: heights[index],
-            justifyContent: "center",
-            alignItems: "center",
-            boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
-            overflow: "visible"
+            width: width,
+            height: 200,
+            flex: 1,
+            justifyContent: "flex-start",
+            alignItems: "space-between",
+            overflow: "visible",
+            marginRight : index === 1 ? 30 : 0,
+            marginLeft : index === 1 ? 30 : 0,
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              window.open("https://blocks.fusionnetwork.io/Addresses/" + miner);
+          <View
+            style={{
+              zIndex: 1,
+              height: 32 + heightDiff[index],
+              flex: 1,
+              justifyContent: "flex-end",
+              alignItems: "center",
+              position : 'relative' ,
+              top : sizes[index] /2
             }}
           >
-            <Text style={[styles.rowText, { color: colors.linkBlue, marginBottom : 4 }]}>
-              {utils.midHashDisplay(miner)}
+            <Image
+              source={images[index]}
+              resizeMode="contain"
+              style={{ width: sizes[index], height: sizes[index] }}
+            />
+          </View>
+          <View
+            key={"sep1" + row.miner}
+            style={{
+              width: width,
+              height: heights[index],
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: colors.tagGrey,
+              alignItems: "center",
+              boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+              overflow: "visible",
+              alignSelf: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                window.open(
+                  "https://blocks.fusionnetwork.io/Addresses/" + miner
+                );
+              }}
+            >
+              <Text
+                style={[
+                  styles.rowText,
+                  { color: colors.linkBlue, marginBottom: 4 }
+                ]}
+              >
+                {utils.midHashDisplay(miner)}
+              </Text>
+            </TouchableOpacity>
+            <Text style={[styles.top3Number]}>
+              {this.pfsnEarned(count)}
+              <Text style={[styles.top3Text]}>PFSN</Text>
             </Text>
-          </TouchableOpacity>
-          <Text style={[styles.top3Number]}>{this.pfsnEarned(count)}
-          <Text style={[styles.top3Text]}>PFSN</Text>
-          </Text>
-          <Text style={[styles.top3Number]}>{this.fsnEarned(count)}
-          <Text style={[styles.top3Text]}>FSN</Text>
-          </Text>
+            <Text style={[styles.top3Number]}>
+              {this.fsnEarned(count)}
+              <Text style={[styles.top3Text]}>FSN</Text>
+            </Text>
+          </View>
         </View>
       );
     }
@@ -389,7 +447,7 @@ styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.white,
     padding: 32,
-    height: 800,
+    height: "100%",
     width: "100%"
   },
   subContainer: {
