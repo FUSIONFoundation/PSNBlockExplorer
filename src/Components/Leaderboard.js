@@ -28,16 +28,18 @@ class SelectButton extends Component {
           style={{
             width: 120,
             marginRight: 16,
-            height: 32,
+            height: 36,
+            overflow : 'visible',
             borderRadius: 3,
-            borderWidth: 1,
-            borderColor: colors.orderGrey,
+            // borderWidth: 1,
+            // borderColor: colors.orderGrey,
+            boxShadow: '0 6px 12px 0 rgba(189, 196, 206, 0.2)',
             backgroundColor: this.props.active
-              ? colors.disabledBlue
-              : colors.coolGrey
+              ? colors.primaryBlue
+              : colors.white
           }}
         >
-          <Text style={styles.bigButtonText}>{this.props.text}</Text>
+          <Text style={[styles.bigButtonText,{color:this.props.active?colors.white:colors.textBlue}]}>{this.props.text}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -73,15 +75,8 @@ export default class Leaderboard extends Component {
     return (
       <View style={styles.container}>
         <View>
-          <Text style={styles.titleText}>Top 10 Staking Leaderboard</Text>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <SelectButton
-              text="Year To Date"
-              active={cmd === "Year To Date"}
-              onPress={() => {
-                this.setState({ cmd: "Year To Date" });
-              }}
-            />
+          <Text style={styles.titleText}>Staking Leaderboard</Text>
+          <View style={{ flex: 1, flexDirection: "row" , marginBottom : 32, marginTop : 16 }}>
             <SelectButton
               text="Current Month"
               active={cmd === "Current Month"}
@@ -96,9 +91,22 @@ export default class Leaderboard extends Component {
                 this.setState({ cmd: "Prior Month" });
               }}
             />
+             <SelectButton
+              text="Year To Date"
+              active={cmd === "Year To Date"}
+              onPress={() => {
+                this.setState({ cmd: "Year To Date" });
+              }}
+            />
           </View>
-          {this.renderTitle()}
-          {this.renderTable()}
+          <View style = {{
+ boxShadow: "0 6px 12px 0 rgba(189, 196, 206, 0.2)",
+ overflow : 'visible',
+ padding : 32
+          }}>
+                    {this.renderTitle()}
+           {this.renderTable()}
+          </View>
         </View>
       </View>
     );
@@ -109,11 +117,14 @@ export default class Leaderboard extends Component {
       <View
         style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start", marginTop : 16 , marginBottom : 4}}
       >
-        <Text style={[styles.headerText, { width: 340, marginRight: 4 }]}>
-          Wallet
+        <Text style={[styles.headerText, { width: 32}]}>
+          #
         </Text>
-        <Text style={[styles.headerText, { textAlign: 'center', width: 180, marginRight: 4 }]}>P-FSN Earned</Text>
-        <Text style={[styles.headerText, { textAlign: 'center', width: 180, marginRight: 4 }]}>FSN Earned</Text>
+        <Text style={[styles.headerText, { width: 340, marginRight: 4 }]}>
+          Address
+        </Text>
+        <Text style={[styles.headerText, { textAlign: 'right', width: 90, marginRight: 4 }]}>P-FSN</Text>
+        <Text style={[styles.headerText, { textAlign: 'right', width: 90, marginRight: 4 }]}>FSN Earned</Text>
       </View>
     );
   }
@@ -134,9 +145,25 @@ export default class Leaderboard extends Component {
         break;
     }
 
+    let index = 1
+
     for (let row of data) {
       let count = row["count(miner)"];
       let miner = row.miner.toLowerCase()
+
+      ret.push(
+        <View
+        key={"sep"+row.miner}
+        style={{
+          marginTop : 8,
+          marginBottom : 8,
+          width : 565,
+          height : 1,
+          backgroundColor : '#bdc4ce'
+        }}
+      />
+
+      )
 
       ret.push(
         <View
@@ -148,16 +175,21 @@ export default class Leaderboard extends Component {
             marginBottom : 4
           }}
         >
+          <Text style={[styles.headerText, { width: 32}]}>
+          {index}
+        </Text>
         <TouchableOpacity onPress={()=>{
             window.open("https://blocks.fusionnetwork.io/Addresses/" + miner)
         }}>
-          <Text style={[styles.rowText, { width: 340, marginRight: 4 }]}>{miner}</Text>
+      
+          <Text style={[styles.rowText, { color : colors.linkBlue,width: 340, marginRight: 4 }]}>{miner}</Text>
         </TouchableOpacity>
-          <Text style={[styles.rowText, { textAlign: 'right', width: 180, marginRight: 4 }]}>{this.pfsnEarned(count)}</Text>
-          <Text style={[styles.rowText, { textAlign: 'right', width: 180, marginRight: 4 }]}>{this.fsnEarned(count)}</Text>
+          <Text style={[styles.rowText, { textAlign: 'right', width: 90, marginRight: 4 }]}>{this.pfsnEarned(count)}</Text>
+          <Text style={[styles.rowText, { textAlign: 'right', width: 90, marginRight: 4 }]}>{this.fsnEarned(count)}</Text>
         </View>
 
       );
+      index++
     }
 
     return ret;
@@ -227,25 +259,25 @@ styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: constants.fontFamily,
-    fontSize: 20,
+    fontSize: 32,
     color: colors.textBlue,
-    fontWeight: constants.mediumFont,
+    fontWeight: constants.boldFont,
     marginBottom: 16
   },
   headerText: {
     fontFamily: constants.fontFamily,
-    fontSize: 20,
-    color: colors.white,
+    fontSize: 13,
+    color: colors.labelGrey,
     fontWeight: constants.mediumFont,
-    backgroundColor: colors.primaryBlue,
+    backgroundColor: colors.white,
     padding : 4
   },
   rowText: {
     fontFamily: constants.fontFamily,
     fontSize: 14,
-    color: colors.black,
+    color: colors.labelGrey,
     fontWeight: constants.mediumFont,
-    backgroundColor: colors.disabledBlue,
+    backgroundColor: colors.white,
     padding : 4
   },
   youStakeRowText: {
@@ -344,7 +376,7 @@ styles = StyleSheet.create({
   },
   bigButtonText: {
     fontFamily: constants.fontFamily,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: constants.regularFont,
     color: colors.textBlue,
     textAlign: "center",
