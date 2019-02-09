@@ -23,6 +23,9 @@ let bronze = require("../images/Bronze.svg");
 let gold = require("../images/Gold.svg");
 let silver = require("../images/Silver.svg");
 
+var formatter = (new Intl.NumberFormat(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}))
+
+
 class SelectButton extends Component {
   render() {
     return (
@@ -539,11 +542,11 @@ export default class Leaderboard extends Component {
   }
 
   pfsnEarned(count) {
-    return (count * 2.5).toFixed(2);
+    return formatter.format(count * 2.5)
   }
 
   fsnEarned(count) {
-    return (count * 0.625).toFixed(2);
+    return formatter.format(count * 0.625)
   }
 
   componentDidMount() {

@@ -14,6 +14,8 @@ import constants from "./constants";
 import utils from "../utils";
 import currentDataState from "../api/dataAPI";
 
+
+var formatter = (new Intl.NumberFormat(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}))
 var styles;
 
 class BigButton extends Component {
@@ -174,12 +176,12 @@ export default class Staking extends Component {
     let FSN_PFSN_Reward_User = PFSN_Reward_User + FSN_Reward_User;
     let ROR_PFSN_PLUS_FSN = FSN_PFSN_Reward_User / User_FSN;
 
-    obj.PFSN_Amount = PFSN_Reward_User.toFixed(2);
-    obj.FSN_Amount = FSN_Reward_User.toFixed(2);
+    obj.PFSN_Amount = formatter.format( PFSN_Reward_User )
+    obj.FSN_Amount = formatter.format( FSN_Reward_User );
     obj.PFSN_Return = ROR_PFSN * 100;
     obj.FSN_Return = ROR_FSN * 100;
-    obj.Total_Amount = FSN_PFSN_Reward_User.toFixed(2);
-    obj.Total_Return = ROR_PFSN_PLUS_FSN * 100;
+    obj.Total_Amount = formatter.format( FSN_PFSN_Reward_User );
+    obj.Total_Return = formatter.format( ROR_PFSN_PLUS_FSN * 100 );
     obj.stakeVal = "" + valIn;
 
     obj.ticketVal = parseInt( User_Tickets  )
