@@ -26,10 +26,10 @@ class BigButton extends Component {
       >
         <View
           style={{
-            width: 80,
-            marginRight: 16,
-            marginTop : 8,
-            height: 48,
+            width: 48,
+            marginRight: 8,
+            marginTop: 8,
+            height: 36,
             borderRadius: 3,
             borderWidth: 1,
             borderColor: colors.orderGrey,
@@ -53,6 +53,7 @@ class BigButton extends Component {
 export default class Staking extends Component {
   state = {
     stakeVal: 1000,
+    ticketVal : 4,
     cmd: "30d",
     PFSN_Amount: "-",
     FSN_Amount: "-",
@@ -60,17 +61,41 @@ export default class Staking extends Component {
     FSN_Return: "-",
     Total_Amount: "-",
     Total_Return: "-",
-    width : parseInt( Dimensions.get("window").width * .45 ),
+    width: parseInt(Dimensions.get("window").width),
     ticketNumber: currentDataState.datablock.ticketNumber
   };
 
   constructor(props) {
     super(props);
     this.calcDisplay = this.calcDisplay.bind(this);
+    this.calcTicketDisplay = this.calcTicketDisplay.bind(this)
     this.ticketNumberChanged = this.ticketNumberChanged.bind(this);
 
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
 
-    this.updateDimensions = this.updateDimensions.bind(this)
+  calcTicketDisplay(valIn) {
+    let val = valIn
+    val = parseInt(val);
+    if (
+      isNaN(val) ||
+      val <= 0 ||
+      valIn.length === 0
+    ) {
+      let obj = Object.assign({}, this.state);
+      obj.stakeVal = 0;
+      obj.ticketVal = valIn
+      obj.PFSN_Amount = "-";
+      obj.FSN_Amount = "-";
+      obj.PFSN_Return = "-";
+      obj.FSN_Return = "-";
+      obj.Total_Amount = "-";
+      obj.Total_Return = "-";
+      this.setState(obj);
+      return;
+    }
+
+    this.calcDisplay( "" + (val * 200) )
   }
 
   calcDisplay(valIn, cmdPast) {
@@ -85,10 +110,11 @@ export default class Staking extends Component {
       isNaN(val) ||
       val <= 0 ||
       isNaN(ticketNumber) ||
-      !valIn ||
-      valIn.length === 0
+      (!cmdPast && (!valIn ||
+      valIn.length === 0))
     ) {
       obj.stakeVal = valIn;
+      obj.ticketVal = 0
       obj.PFSN_Amount = "-";
       obj.FSN_Amount = "-";
       obj.PFSN_Return = "-";
@@ -98,6 +124,10 @@ export default class Staking extends Component {
       obj.cmd = cmd;
       this.setState(obj);
       return;
+    }
+
+    if ( !valIn ) {
+      valIn = val
     }
 
     let days = 30;
@@ -115,7 +145,7 @@ export default class Staking extends Component {
       case "180d":
         days = 180;
         break;
-      case "1yr":
+      case "1y":
         days = 365;
         break;
     }
@@ -152,6 +182,8 @@ export default class Staking extends Component {
     obj.Total_Return = ROR_PFSN_PLUS_FSN * 100;
     obj.stakeVal = "" + valIn;
 
+    obj.ticketVal = parseInt( User_Tickets  )
+
     obj.cmd = cmd;
     this.setState(obj);
   }
@@ -162,6 +194,10 @@ export default class Staking extends Component {
   }
 
   componentDidMount() {
+    this.intervalTimer = setInterval(() => {
+      this.updateDimensions();
+    }, 250);
+
     window.addEventListener("resize", this.updateDimensions);
     this.calcDisplay("1000");
     this.mounted = true;
@@ -175,20 +211,31 @@ export default class Staking extends Component {
       "ticketNumber",
       this.ticketNumberChanged
     );
+    if (this.intervalTimer) {
+      clearInterval(this.intervalTimer);
+      this.intervalTimer = undefined;
+    }
   }
 
   updateDimensions() {
-    this.setState({ width : parseInt( Dimensions.get("window").width * .45 ) } );
+    let newWidth = parseInt(Dimensions.get("window").width);
+    if (newWidth !== this.state.width) {
+      this.setState({ width: newWidth });
+    }
   }
-
 
   render() {
     let cmd = this.state.cmd;
 
-    let w = this.state.width
+    let displayWidth = 320;
+    let displayHeight = 280;
 
-    if ( w < 320 ) {
-      w = 320
+    if (this.state.width < displayWidth * 2) {
+      this.stacked = true;
+      this.widthToUse = this.state.width - 64;
+    } else {
+      this.stacked = false;
+      this.widthToUse = 585;
     }
 
     return (
@@ -196,8 +243,8 @@ export default class Staking extends Component {
         <View style={styles.innerContainer}>
           <View
             style={{
-              width: w,
-              height: 400,
+              width: displayWidth,
+              height: displayHeight,
               backgroundColor: colors.tagGrey,
               paddingTop: 16,
               paddingBottom: 16,
@@ -221,18 +268,65 @@ export default class Staking extends Component {
                 <Text style={styles.youStakeText}>Your Stake</Text>
               </View>
               <View style={styles.youStakeRow}>
-                <View style={{ width: 220, marginRight: 16 }}>
-                  <TextInput
-                    style={[styles.stakeQuantityInput]}
-                    placeholder="0"
-                    autoCorrect={false}
-                    placeholderTextColor={colors.orderGrey}
-                    maxLength={10}
-                    value={"" + (this.state.stakeVal || "")}
-                    onChangeText={val => {
-                      this.calcDisplay(val);
+                <View>
+                  <View
+                    style={{
+                      width: 125,
+                      borderRadius: 3,
+                      backgroundColor: "white",
+                      borderWidth: 1,
+                      height: 36,
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      borderColor: colors.orderGrey,
                     }}
-                  />
+                  >
+                    <TextInput
+                      style={[styles.stakeQuantityInput]}
+                      placeholder="0"
+                      autoCorrect={false}
+                      placeholderTextColor={colors.orderGrey}
+                      maxLength={10}
+                      value={"" + (this.state.stakeVal || "")}
+                      onChangeText={val => {
+                        this.calcDisplay(val);
+                      }}
+                    />
+                    <Text style={styles.inputLabel}>P-FSN</Text>
+                  </View>
+                </View>
+                <Text style={{marginTop:8,marginRight:8,marginLeft:8}}>=</Text>
+                <View>
+                  <View
+                    style={{
+                      width: 125,
+                      borderRadius: 3,
+                      backgroundColor: "white",
+                      borderWidth: 1,
+                      height: 36,
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      borderColor: colors.orderGrey,
+                      marginRight: 16
+                    }}
+                  >
+                    <TextInput
+                      style={[styles.stakeQuantityInput]}
+                      placeholder="0"
+                      autoCorrect={false}
+                      placeholderTextColor={colors.orderGrey}
+                      maxLength={10}
+                      value={"" + (this.state.ticketVal || "")}
+                      onChangeText={val => {
+                        this.calcTicketDisplay(val);
+                      }}
+                    />
+                    <Text style={styles.inputLabel}>Tickets</Text>
+                  </View>
                 </View>
               </View>
               <View style={{ marginTop: 32 }}>
@@ -242,8 +336,8 @@ export default class Staking extends Component {
                   style={{
                     flex: 1,
                     flexDirection: "row",
-                    justifyContent: "flex-start",
-                    flexWrap : 'wrap',
+                    justifyContent: "flex-start"
+                    //flexWrap : 'wrap',
                   }}
                 >
                   <BigButton
@@ -275,10 +369,10 @@ export default class Staking extends Component {
                     }}
                   />
                   <BigButton
-                    text="1yr"
-                    active={cmd === "1yr"}
+                    text="1y"
+                    active={cmd === "1y"}
                     onPress={() => {
-                      this.calcDisplay(undefined, "1yr");
+                      this.calcDisplay(undefined, "1y");
                     }}
                   />
                 </View>
@@ -288,8 +382,8 @@ export default class Staking extends Component {
           </View>
           <View
             style={{
-              width: w,
-              height: 400,
+              width: displayWidth,
+              height: displayHeight,
               backgroundColor: colors.white,
               paddingTop: 16,
               paddingBottom: 16,
@@ -304,7 +398,14 @@ export default class Staking extends Component {
                 backgroundColor: "white"
               }}
             >
-              <Text style={styles.youReceiveText}>Your Estimated Return</Text>
+              <Text
+                style={[
+                  styles.youReceiveText,
+                  { marginTop: this.stacked ? 24 : 0 }
+                ]}
+              >
+                Your Estimated Return
+              </Text>
               <View style={{ height: 16 }} />
               <View style={styles.simpleRow}>
                 <Text style={styles.calcAmountText}>
@@ -352,10 +453,11 @@ styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 0,
     flexDirection: "row",
-    justifyContent : 'space-evenly',
-    alignItems : 'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
     backgroundColor: colors.white,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    marginTop: 32
   },
   youStakeRowText: {
     flex: 1,
@@ -438,20 +540,28 @@ styles = StyleSheet.create({
     justifyContent: "flex-start"
   },
   stakeQuantityInput: {
-    width: 200,
-    borderColor: colors.orderGrey,
-    borderRadius: 3,
-    backgroundColor: "white",
-    borderWidth: 1,
-    fontSize: 18,
+    width: 80,
+    fontSize: 14,
     fontFamily: constants.mediumFont,
-    color: colors.labelGrey,
-    height: 48,
+    color: colors.textBlue,
+    height: 36,
     alignSelf: "flex-end",
-    textAlign: "right",
+    textAlign: "left",
     paddingRight: 4,
-    paddingLeft: 4,
+    paddingLeft: 8,
     outline: "none"
+  },
+  inputLabel : {
+    marginTop: 8,
+    fontFamily: constants.fontFamily,
+    fontSize: 12,
+    color: colors.textBlue,
+    fontWeight: constants.regularFont,
+    width : 45,
+    height : 20,
+    paddingRight : 4,
+    textAlign : 'right',
+    whiteSpace : 'nowrap'
   },
   sectionTitle: {
     fontSize: 28,
@@ -465,12 +575,11 @@ styles = StyleSheet.create({
   },
   bigButtonText: {
     fontFamily: constants.fontFamily,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: constants.regularFont,
     color: colors.textBlue,
     textAlign: "center",
-    padding: 16,
-    marginBottom: 14
+    paddingTop: 10
   },
   info: {
     fontSize: 16,

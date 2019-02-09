@@ -33,8 +33,9 @@ class SelectButton extends Component {
       >
         <View
           style={{
-            width: 120,
-            marginRight: 16,
+            width: 110,
+            marginLeft : 4,
+            marginRight: 4,
             height: 36,
             overflow: "visible",
             borderRadius: 3,
@@ -79,7 +80,7 @@ export default class Leaderboard extends Component {
 
     if (this.state.width < 640) {
       this.stacked = true;
-      this.widthToUse = this.state.width - 64;
+      this.widthToUse = parseInt(Dimensions.get("window").width) - 64;
     } else {
       this.stacked = false;
       this.widthToUse = 585;
@@ -118,7 +119,6 @@ export default class Leaderboard extends Component {
               flex: 1,
               flexDirection: "row",
               marginBottom: 16,
-              marginTop: 16
             }}
           >
             <SelectButton
@@ -326,7 +326,7 @@ export default class Leaderboard extends Component {
               height: 200,
               flex: 1,
               justifyContent: "flex-start",
-              alignItems: "space-between",
+              alignItems: "center",
               overflow: "visible",
               marginRight: index === 1 ? 30 : 0,
               marginLeft: index === 1 ? 30 : 0
@@ -547,6 +547,10 @@ export default class Leaderboard extends Component {
   }
 
   componentDidMount() {
+    this.intervalTimer = setInterval( ()=> {
+        this.updateDimensions()
+    }, 250 )
+
     window.addEventListener("resize", this.updateDimensions);
     this.mounted = true;
 
@@ -584,17 +588,19 @@ export default class Leaderboard extends Component {
   }
 
   updateDimensions() {
-    setTimeout(() => {
-      this.setState({ width: parseInt(Dimensions.get("window").width) });
-    }, 100);
-    setTimeout(() => {
-      this.setState({ width: parseInt(Dimensions.get("window").width) });
-    }, 500);
+    let newWidth = parseInt(Dimensions.get("window").width)
+    if ( newWidth !== this.state.width ) {
+      this.setState({ width: newWidth });
+    }
   }
 
   componentWillUnmount() {
     this.mounted = false;
     window.removeEventListener("resize", this.updateDimensions);
+    if ( this.intervalTimer ) {
+      clearInterval( this.intervalTimer )
+      this.intervalTimer = undefined
+    }
   }
 }
 
