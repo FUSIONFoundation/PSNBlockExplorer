@@ -1,7 +1,10 @@
 
 import EventEmitter from "events";
 import history from "../history.js";
+import utils from "../utils";
+import { debug } from "util";
 const rp = require("request-promise");
+
 
 var datablock = {
   priceInfo: {},
@@ -38,7 +41,7 @@ var datablock = {
 
 let eventEmitter = new EventEmitter();
 
-let server = "https://api.fusionnetwork.io";
+let server = utils.getServer()
 
 function scheduleRefresh() {
   setTimeout(() => {
@@ -385,7 +388,22 @@ export default class currentDataState {
   static executeLoadOfTransactions(c) {
     let uri = server + "/transactions/ts";
 
-    let cacheToProces = c ? c : Object.keys(datablock.cacheTLoad);
+    if ( !c ) {
+ 
+      // lets take 20 at a time
+      let p = Object.keys(datablock.cacheTLoad);
+      if ( p.length > 40 ) {
+        p = p.slice( 0, 20 )
+      }
+      // then delete from cache
+      for ( let k of p ) {
+        delete datablock.cacheTLoad[k]
+      }
+
+      c = p
+    }
+
+    let cacheToProces = c 
     if (!c) {
       datablock.cacheTLoad = {};
     }
@@ -410,8 +428,8 @@ export default class currentDataState {
     return rp(requestOptions)
       .then(response => {
         if (response) {
-          console.log("yyyTTTTTTyy" + cacheToProces.join("-"), requestOptions);
-          console.log(response);
+          //console.log("yyyTTTTTTyy" + cacheToProces.join("-"), requestOptions);
+          //console.log(response);
 
           for (let t of response) {
             datablock.transactions[t.hash] = t;
@@ -419,6 +437,9 @@ export default class currentDataState {
           }
           datablock.disableTLoader = false;
           eventEmitter.emit("transactionsLoaded", datablock, false);
+          if ( Object.keys(datablock.cacheTLoad).length )  {
+            setTimeout( currentDataState.executeLoadOfTransactions, 1 )
+          }
         }
         return true;
       })
@@ -426,7 +447,7 @@ export default class currentDataState {
         console.log("Fetch next transaction API call error:", err);
         setTimeout(() => {
           currentDataState.executeLoadOfTransactions(cacheToProces);
-        }, 1000);
+        }, 100);
       });
   }
 
@@ -524,6 +545,8 @@ export default class currentDataState {
       json: true,
       gzip: true
     };
+
+    console.log("Requesting " , requestOptions )
 
     rp(requestOptions)
       .then(response => {
@@ -678,13 +701,26 @@ export default class currentDataState {
   static executeLoadOfAddresses(c) {
     let uri = server + "/balances/ts";
 
-    let cacheToProces = c ? c : Object.keys(datablock.cacheALoad);
-    if (!c) {
-      datablock.cacheALoad = {};
+    if ( !c ) {
+      // lets take 20 at a time
+      let p = Object.keys(datablock.cacheALoad);
+      if ( p.length > 20 ) {
+        p = p.slice( 0, 20 )
+      }
+      // then delete from cache
+      for ( let k of p ) {
+        delete datablock.cacheALoad[k]
+      }
+
+      c = p
     }
+
+    let cacheToProces = c
+
     if (cacheToProces.length === 0) {
       return;
     }
+
     datablock.disableALoader = true;
 
     // "https://api.fusionnetwork.io/balances/ts?ts=0xfa37b7c3f21060458361ed5322be5af3740bce3c
@@ -714,12 +750,16 @@ export default class currentDataState {
           }
           datablock.disableALoader = false;
           eventEmitter.emit("addressesLoaded", datablock, false);
+          if ( Object.keys(datablock.cacheALoad).length )  {
+            setTimeout( currentDataState.executeLoadOfAddresses, 1 )
+          }
         }
         return true;
       })
       .catch(err => {
         console.log("Fetch next addresses API call error:", err);
         setTimeout(() => {
+          datablock.disableALoader = false
           currentDataState.executeLoadOfAddresses(cacheToProces);
         }, 1000);
       });

@@ -39,6 +39,14 @@ export default class Utils {
     return newValue;
   }
 
+  static getServer() {
+    if ( window.location.href.indexOf( "useServer2") > 0 ) {
+      return  "https://api2.fusionnetwork.io";
+    } else {
+      return  "https://api.fusionnetwork.io";
+    }
+  }
+
   static insert(str, index, value) {
     return str.substr(0, index) + value + str.substr(index);
   }

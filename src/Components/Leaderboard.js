@@ -15,7 +15,7 @@ import utils from "../utils";
 import constants from "./constants";
 const rp = require("request-promise");
 
-let server = "https://api.fusionnetwork.io";
+let server = utils.getServer()
 
 var styles;
 
