@@ -235,13 +235,21 @@ export default class Leaderboard extends Component {
     for (let index = 0; index < 3; index++) {
       let row = this.stacked ? data[index] : datas[index];
 
-      let count = row["count(miner)"];
-      let miner = row.miner.toLowerCase();
+      let count , miner
+
+      if ( !row || !row.miner  ) {
+        count = 0
+        miner = "0x000000000000000000000"
+        row = { count , miner }
+      } else {
+        count = row["count(miner)"];
+        miner = row.miner.toLowerCase();  
+      }
 
       if (this.stacked) {
         ret.push(
           <View
-            key={"sep1" + row.miner}
+            key={"sep1" + index}
             style={{
               width: this.widthToUse + 32,
               height: 104,
@@ -277,7 +285,7 @@ export default class Leaderboard extends Component {
               />
             </View>
             <View
-              key={"sep1" + row.miner}
+              key={"sep1b" + index}
               style={{
                 width: this.widthToUse - 96,
                 height: 104,
@@ -323,7 +331,7 @@ export default class Leaderboard extends Component {
       } else {
         ret.push(
           <View
-            key={"sep1" + row.miner}
+            key={"sep1" + index}
             style={{
               width: width,
               height: 200,
@@ -433,13 +441,22 @@ export default class Leaderboard extends Component {
         index++;
         continue;
       }
-      let count = row["count(miner)"];
-      let miner = row.miner.toLowerCase();
+
+      let count, miner
+
+      if ( !row || !row.miner  ) {
+        count = 0
+        miner = "0x000000000000000000000"
+        row = { count , miner }
+      } else {
+        count = row["count(miner)"];
+        miner = row.miner.toLowerCase();  
+      }
 
       if (!this.stacked | (index > 4)) {
         ret.push(
           <View
-            key={"sep" + row.miner}
+            key={"sep" + index}
             style={{
               marginTop: 8,
               marginBottom: 8,
@@ -452,7 +469,7 @@ export default class Leaderboard extends Component {
       } else {
         ret.push(
           <View
-            key={"sep" + row.miner}
+            key={"sep1" + index}
             style={{
               marginTop: 8,
               marginBottom: 8,
@@ -465,7 +482,7 @@ export default class Leaderboard extends Component {
 
       ret.push(
         <View
-          key={row.miner}
+          key={"se11m"+index}
           style={{
             flex: 1,
             flexDirection: this.stacked ? "column" : "row",
