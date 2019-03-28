@@ -33,7 +33,7 @@ export default class NodeSelect extends Component {
 
     this.connectionListener = this.connectionListener.bind(this);
 
-    var val = window.localStorage.getItem("address1");
+    var val = window.localStorage.getItem("address2");
     var error = null;
 
     if (!error) {
@@ -78,7 +78,7 @@ export default class NodeSelect extends Component {
   }
 
   connectionListener(arg, e) {
-    console.log("CONNECTION EVENTS FIRING AWAY", arg);
+    //console.log("CONNECTION EVENTS FIRING AWAY", arg);
     if (this.state.testing) {
       if (arg[0] === "error") {
         alert("Unable to connect to " + this.state.newNodeAddress);
@@ -90,7 +90,7 @@ export default class NodeSelect extends Component {
           testing: false,
           currentNodeAddress: this.state.newNodeAddress
         });
-        window.localStorage.setItem("address1", this.state.newNodeAddress);
+        window.localStorage.setItem("address2", this.state.newNodeAddress);
       }
     } else {
       if (arg[0] === "error") {

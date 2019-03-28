@@ -182,9 +182,9 @@ export default class web3Api {
           if (result.topics.length > 0) {
             let topic = parseInt(result.topics[0].substr(2));
             let callType = this._web3.fsn.consts.FSNCallAddress_Topic_To_Function[topic];
-            console.log(callType, result);
+            // console.log(callType, result);
             this._web3.eth.getTransaction(result.transactionHash, (err, tx) => {
-              console.log("tx", err, tx);
+              // console.log("tx", err, tx);
               if (!err) {
                 if (tx.from === currentDataState.data.signInfo.address) {
                   console.log("got a ticket ");
@@ -213,7 +213,7 @@ export default class web3Api {
         this.emit("connectstatus", ["stillgood"], false);
         if (this.lastBlock.number != block.number) {
           this.lastBlock = block;
-          console.log(block);
+          // console.log(block);
           this.emit("latestBlock", block);
 
           if (!walletAddress || walletAddress != this._walletAddress) {

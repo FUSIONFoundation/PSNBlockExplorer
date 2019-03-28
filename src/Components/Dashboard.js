@@ -50,7 +50,7 @@ export default class Dashboard extends Component {
       seconds =
         data.lastTwoBlocks[0].timeStamp - data.lastTwoBlocks[1].timeStamp;
     }
-    console.log(data);
+    //console.log(data);
     //debugger
     return (
       <View style={{width:1280}}>

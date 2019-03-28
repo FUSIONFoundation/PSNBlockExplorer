@@ -181,8 +181,8 @@ function getNext5Transactions() {
   return rp(requestOptions)
     .then(response => {
       if (response) {
-        console.log("TTTT");
-        console.log(response);
+        // console.log("TTTT");
+        // console.log(response);
         datablock.last5Transactions = response;
         currentDataState.emit("data", datablock);
       }
@@ -546,7 +546,7 @@ export default class currentDataState {
       gzip: true
     };
 
-    console.log("Requesting " , requestOptions )
+    // console.log("Requesting " , requestOptions )
 
     rp(requestOptions)
       .then(response => {
@@ -741,8 +741,8 @@ export default class currentDataState {
     return rp(requestOptions)
       .then(response => {
         if (response) {
-          console.log("AAAAAA" + cacheToProces.join("-"), requestOptions);
-          console.log(response);
+          // console.log("AAAAAA" + cacheToProces.join("-"), requestOptions);
+          // console.log(response);
 
           for (let t of response) {
             datablock.address[t._id] = t;
@@ -874,8 +874,8 @@ export default class currentDataState {
     return rp(requestOptions)
       .then(response => {
         if (response) {
-          console.log("AsAsAsAsAAs" + cacheToProces.join("-"), requestOptions);
-          console.log(response);
+          // console.log("AsAsAsAsAAs" + cacheToProces.join("-"), requestOptions);
+          // console.log(response);
 
           for (let t of response) {
             datablock.asset[t.commandExra] = t;

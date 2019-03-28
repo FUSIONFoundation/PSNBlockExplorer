@@ -153,7 +153,7 @@ export default class UnlockAccount extends Component {
         <TouchableOpacity
           onPress={() => {
             glb_selectFiles({multiple: false}).then( (files) => {
-              console.log(files)
+              // console.log(files)
               if ( files.length === 1 ) {
                 // read the 
                 let reader = new FileReader();
@@ -164,7 +164,7 @@ export default class UnlockAccount extends Component {
                   }
                   try {
                     let obj = JSON.parse( data );
-                    console.log(obj);
+                    // console.log(obj);
                     if ( !obj.address ) {
                       this.setState( {error:'Invalid key store file ', keyData : null})
                     } else {
