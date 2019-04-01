@@ -26,7 +26,7 @@ class App extends Component {
     }
     return (
       <View>
-        <Header title="Block Explorer" titleWidth={150} version="1.00.00" />
+        <Header title="Block Explorer" titleWidth={150} version="2.00.00" />
         <Menu />
         <Router history={history}>
           <div>
