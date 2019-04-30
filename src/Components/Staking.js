@@ -97,7 +97,7 @@ export default class Staking extends Component {
       return;
     }
 
-    this.calcDisplay( "" + (val * 200) )
+    this.calcDisplay( "" + (val * 5000) )
   }
 
   calcDisplay(valIn, cmdPast) {
@@ -155,7 +155,7 @@ export default class Staking extends Component {
     //let averageBlockTime = 15;
     let Total_Tickets = ticketNumber;
     let User_FSN = val;
-    let User_Tickets = Math.floor(User_FSN / 200);
+    let User_Tickets = Math.floor(User_FSN / 5000);
 
     let Time_Invested = days;
     //let pFsnToFsnExchange = 1;

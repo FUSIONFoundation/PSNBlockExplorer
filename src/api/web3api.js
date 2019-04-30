@@ -234,7 +234,7 @@ export default class web3Api {
                 });
             })
             .then(loadsOfInfo => {
-              return this._web3.fsn.ticketPrice().then(res => {
+              return this._web3.fsn.ticketPrice("latest").then(res => {
                 return Object.assign(loadsOfInfo, { ticketPrice: res });
               });
             })
