@@ -54,7 +54,7 @@ class BigButton extends Component {
 
 export default class Staking extends Component {
   state = {
-    stakeVal: 1000,
+    stakeVal: 5000,
     ticketVal : 4,
     cmd: "30d",
     PFSN_Amount: "-",
@@ -279,6 +279,7 @@ export default class Staking extends Component {
                       borderWidth: 1,
                       height: 36,
                       flex: 1,
+                      flexBasis : 'auto',
                       flexDirection: "row",
                       justifyContent: "space-between",
                       alignItems: "center",
@@ -296,7 +297,7 @@ export default class Staking extends Component {
                         this.calcDisplay(val);
                       }}
                     />
-                    <Text style={styles.inputLabel}>P-FSN</Text>
+                    <Text style={styles.inputLabel}>FSN</Text>
                   </View>
                 </View>
                 <Text style={{marginTop:8,marginRight:8,marginLeft:8}}>=</Text>
@@ -308,7 +309,7 @@ export default class Staking extends Component {
                       backgroundColor: "white",
                       borderWidth: 1,
                       height: 36,
-                      flex: 1,
+                      flex: "1 0 0",
                       flexDirection: "row",
                       justifyContent: "space-between",
                       alignItems: "center",
@@ -413,14 +414,14 @@ export default class Staking extends Component {
                 <Text style={styles.calcAmountText}>
                   {this.state.PFSN_Amount}
                 </Text>
-                <Text style={styles.smallLabelText}>P-FSN</Text>
+                <Text style={styles.smallLabelText}>FSN</Text>
                 <View style={{ width: 32 }} />
                 <Text style={styles.calcReturnText}>
                   {utils.formatPercent(this.state.PFSN_Return)}
                 </Text>
                 <Text style={styles.smallLabelText}>ROR</Text>
               </View>
-              <View style={styles.simpleRow}>
+              {/* <View style={styles.simpleRow}>
                 <Text style={styles.calcAmountText}>
                   {this.state.FSN_Amount}
                 </Text>
@@ -430,7 +431,7 @@ export default class Staking extends Component {
                   {utils.formatPercent(this.state.FSN_Return)}
                 </Text>
                 <Text style={styles.smallLabelText}>ROR</Text>
-              </View>
+              </View> */}
               <View style={{ height: 48 }} />
             </View>
           </View>
@@ -544,10 +545,11 @@ styles = StyleSheet.create({
   stakeQuantityInput: {
     width: 80,
     fontSize: 14,
-    fontFamily: constants.mediumFont,
+    fontStyle: constants.mediumFont,
+    fontFamily: constants.fontFamily,
     color: colors.textBlue,
     height: 36,
-    alignSelf: "flex-end",
+    //alignSelf: "flex-end",
     textAlign: "left",
     paddingRight: 4,
     paddingLeft: 8,

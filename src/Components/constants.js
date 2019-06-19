@@ -13,6 +13,6 @@ export default class Constants
     }
 
     static get fontFamily() {
-        return 'Roboto, san-serif'
+        return 'Lato, san-serif'
     }
 }
