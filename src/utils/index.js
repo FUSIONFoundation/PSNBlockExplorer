@@ -43,7 +43,7 @@ export default class Utils {
     if ( window.location.href.indexOf( "useServer2") > 0 ) {
       return  "https://api2.fusionnetwork.io";
     } else {
-      return  "https://api.fusionnetwork.io";
+      return  "https://psn2api.fusionnetwork.io";
     }
   }
 
